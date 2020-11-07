@@ -1,0 +1,55 @@
+packages/api/node_modules
+packages/app/node_modules
+packages/app/.next
+packages/api/prisma/.env
+.env
+
+# dependencies
+packages/app/.pnp
+.pnp.js
+
+# testing
+packages/app/coverage
+
+# next.js
+packages/app/.next/
+packages/app/out/
+
+# production
+packages/app/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# vercel
+.vercel
+
+#amplify
+packages/app/amplify/\#current-cloud-backend
+packages/app/amplify/.config/local-*
+packages/app/amplify/mock-data
+packages/app/amplify/backend/amplify-meta.json
+packages/app/amplify/backend/awscloudformation
+packages/app/build/
+packages/app/dist/
+aws-exports.js
+awsconfiguration.json
+amplifyconfiguration.json
+amplify-build-config.json
+amplify-gradle-config.json
+amplifytools.xcconfig
+
+
+.idea
