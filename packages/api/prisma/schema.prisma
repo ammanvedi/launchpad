@@ -28,7 +28,6 @@ model Consent {
 
 model User {
   id            String      @id
-  email         String      @unique
   firstName     String?
   lastName      String?
   profileImage  String?
