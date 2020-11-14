@@ -11,6 +11,9 @@ export default function SignUp() {
             const { user } = await Auth.signUp({
                 username,
                 password,
+                attributes: {
+                    'custom:role': 'USER'
+                }
             });
             console.log(user);
         } catch (error) {
@@ -20,6 +23,7 @@ export default function SignUp() {
 
     return (
         <div>
+            sign up
             <input type='text' value={username} onChange={e => setUsername(e.target.value)} placeholder='email' />
             <input type='text' value={password} onChange={e => setPassword(e.target.value)} placeholder='password' />
             <button onClick={handleButtonClick} >Sign up</button>
