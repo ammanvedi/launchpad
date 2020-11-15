@@ -8,6 +8,9 @@ import {IAuthorizer} from "./lib/authorization/IAuthorizer";
 import {getAuthTokens} from "./lib/authorization/header";
 import {rbacExtension} from "./lib/authorization/rbac";
 import {PrismaClient} from "@prisma/client";
+// @ts-ignore
+import awsConfig from '../../app/src/aws-exports';
+import Amplify, { Auth } from 'aws-amplify';
 
 dotenv.config();
 
@@ -17,6 +20,11 @@ const authorizer: IAuthorizer<CognitoAuthorizerConfig> = new CognitoAuthorizer(
 );
 
 const db = new PrismaClient();
+
+Amplify.configure({
+    ...awsConfig,
+    ssr: true
+});
 
 const authorizerInit = authorizer.initialize({
     jwkUrl: process.env.AMPLIFY_JWK_URL || ''
@@ -39,6 +47,7 @@ Promise.all([authorizerInit]).then(() => {
                 authorizer,
                 authState,
                 db,
+                amplifyAuth: Auth
             }
         }
     })

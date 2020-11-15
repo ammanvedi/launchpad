@@ -8,8 +8,6 @@ import { useApollo } from '../lib/apollo'
 
 Amplify.configure(awsconfig);
 
-Auth.currentSession()
-
 function MyApp({ Component, pageProps }) {
   const store = useStore(pageProps.initialReduxState)
   const apolloClient = useApollo(pageProps.initialApolloState)

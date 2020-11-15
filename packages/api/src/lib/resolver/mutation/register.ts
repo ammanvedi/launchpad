@@ -27,6 +27,8 @@ export const registerResolver: MutationResolvers<GQLContext>['register'] =
         }
     });
 
+    console.log(existingUser, context.authState)
+
     if (existingUser) {
         throw new Error('User with ID already exists');
     }
@@ -38,6 +40,8 @@ export const registerResolver: MutationResolvers<GQLContext>['register'] =
             lastName,
             firstName,
         }})
+
+        console.log('nu', newUser)
 
     return {
         email: context.authState.email,
