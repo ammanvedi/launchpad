@@ -1,26 +1,40 @@
 import { useMemo } from 'react'
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
-import { concatPagination } from '@apollo/client/utilities'
+import { concatPagination } from '@apollo/client/utilities';
+import {setContext} from "@apollo/client/link/context";
 import merge from 'deepmerge'
+import {Auth} from 'aws-amplify'
 
 let apolloClient
+
+const authLink = setContext(async (_, { headers }) => {
+    try {
+        const session = await Auth.currentSession();
+        return {
+            headers: {
+                ...headers,
+                'x-access-token': session.getAccessToken().getJwtToken(),
+                'x-id-token': session.getIdToken().getJwtToken(),
+            }
+        }
+    } catch {
+        return {
+            headers: {}
+        }
+    }
+});
+
+const httpLink = new HttpLink({
+    uri: 'http://localhost:4000', // Server URL (must be absolute)
+    credentials: 'same-origin', // Additional fetch() options like `credentials` or `headers`
+})
+
 
 function createApolloClient() {
     return new ApolloClient({
         ssrMode: typeof window === 'undefined',
-        link: new HttpLink({
-            uri: 'https://api.graph.cool/simple/v1/cixmkt2ul01q00122mksg82pn', // Server URL (must be absolute)
-            credentials: 'same-origin', // Additional fetch() options like `credentials` or `headers`
-        }),
-        cache: new InMemoryCache({
-            typePolicies: {
-                Query: {
-                    fields: {
-                        allPosts: concatPagination(),
-                    },
-                },
-            },
-        }),
+        link: authLink.concat(httpLink),
+        cache: new InMemoryCache({}),
     })
 }
 

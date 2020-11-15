@@ -166,7 +166,14 @@ Resources:
           Name: email
           Required: true
           Mutable: true
-        
+
+        -
+          AttributeDataType: "String"
+          Mutable: true
+          Name: role
+          StringAttributeConstraints:
+            MaxLength: 256
+            MinLength: 1
       
       
       

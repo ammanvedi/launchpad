@@ -29,8 +29,18 @@ export const getJWKByKeyId = <ALG = 'RSA'>(jwks: JWKData<ALG>, kid: string): JWK
     return jwks.keys.find(jwk => jwk.kid === kid) || null;
 }
 
-export const jwtIsValid = (jwt: string, jwks: JWKData<'RSA'>): boolean | never => {
+export const decodeIdToken = <TokenResult extends object>(idToken: string): TokenResult | null => {
+    return (decode(idToken, {json: true}) as TokenResult) || null;
+}
+
+export const jwtSignatureIsValid = (jwt: string, jwks: JWKData<'RSA'>): boolean | never => {
     const header = getHeader(jwt);
+
+    /**
+     * TODO - Check issuer
+     * TODO - Check Aud
+     * TODO - check exp
+     */
 
     if(!header || !header.kid) {
         throw new Error('Could not decode header of jwt');
@@ -47,7 +57,7 @@ export const jwtIsValid = (jwt: string, jwks: JWKData<'RSA'>): boolean | never =
     try {
         verify(jwt, pem, {algorithms: ['RS256']});
         return true;
-    } catch {
+    } catch (e) {
         return false;
     }
 }

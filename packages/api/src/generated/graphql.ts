@@ -34,16 +34,15 @@ export type User = {
   lastName?: Maybe<Scalars['String']>;
   profileImage?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
-  role?: Maybe<Role>;
+  role: Role;
   consents?: Maybe<Array<Consent>>;
 };
 
 export type RegisterUserInput = {
-  id: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
-  role?: Maybe<Role>;
+  role: Role;
 };
 
 export type Query = {
@@ -176,7 +175,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   profileImage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   bio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  role?: Resolver<Maybe<ResolversTypes['Role']>, ParentType, ContextType>;
+  role?: Resolver<ResolversTypes['Role'], ParentType, ContextType>;
   consents?: Resolver<Maybe<Array<ResolversTypes['Consent']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

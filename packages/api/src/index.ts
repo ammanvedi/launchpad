@@ -3,11 +3,21 @@ import {ApolloServer} from 'apollo-server'
 import {resolvers} from "./lib/resolver/resolver";
 import dotenv from 'dotenv'
 import {GQLContext} from "./lib/context/context";
-import {CognitoAuthorizer} from "./lib/authorization/cognito-authorizer";
+import {CognitoAuthorizer, CognitoAuthorizerConfig} from "./lib/authorization/cognito-authorizer";
+import {IAuthorizer} from "./lib/authorization/IAuthorizer";
+import {getAuthTokens} from "./lib/authorization/header";
+import {rbacExtension} from "./lib/authorization/rbac";
+import {PrismaClient} from "@prisma/client";
 
 dotenv.config();
 
-const authorizer = new CognitoAuthorizer();
+const authorizer: IAuthorizer<CognitoAuthorizerConfig> = new CognitoAuthorizer(
+    process.env.AMPLIFY_ISSUER || '',
+    process.env.AMPLIFY_AUD || ''
+);
+
+const db = new PrismaClient();
+
 const authorizerInit = authorizer.initialize({
     jwkUrl: process.env.AMPLIFY_JWK_URL || ''
 })
@@ -17,9 +27,20 @@ Promise.all([authorizerInit]).then(() => {
     const server = new ApolloServer({
         typeDefs: schema,
         resolvers: resolvers as any,
-        context: ( {
-            authorizer
-        } as GQLContext)
+        plugins: [
+            rbacExtension
+        ],
+        context: ({req}): GQLContext => {
+
+            const authTokens = getAuthTokens(req);
+            const authState = authorizer.getAuthState(authTokens);
+
+            return {
+                authorizer,
+                authState,
+                db,
+            }
+        }
     })
 
     server.listen().then(({ url }) => {

@@ -1,6 +1,9 @@
-import {IAuthorizer} from "../authorization/IAuthorizer";
+import {AuthState, IAuthorizer} from "../authorization/IAuthorizer";
+import {PrismaClient} from "@prisma/client";
 
 export type GQLContext<AuthorizerConfig = any> = {
-    authorizer: IAuthorizer<AuthorizerConfig>
+    authorizer: IAuthorizer<AuthorizerConfig>,
+    db: PrismaClient,
+    authState: AuthState
 }
 

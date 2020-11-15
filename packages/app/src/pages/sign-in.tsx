@@ -8,6 +8,7 @@ export default function SignUp() {
     const handleButtonClick = async () => {
         try {
             const user = await Auth.signIn(username, password);
+            console.log(user)
         } catch (error) {
             console.log('error signing in', error);
         }

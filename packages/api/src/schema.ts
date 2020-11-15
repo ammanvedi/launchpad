@@ -22,16 +22,15 @@ export const schema = gql`
         lastName: String
         profileImage: String
         bio: String
-        role: Role
+        role: Role!
         consents: [Consent!]
     }
     
     input RegisterUserInput {
-        id: String!
         firstName: String
         lastName: String
         bio: String
-        role: Role
+        role: Role!
     }
     
     type Query {
