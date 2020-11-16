@@ -22,8 +22,6 @@ export const SignUpMutation = gql`
     ${GlobalUserFragment} 
     
     mutation signUp($input: RegisterUserInput) {
-        register(user: $input) {
-            ...GlobalUserFragment
-        }
+        register(user: $input)
     }
 `

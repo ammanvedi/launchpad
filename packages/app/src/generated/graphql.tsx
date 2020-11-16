@@ -39,6 +39,8 @@ export type User = {
 };
 
 export type RegisterUserInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
@@ -52,7 +54,7 @@ export type Query = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  register?: Maybe<User>;
+  register?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -76,10 +78,7 @@ export type SignUpMutationVariables = Exact<{
 
 export type SignUpMutation = (
   { __typename?: 'Mutation' }
-  & { register?: Maybe<(
-    { __typename?: 'User' }
-    & GlobalUserFragmentFragment
-  )> }
+  & Pick<Mutation, 'register'>
 );
 
 export const GlobalUserFragmentFragmentDoc = gql`
@@ -101,11 +100,9 @@ export const GlobalUserFragmentFragmentDoc = gql`
     `;
 export const SignUpDocument = gql`
     mutation signUp($input: RegisterUserInput) {
-  register(user: $input) {
-    ...GlobalUserFragment
-  }
+  register(user: $input)
 }
-    ${GlobalUserFragmentFragmentDoc}`;
+    `;
 export type SignUpMutationFn = Apollo.MutationFunction<SignUpMutation, SignUpMutationVariables>;
 
 /**

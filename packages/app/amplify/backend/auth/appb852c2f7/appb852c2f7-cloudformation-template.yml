@@ -174,9 +174,14 @@ Resources:
           StringAttributeConstraints:
             MaxLength: 256
             MinLength: 1
-      
-      
-      
+
+        - AttributeDataType: "String"
+          Mutable: true
+          Name: internalId
+          StringAttributeConstraints:
+            MaxLength: 256
+            MinLength: 1
+
       AutoVerifiedAttributes: !Ref autoVerifiedAttributes
       
       

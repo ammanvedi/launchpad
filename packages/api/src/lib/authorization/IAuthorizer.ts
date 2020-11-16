@@ -8,7 +8,6 @@ export type AuthState = {
 
 export type AuthTokens = {
     idToken: string | null,
-    accessToken: string | null
 }
 
 export interface IAuthorizer<Config extends Object> {

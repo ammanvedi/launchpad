@@ -13,7 +13,6 @@ const authLink = setContext(async (_, { headers }) => {
         return {
             headers: {
                 ...headers,
-                'x-access-token': session.getAccessToken().getJwtToken(),
                 'x-id-token': session.getIdToken().getJwtToken(),
             }
         }

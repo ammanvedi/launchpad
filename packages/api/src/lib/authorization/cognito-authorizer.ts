@@ -20,6 +20,7 @@ export type CognitoIdToken = {
     'cognito:username': string,
     exp: number,
     'custom:role': Role,
+    'custom:internalId': string,
     iat: number,
     email: string,
 }
@@ -130,7 +131,7 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
 
     public getAuthState(tokens: AuthTokens): AuthState {
 
-        if (!tokens.accessToken || !tokens.idToken) {
+        if (!tokens.idToken) {
             this.log.warn('Rejected incomplete token set')
             return CognitoAuthorizer.nullAuthState;
         }
@@ -150,7 +151,7 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
         }
 
         return {
-            id: decodedIdToken['cognito:username'],
+            id: decodedIdToken['custom:internalId'],
             role: decodedIdToken['custom:role'],
             email: decodedIdToken['email'],
         }

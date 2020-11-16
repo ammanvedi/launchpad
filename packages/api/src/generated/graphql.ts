@@ -39,6 +39,8 @@ export type User = {
 };
 
 export type RegisterUserInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
@@ -52,7 +54,7 @@ export type Query = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  register?: Maybe<User>;
+  register?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -185,7 +187,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  register?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationRegisterArgs, never>>;
+  register?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationRegisterArgs, never>>;
 };
 
 export type Resolvers<ContextType = any> = {

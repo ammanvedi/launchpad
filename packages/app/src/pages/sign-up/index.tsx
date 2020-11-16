@@ -11,27 +11,15 @@ export default function SignUp() {
     const handleButtonClick = async () => {
         try {
             /**
-             * First we sign up the minimum amount of information
-             * with the external identity provider which is where
-             * we will store all authorization and authentication
-             * data
-             */
-            const { user: cognitoUser } = await Auth.signUp({
-                username,
-                password,
-                attributes: {
-                    'custom:role': 'USER'
-                }
-            });
-            console.log(cognitoUser);
-            /**
              * Then we register the user in our own database where we store
              * profile information, linked via the ID which is given by the
              * external identity provider
              */
-            const { data: {register: {id}} } = await signUpInternalUser({
+            const { data: {register} } = await signUpInternalUser({
                 variables: {
                     input: {
+                        email: username,
+                        password,
                         bio: 'default bio',
                         firstName: 'john',
                         lastName: 'appleseed',
