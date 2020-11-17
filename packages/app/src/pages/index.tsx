@@ -1,5 +1,17 @@
 import Head from 'next/head'
-import styles from '../../styles/Home.module.css'
+import styles from '../../styles/Home.module.css';
+import {withSSRContext} from "aws-amplify";
+
+
+export async function getServerSideProps(context) {
+  const { Auth } = withSSRContext(context)
+  const u = await Auth.currentAuthenticatedUser();
+  console.log('cau', u)
+  return {
+    props: {
+    }
+  }
+}
 
 export default function Home() {
   return (

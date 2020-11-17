@@ -6,11 +6,14 @@ import {GQLContext} from "./lib/context/context";
 import {CognitoAuthorizer, CognitoAuthorizerConfig} from "./lib/authorization/cognito-authorizer";
 import {IAuthorizer} from "./lib/authorization/IAuthorizer";
 import {getAuthTokens} from "./lib/authorization/header";
-import {rbacExtension} from "./lib/authorization/rbac";
+import {applyMiddleware} from "graphql-middleware";
+import { makeExecutableSchema } from 'graphql-tools';
+
 import {PrismaClient} from "@prisma/client";
 // @ts-ignore
 import awsConfig from '../../app/src/aws-exports';
 import Amplify, { Auth } from 'aws-amplify';
+import {permissions} from "./lib/authorization/rbac";
 
 dotenv.config();
 
@@ -28,16 +31,22 @@ Amplify.configure({
 
 const authorizerInit = authorizer.initialize({
     jwkUrl: process.env.AMPLIFY_JWK_URL || ''
-})
+});
+
+const executableSchema = makeExecutableSchema({
+    typeDefs: schema,
+    resolvers: resolvers as any
+});
+
+const schemaWithPermissions = applyMiddleware(
+    executableSchema,
+    permissions
+)
 
 Promise.all([authorizerInit]).then(() => {
 
     const server = new ApolloServer({
-        typeDefs: schema,
-        resolvers: resolvers as any,
-        plugins: [
-            rbacExtension
-        ],
+        schema: schemaWithPermissions,
         context: ({req}): GQLContext => {
 
             const authTokens = getAuthTokens(req);
