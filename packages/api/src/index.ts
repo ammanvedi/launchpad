@@ -57,7 +57,11 @@ console.log(`apply middleware: ${am1 - am0}`)
 // @ts-ignore
 export const context = ({req}): GQLContext => {
     const authTokens = getAuthTokens(req);
+
+    const gas0 = performance.now();
     const authState = authorizer.getAuthState(authTokens);
+    const gas1 = performance.now();
+    console.log(`get auth state: ${gas1 - gas0}`)
 
     return {
         authorizer,
