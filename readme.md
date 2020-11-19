@@ -8,4 +8,4 @@ lerna bootstrap
 lerna run amplify:push
 lerna run dev
 
-lerna bootstrap --force-local && lerna link --force-local && lerna run prisma:generate &&  lerna run export-url && lerna run build --scope app
+lerna bootstrap --force-local && lerna link --force-local && lerna run prisma:generate && lerna run build --scope app
