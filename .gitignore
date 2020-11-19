@@ -4,6 +4,7 @@ packages/api/out
 packages/app/.next
 packages/api/prisma/.env
 .env*
+!.env.production
 
 # dependencies
 packages/app/.pnp
