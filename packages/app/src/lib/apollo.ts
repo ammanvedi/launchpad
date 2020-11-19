@@ -23,8 +23,6 @@ const authLink = setContext(async (_, { headers }) => {
     }
 });
 
-console.log(process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT)
-
 const httpLink = new HttpLink({
     uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT, // Server URL (must be absolute)
     credentials: 'same-origin', // Additional fetch() options like `credentials` or `headers`
