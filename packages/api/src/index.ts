@@ -24,7 +24,7 @@ const authorizer: IAuthorizer<CognitoAuthorizerConfig> = new CognitoAuthorizer(
 const db = new PrismaClient();
 
 Amplify.configure({
-    ...JSON.parse(process.env.AMPLIFY_CONFIG || ''),
+    ...JSON.parse(process.env.NEXT_PUBLIC_AMPLIFY_CONFIG || ''),
     ssr: true
 });
 
