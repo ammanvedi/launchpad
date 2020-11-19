@@ -3,7 +3,7 @@ packages/app/node_modules
 packages/api/out
 packages/app/.next
 packages/api/prisma/.env
-.env
+.env*
 
 # dependencies
 packages/app/.pnp

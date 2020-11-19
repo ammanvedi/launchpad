@@ -6,7 +6,7 @@ import {createLogger, createLoggerSet} from "../logging/logger";
 import {Role} from "../../generated/graphql";
 
 export type CognitoAuthorizerConfig = {
-    jwkUrl: string
+    jwk: JWKData
 }
 
 export type CognitoIdToken = {
@@ -28,7 +28,6 @@ export type CognitoIdToken = {
 
 export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
 
-    config: CognitoAuthorizerConfig | null = null;
     jwkData: JWKData<'RSA'>| null = null;
 
     private log = createLoggerSet('CognitoAuthorizer');
@@ -39,12 +38,7 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
         email: '',
     }
 
-    constructor(private iss: string, private aud: string) {
-    }
-
-    public async initialize(config: CognitoAuthorizerConfig): Promise<void> {
-        this.config = config;
-        this.jwkData = await this.getJWKData();
+    constructor(private iss: string, private aud: string, private readonly config: CognitoAuthorizerConfig) {
     }
 
     private isIssuerValid(iss: string): boolean {
@@ -107,25 +101,6 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
             this.log.err(`Something went wrong validating token, ${e}`);
             return false;
         }
-
-    }
-
-    private async getJWKData(): Promise<JWKData<'RSA'> | null> {
-        if (!this.config) {
-            this.log.err('Cant fetch JWK data as there is no config, has initialize() been called?');
-            return null;
-        }
-
-        if (!this.config?.jwkUrl) {
-            this.log.err('Cant fetch JWK data as there is no jwkUrl in config');
-            return null;
-        }
-
-        const result = await fetch(this.config?.jwkUrl).then(res => res.json());
-
-        this.log.info('Fetched Cognito JWK\'s');
-
-        return result as JWKData<'RSA'>;
 
     }
 

@@ -1,5 +1,4 @@
 import {schema} from './schema';
-import {ApolloServer} from 'apollo-server'
 import {resolvers} from "./lib/resolver/resolver";
 import dotenv from 'dotenv'
 import {GQLContext} from "./lib/context/context";
@@ -8,18 +7,21 @@ import {IAuthorizer} from "./lib/authorization/IAuthorizer";
 import {getAuthTokens} from "./lib/authorization/header";
 import {applyMiddleware} from "graphql-middleware";
 import { makeExecutableSchema } from 'graphql-tools';
-
 import {PrismaClient} from "@prisma/client";
 // @ts-ignore
 import awsConfig from '../../app/src/aws-exports';
 import Amplify, { Auth } from 'aws-amplify';
 import {permissions} from "./lib/authorization/rbac";
+import {ApolloServer} from "apollo-server-micro";
 
 dotenv.config();
 
+console.log(process.env.AMPLIFY_ISSUER, process.env.AMPLIFY_ISSUER, process.env.AMPLIFY_JWK_RAW)
+
 const authorizer: IAuthorizer<CognitoAuthorizerConfig> = new CognitoAuthorizer(
     process.env.AMPLIFY_ISSUER || '',
-    process.env.AMPLIFY_AUD || ''
+    process.env.AMPLIFY_AUD || '',
+    JSON.parse(process.env.AMPLIFY_JWK_RAW || '')
 );
 
 const db = new PrismaClient();
@@ -29,39 +31,45 @@ Amplify.configure({
     ssr: true
 });
 
-const authorizerInit = authorizer.initialize({
-    jwkUrl: process.env.AMPLIFY_JWK_URL || ''
-});
-
 const executableSchema = makeExecutableSchema({
     typeDefs: schema,
     resolvers: resolvers as any
 });
 
-const schemaWithPermissions = applyMiddleware(
+export const schemaWithPermissions = applyMiddleware(
     executableSchema,
     permissions
 )
 
-Promise.all([authorizerInit]).then(() => {
+// @ts-ignore
+export const context = ({req}): GQLContext => {
+    const authTokens = getAuthTokens(req);
+    const authState = authorizer.getAuthState(authTokens);
 
-    const server = new ApolloServer({
-        schema: schemaWithPermissions,
-        context: ({req}): GQLContext => {
+    return {
+        authorizer,
+        authState,
+        db,
+        amplifyAuth: Auth
+    }
+}
 
-            const authTokens = getAuthTokens(req);
-            const authState = authorizer.getAuthState(authTokens);
+const apolloServer = new ApolloServer({ schema: schemaWithPermissions, context });
 
-            return {
-                authorizer,
-                authState,
-                db,
-                amplifyAuth: Auth
-            }
-        }
-    })
+export const serverlessHandler = apolloServer.createHandler({ path: '/api/graphql' })
 
-    server.listen().then(({ url }) => {
-        console.log(`Server running @ ${url}`);
-    });
-})
+/**
+ * if you'd like to use this as a standalone server,
+ * you can uncomment the following
+ */
+
+// import {ApolloServer} from 'apollo-server'
+//
+// const server = new ApolloServer({
+//     schema: schemaWithPermissions,
+//     context
+// })
+//
+// server.listen().then(({ url }) => {
+//     console.log(`Server running @ ${url}`);
+// });
