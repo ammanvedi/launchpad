@@ -6,7 +6,7 @@ import {createLogger, createLoggerSet} from "../logging/logger";
 import {Role} from "../../generated/graphql";
 
 export type CognitoAuthorizerConfig = {
-    jwk: JWKData
+    jwk: JWKData<'RSA'>
 }
 
 export type CognitoIdToken = {
