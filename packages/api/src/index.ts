@@ -9,14 +9,11 @@ import {applyMiddleware} from "graphql-middleware";
 import { makeExecutableSchema } from 'graphql-tools';
 import {PrismaClient} from "@prisma/client";
 // @ts-ignore
-import awsConfig from '../../app/src/aws-exports';
 import Amplify, { Auth } from 'aws-amplify';
 import {permissions} from "./lib/authorization/rbac";
 import {ApolloServer} from "apollo-server-micro";
 
 dotenv.config();
-
-console.log(process.env.AMPLIFY_ISSUER, process.env.AMPLIFY_ISSUER, process.env.AMPLIFY_JWK_RAW)
 
 const authorizer: IAuthorizer<CognitoAuthorizerConfig> = new CognitoAuthorizer(
     process.env.AMPLIFY_ISSUER || '',
@@ -27,7 +24,7 @@ const authorizer: IAuthorizer<CognitoAuthorizerConfig> = new CognitoAuthorizer(
 const db = new PrismaClient();
 
 Amplify.configure({
-    ...awsConfig,
+    ...JSON.parse(process.env.AMPLIFY_CONFIG || ''),
     ssr: true
 });
 

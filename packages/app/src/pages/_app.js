@@ -6,7 +6,7 @@ import { Provider } from 'react-redux'
 import { useStore } from '../lib/redux'
 import { useApollo } from '../lib/apollo'
 
-Amplify.configure({...awsconfig, ssr: true});
+Amplify.configure({...JSON.parse(process.env.AMPLIFY_CONFIG), ssr: true});
 
 function MyApp({ Component, pageProps }) {
   const store = useStore(pageProps.initialReduxState)
