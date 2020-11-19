@@ -6,7 +6,5 @@ module.exports = {
         AMPLIFY_ISSUER: process.env.AMPLIFY_ISSUER,
         AMPLIFY_AUD: process.env.AMPLIFY_AUD,
         AMPLIFY_CONFIG: process.env.AMPLIFY_CONFIG,
-
-    },
-    target: 'serverless',
+    }
 };
