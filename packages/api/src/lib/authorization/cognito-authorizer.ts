@@ -28,8 +28,6 @@ export type CognitoIdToken = {
 
 export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
 
-    jwkData: JWKData<'RSA'>| null = null;
-
     private log = createLoggerSet('CognitoAuthorizer');
 
     private static readonly nullAuthState: AuthState = {
@@ -55,12 +53,12 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
     }
 
     public validateToken(accessToken: string): boolean {
-        if (!this.jwkData) {
+        if (!this.config.jwk) {
             this.log.warn('Attempted token validation when no JWK data was available');
             return false;
         }
         try {
-            const signatureValid = jwtSignatureIsValid(accessToken, this.jwkData);
+            const signatureValid = jwtSignatureIsValid(accessToken, this.config.jwk);
 
             if (!signatureValid) {
                 this.log.err('The jwt signature could not be verified');
