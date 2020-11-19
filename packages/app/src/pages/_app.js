@@ -1,6 +1,5 @@
 import '../../styles/globals.css';
 import Amplify, { Auth } from 'aws-amplify';
-import awsconfig from '../aws-exports';
 import { ApolloProvider } from '@apollo/client'
 import { Provider } from 'react-redux'
 import { useStore } from '../lib/redux'
