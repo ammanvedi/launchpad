@@ -1,8 +1,6 @@
 import {AuthState, AuthTokens, IAuthorizer} from "./IAuthorizer";
-import jwkToPem from 'jwk-to-pem'
-import fetch from 'node-fetch';
 import {decodeIdToken, JWKData, jwtSignatureIsValid} from "./jwt";
-import {createLogger, createLoggerSet} from "../logging/logger";
+import {createLoggerSet} from "../logging/logger";
 import {Role} from "../../generated/graphql";
 
 export type CognitoAuthorizerConfig = {
