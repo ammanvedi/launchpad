@@ -6,6 +6,8 @@ packages/api/.env
 .env*
 !.env.production
 
+node_modules
+
 # dependencies
 packages/app/.pnp
 .pnp.js
