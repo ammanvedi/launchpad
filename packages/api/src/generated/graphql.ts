@@ -38,6 +38,11 @@ export type User = {
   consents?: Maybe<Array<Consent>>;
 };
 
+export type MeResponse = {
+  __typename?: 'MeResponse';
+  me?: Maybe<User>;
+};
+
 export type RegisterUserInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -49,7 +54,7 @@ export type RegisterUserInput = {
 
 export type Query = {
   __typename?: 'Query';
-  me?: Maybe<User>;
+  me: MeResponse;
 };
 
 export type Mutation = {
@@ -145,6 +150,7 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']>;
   String: ResolverTypeWrapper<Scalars['String']>;
   User: ResolverTypeWrapper<User>;
+  MeResponse: ResolverTypeWrapper<MeResponse>;
   RegisterUserInput: RegisterUserInput;
   Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -157,6 +163,7 @@ export type ResolversParentTypes = {
   ID: Scalars['ID'];
   String: Scalars['String'];
   User: User;
+  MeResponse: MeResponse;
   RegisterUserInput: RegisterUserInput;
   Query: {};
   Mutation: {};
@@ -182,8 +189,13 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+export type MeResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['MeResponse'] = ResolversParentTypes['MeResponse']> = {
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  me?: Resolver<ResolversTypes['MeResponse'], ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
@@ -193,6 +205,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 export type Resolvers<ContextType = any> = {
   Consent?: ConsentResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  MeResponse?: MeResponseResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
 };

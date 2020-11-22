@@ -26,6 +26,10 @@ export const schema = gql`
         consents: [Consent!]
     }
     
+    type MeResponse {
+        me: User
+    }
+    
     input RegisterUserInput {
         email: String!
         password: String!
@@ -36,7 +40,7 @@ export const schema = gql`
     }
     
     type Query {
-        me: User
+        me: MeResponse!
     }
     
     type Mutation {

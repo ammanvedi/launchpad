@@ -1,21 +1,29 @@
 import Head from 'next/head'
 import styles from '../../styles/Home.module.css';
 import {withSSRContext} from "aws-amplify";
+import {ssrMe} from "../generated/page";
+import Link from 'next/link'
 
 
-export async function getServerSideProps(context) {
-  const { Auth } = withSSRContext(context)
-  const u = await Auth.currentAuthenticatedUser();
-  console.log('cau', u)
-  return {
-    props: {
-    }
-  }
-}
+// export async function getServerSideProps(context) {
+//   // const { Auth } = withSSRContext(context);
+//   // try {
+//   //   const u = await Auth.currentAuthenticatedUser();
+//   // } catch {
+//   //   console.log('fetch user failed')
+//   // }
+//
+//   return await ssrMe.getServerPage({
+//     errorPolicy: 'all',
+//   }, context)
+// }
 
 export default function Home() {
+  console.log(props)
   return (
     <div className={styles.container}>
+      {JSON.stringify(data)}
+      <Link href='sign-in'>sign in </Link>
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
@@ -74,4 +82,11 @@ export default function Home() {
       </footer>
     </div>
   )
+}
+
+
+Home.getInitialProps = async ({req}) => {
+  return await ssrMe.getServerPage({
+    errorPolicy: 'all',
+  }, req)
 }

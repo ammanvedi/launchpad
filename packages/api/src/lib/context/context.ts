@@ -1,6 +1,6 @@
 import {AuthState, IAuthorizer} from "../authorization/IAuthorizer";
 import {PrismaClient} from "@prisma/client";
-import { Auth } from 'aws-amplify';
+import {Auth} from 'aws-amplify';
 
 export type GQLContext<AuthorizerConfig = any> = {
     authorizer: IAuthorizer<AuthorizerConfig>,

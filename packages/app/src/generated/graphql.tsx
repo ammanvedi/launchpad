@@ -38,6 +38,11 @@ export type User = {
   consents?: Maybe<Array<Consent>>;
 };
 
+export type MeResponse = {
+  __typename?: 'MeResponse';
+  me?: Maybe<User>;
+};
+
 export type RegisterUserInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -49,7 +54,7 @@ export type RegisterUserInput = {
 
 export type Query = {
   __typename?: 'Query';
-  me?: Maybe<User>;
+  me: MeResponse;
 };
 
 export type Mutation = {
@@ -61,6 +66,20 @@ export type Mutation = {
 export type MutationRegisterArgs = {
   user?: Maybe<RegisterUserInput>;
 };
+
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = (
+  { __typename?: 'Query' }
+  & { me: (
+    { __typename?: 'MeResponse' }
+    & { me?: Maybe<(
+      { __typename?: 'User' }
+      & GlobalUserFragmentFragment
+    )> }
+  ) }
+);
 
 export type GlobalUserFragmentFragment = (
   { __typename?: 'User' }
@@ -98,6 +117,40 @@ export const GlobalUserFragmentFragmentDoc = gql`
   }
 }
     `;
+export const MeDocument = gql`
+    query me {
+  me {
+    me {
+      ...GlobalUserFragment
+    }
+  }
+}
+    ${GlobalUserFragmentFragmentDoc}`;
+
+/**
+ * __useMeQuery__
+ *
+ * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
+      }
+export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
+        }
+export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
+export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
+export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const SignUpDocument = gql`
     mutation signUp($input: RegisterUserInput) {
   register(user: $input)
@@ -128,14 +181,3 @@ export function useSignUpMutation(baseOptions?: Apollo.MutationHookOptions<SignU
 export type SignUpMutationHookResult = ReturnType<typeof useSignUpMutation>;
 export type SignUpMutationResult = Apollo.MutationResult<SignUpMutation>;
 export type SignUpMutationOptions = Apollo.BaseMutationOptions<SignUpMutation, SignUpMutationVariables>;
-
-      export interface PossibleTypesResultData {
-        possibleTypes: {
-          [key: string]: string[]
-        }
-      }
-      const result: PossibleTypesResultData = {
-  "possibleTypes": {}
-};
-      export default result;
-    

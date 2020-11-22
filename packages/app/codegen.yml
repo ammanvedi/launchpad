@@ -7,4 +7,27 @@ generates:
       - "typescript"
       - "typescript-operations"
       - "typescript-react-apollo"
-      - "fragment-matcher"
+    config:
+      reactApolloVersion: 3
+      withHooks: true
+      withHOC: false
+      withComponent: false
+      exportFragmentSpreadSubTypes: true
+      documentMode: graphQLTag
+  src/generated/page.tsx:
+    config:
+      documentMode: external
+      importDocumentNodeExternallyFrom: ./graphql
+      reactApolloVersion: 3
+      withHooks: true
+      # withHOC: false
+      # excludePatterns: 'getComments'
+      # excludePatternsOptions: 'i'
+      # customDataIdFromObjectName: 'test'
+      # customDataIdFromObjectImport: 'abc'
+      apolloClientInstanceImport: '../lib/apollo'
+    preset: import-types
+    presetConfig:
+      typesPath: ./graphql
+    plugins:
+      - "graphql-codegen-apollo-next-ssr"

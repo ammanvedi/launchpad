@@ -4,7 +4,9 @@ import {createLoggerSet} from "../logging/logger";
 import {Role} from "../../generated/graphql";
 
 export type CognitoAuthorizerConfig = {
-    jwk: JWKData<'RSA'>
+    jwk: JWKData<'RSA'>,
+    iss: string,
+    aud: string,
 }
 
 export type CognitoIdToken = {
@@ -34,15 +36,15 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
         email: '',
     }
 
-    constructor(private iss: string, private aud: string, private readonly config: CognitoAuthorizerConfig) {
+    constructor(private readonly config: CognitoAuthorizerConfig) {
     }
 
     private isIssuerValid(iss: string): boolean {
-        return iss === this.iss;
+        return iss === this.config.iss;
     }
 
     private isAudValid(aud: string): boolean {
-        return aud === this.aud;
+        return aud === this.config.aud;
     }
 
     private isExpiryValid(exp: number): boolean {
