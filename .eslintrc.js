@@ -5,4 +5,4 @@ require('@babel/register')({
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
 });
 
-module.exports = require('./.eslintrc.ts').default;
+module.exports = require('.eslintrc.js').default;

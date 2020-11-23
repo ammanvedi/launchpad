@@ -1,4 +1,4 @@
-import paths from './config/paths';
+import paths from './packages/web/config/paths';
 
 export default {
     extends: [

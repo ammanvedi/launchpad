@@ -1,6 +1,4 @@
 node_modules
-logs/*.log
-/.vagrant
 .webpack-cache
 public
 npm-debug.log
