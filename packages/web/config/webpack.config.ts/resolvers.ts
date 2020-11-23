@@ -5,7 +5,7 @@ const getDependencyPath = (dependencyName: string) =>
     path.join(__dirname, '..', '..', 'node_modules', dependencyName);
 
 export default {
-    extensions: ['.js', '.json', '.jsx', '.ts', '.tsx', '.css'],
+    extensions: ['.mjs', '.js', '.json', '.jsx', '.ts', '.tsx', '.css'],
     modules: paths.resolveModules,
     alias: {
         /* When working with linked modules which have their own node_modules we must make sure

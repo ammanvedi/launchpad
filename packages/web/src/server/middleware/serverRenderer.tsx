@@ -12,6 +12,8 @@ import App from '../../shared/App';
 import Html from '../components/HTML';
 import Amplify from '@aws-amplify/core';
 import {withSSRContext} from "aws-amplify";
+import {createApolloClient} from "../../shared/graphql/apollo";
+import {ApolloProvider} from "@apollo/client";
 
 Amplify.configure({...JSON.parse(process.env.NEXT_PUBLIC_AMPLIFY_CONFIG || ''), ssr: true});
 
@@ -28,24 +30,21 @@ const serverRenderer: any = () => async (
 
     const {Auth} = withSSRContext({req});
 
-    try {
-        const u = await Auth.currentAuthenticatedUser();
-        console.log(u)
-    } catch {
-        console.log('no user in request')
-    }
+    const apolloClient = createApolloClient(Auth, true);
 
     const content = renderToString(
         <Loadable.Capture report={(moduleName: string) => modules.add(moduleName)}>
-            <Provider store={res.locals.store}>
-                <Router location={req.url} context={routerContext}>
-                    <IntlProvider>
-                        <HelmetProvider context={helmetContext}>
-                            <App/>
-                        </HelmetProvider>
-                    </IntlProvider>
-                </Router>
-            </Provider>
+            <ApolloProvider client={apolloClient}>
+                <Provider store={res.locals.store}>
+                    <Router location={req.url} context={routerContext}>
+                        <IntlProvider>
+                            <HelmetProvider context={helmetContext}>
+                                <App/>
+                            </HelmetProvider>
+                        </IntlProvider>
+                    </Router>
+                </Provider>
+            </ApolloProvider>
         </Loadable.Capture>
     );
 

@@ -47,7 +47,10 @@ const start = async () => {
     );
 
     const watchOptions = {
-        ignored: /node_modules/,
+        ignored: [
+            /node_modules([\\]+|\/)+(?!api)/,
+            /\api([\\]+|\/)node_modules/
+        ],
         stats: clientConfig.stats,
     };
 

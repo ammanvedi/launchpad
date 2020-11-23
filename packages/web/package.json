@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "web",
   "version": "6.0.0",
   "license": "MIT",
   "engines": {
@@ -26,8 +26,7 @@
     "test": "cross-env TS_NODE_PROJECT=tsconfig.tooling.json ts-node scripts/test --env=jsdom",
     "test:update": "yarn-or-npm test --updateSnapshot",
     "transpile": "yarn-or-npm babel -d build/transpiled ./src --extensions .es6,.js,.es,.jsx,.mjs,.ts,.tsx --ignore **/*.d.ts",
-    "tsc": "tsc --noEmit",
-    "postinstall": "lerna bootstrap --force-local"
+    "tsc": "tsc --noEmit"
   },
   "dependencies": {
     "api": "*",
@@ -64,6 +63,7 @@
     "serve-static": "^1.13.2"
   },
   "devDependencies": {
+    "@apollo/client": "^3.2.7",
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
     "@babel/plugin-proposal-class-properties": "^7.8.3",

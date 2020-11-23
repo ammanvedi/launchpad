@@ -11,6 +11,9 @@ import App from '../shared/App';
 import IntlProvider from '../shared/i18n/IntlProvider';
 import createHistory from '../shared/store/history';
 import Amplify from '@aws-amplify/core';
+import {Auth} from '@aws-amplify/auth';
+import {createApolloClient} from "../shared/graphql/apollo";
+import {ApolloProvider} from "@apollo/client";
 
 const history = createHistory();
 
@@ -26,16 +29,22 @@ const store =
 
 window.onload = () => {
     Loadable.preloadReady().then(() => {
+
+        const apolloClient = createApolloClient(Auth, false);
+
         hydrate(
-            <Provider store={store}>
-                <Router history={history}>
-                    <IntlProvider>
-                        <HelmetProvider>
-                            <App />
-                        </HelmetProvider>
-                    </IntlProvider>
-                </Router>
-            </Provider>,
+            <ApolloProvider client={apolloClient}>
+                <Provider store={store}>
+                    <Router history={history}>
+                        <IntlProvider>
+                            <HelmetProvider>
+                                <App />
+                            </HelmetProvider>
+                        </IntlProvider>
+                    </Router>
+                </Provider>
+            </ApolloProvider>
+            ,
             document.getElementById('app')
         );
     });

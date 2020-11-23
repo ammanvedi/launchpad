@@ -15,6 +15,8 @@ import {ApolloServer} from 'apollo-server-express'
 
 dotenv.config();
 
+
+
 const authorizer: IAuthorizer<CognitoAuthorizerConfig> = new CognitoAuthorizer( {
     iss: process.env.AMPLIFY_ISSUER || '',
     aud: process.env.AMPLIFY_AUD || '',
