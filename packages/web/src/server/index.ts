@@ -6,7 +6,6 @@ import chalk from 'chalk';
 import manifestHelpers from 'express-manifest-helpers';
 import bodyParser from 'body-parser';
 import { preloadAll } from 'react-loadable';
-import { server as gqlServer } from 'api';
 import paths from '../../config/paths';
 // import { configureStore } from '../shared/store';
 import errorHandler from './middleware/errorHandler';
@@ -41,8 +40,6 @@ app.use(
     })
 );
 
-gqlServer.applyMiddleware({ app });
-
 app.use(serverRenderer());
 
 app.use(errorHandler);
@@ -52,12 +49,7 @@ preloadAll()
         app.listen(process.env.PORT || 8500, () => {
             console.log(
                 `[${new Date().toISOString()}]`,
-                chalk.blue(`App is running: http://localhost:${process.env.PORT || 8500}`),
-                chalk.blue(
-                    `GQK is running: http://localhost:${process.env.PORT || 8500}${
-                        gqlServer.graphqlPath
-                    }`
-                )
+                chalk.blue(`App is running: http://localhost:${process.env.PORT || 8500}`)
             );
         });
     })

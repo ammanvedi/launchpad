@@ -11,7 +11,7 @@ import {PrismaClient} from "@prisma/client";
 import Amplify from '@aws-amplify/core';
 import Auth from '@aws-amplify/auth';
 import {permissions} from "./lib/authorization/rbac";
-import {ApolloServer} from 'apollo-server-express'
+import {ApolloServer} from 'apollo-server'
 
 dotenv.config();
 
@@ -63,8 +63,6 @@ export const server = new ApolloServer({
     context
 });
 
-// to run as a standalone server you can uncomment the below
-
-// server.listen().then(({ url }) => {
-//     console.log(`Server running @ ${url}`);
-// });
+server.listen().then(({ url }) => {
+    console.log(`Server running @ ${url}`);
+});

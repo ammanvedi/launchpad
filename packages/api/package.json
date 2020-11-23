@@ -5,8 +5,7 @@
   "main": "out/index.js",
   "scripts": {
     "build": "mkdir -p ./out && ./node_modules/.bin/tsc",
-    "dev:standalone-server": "./node_modules/.bin/nodemon --config nodemon.json",
-    "dev": "./node_modules/.bin/tsc --watch",
+    "dev": "./node_modules/.bin/nodemon --config nodemon.json",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prisma:generate": "./node_modules/.bin/prisma generate",
     "prisma:save-migration": "./node_modules/.bin/prisma migrate save --experimental --verbose",
