@@ -11,11 +11,6 @@ import Page2 from './pages/Page-2';
 import routes from './routes';
 import css from './App.module.css';
 
-// Does not yet work with server side rendering:
-// const Home = React.lazy(() => import('./pages/Home'));
-// const Page1 = React.lazy(() => import('./pages/Page-1'));
-// const Page2 = React.lazy(() => import('./pages/Page-2'));
-
 const App: React.FC<any> = () => {
     const { t } = useTranslation();
     return (

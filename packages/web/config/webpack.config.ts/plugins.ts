@@ -7,6 +7,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import { TypedCssModulesPlugin } from 'typed-css-modules-webpack-plugin';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+const Dotenv = require('dotenv-webpack');
 import ReactLoadableSSRAddon from 'react-loadable-ssr-addon';
 import paths from '../paths';
 import { clientOnly } from '../../scripts/utils';
@@ -27,6 +28,7 @@ export const shared = [
         chunkFilename: isDev() ? '[id].css' : '[id].[contenthash].css',
     }),
     new CaseSensitivePathsPlugin(),
+    new Dotenv()
 ];
 
 export const client = [

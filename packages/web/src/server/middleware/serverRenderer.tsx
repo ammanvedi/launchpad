@@ -10,17 +10,30 @@ import Loadable from 'react-loadable';
 import IntlProvider from '../../shared/i18n/IntlProvider';
 import App from '../../shared/App';
 import Html from '../components/HTML';
+import Amplify from '@aws-amplify/core';
+import {withSSRContext} from "aws-amplify";
+
+Amplify.configure({...JSON.parse(process.env.NEXT_PUBLIC_AMPLIFY_CONFIG || ''), ssr: true});
 
 const manifest = require('../../../build/react-loadable-ssr-addon.json');
 
 const helmetContext = {};
 const routerContext = {};
 
-const serverRenderer: any = () => (
+const serverRenderer: any = () => async (
     req: express.Request & { store: Store },
     res: express.Response
 ) => {
     const modules = new Set();
+
+    const {Auth} = withSSRContext({req});
+
+    try {
+        const u = await Auth.currentAuthenticatedUser();
+        console.log(u)
+    } catch {
+        console.log('no user in request')
+    }
 
     const content = renderToString(
         <Loadable.Capture report={(moduleName: string) => modules.add(moduleName)}>
@@ -28,7 +41,7 @@ const serverRenderer: any = () => (
                 <Router location={req.url} context={routerContext}>
                     <IntlProvider>
                         <HelmetProvider context={helmetContext}>
-                            <App />
+                            <App/>
                         </HelmetProvider>
                     </IntlProvider>
                 </Router>
@@ -48,24 +61,24 @@ const serverRenderer: any = () => (
 
     return res.send(
         '<!doctype html>' +
-            renderToString(
-                <Html
-                    css={[
-                        res.locals.assetPath('bundle.css'),
-                        res.locals.assetPath('vendor.css'),
-                        ...styles.map((s: any) => `/static/${s.file}`),
-                    ]}
-                    helmetContext={helmetContext}
-                    scripts={[
-                        //res.locals.assetPath('bundle.js'),
-                        //res.locals.assetPath('vendor.js'),
-                        ...scripts.map((s: any) => `/static/${s.file}`),
-                    ]}
-                    state={state}
-                >
-                    {content}
-                </Html>
-            )
+        renderToString(
+            <Html
+                css={[
+                    res.locals.assetPath('bundle.css'),
+                    res.locals.assetPath('vendor.css'),
+                    ...styles.map((s: any) => `/static/${s.file}`),
+                ]}
+                helmetContext={helmetContext}
+                scripts={[
+                    //res.locals.assetPath('bundle.js'),
+                    //res.locals.assetPath('vendor.js'),
+                    ...scripts.map((s: any) => `/static/${s.file}`),
+                ]}
+                state={state}
+            >
+                {content}
+            </Html>
+        )
     );
 };
 

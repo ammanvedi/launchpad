@@ -26,10 +26,12 @@
     "test": "cross-env TS_NODE_PROJECT=tsconfig.tooling.json ts-node scripts/test --env=jsdom",
     "test:update": "yarn-or-npm test --updateSnapshot",
     "transpile": "yarn-or-npm babel -d build/transpiled ./src --extensions .es6,.js,.es,.jsx,.mjs,.ts,.tsx --ignore **/*.d.ts",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "postinstall": "lerna bootstrap --force-local"
   },
   "dependencies": {
     "api": "*",
+    "aws-amplify": "^3.3.9",
     "axios": "^0.19.2",
     "before-build-webpack": "^0.2.9",
     "body-parser": "^1.19.0",
@@ -130,6 +132,7 @@
     "css-loader": "^3.5.3",
     "depcheck": "^0.9.2",
     "dependency-cruiser": "^9.1.0",
+    "dotenv-webpack": "^5.1.0",
     "eslint": "^7.0.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-import-resolver-typescript": "2.0.0",
@@ -167,7 +170,7 @@
     "react-dev-utils": "^10.2.1",
     "react-refresh": "^0.8.2",
     "redux-mock-store": "^1.5.4",
-    "regenerator-runtime": "^0.13.5",
+    "regenerator-runtime": "^0.13.7",
     "stats-webpack-plugin": "^0.7.0",
     "style-loader": "^1.2.1",
     "stylelint": "^13.3.3",
