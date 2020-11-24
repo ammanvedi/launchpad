@@ -26,7 +26,8 @@
     "test": "cross-env TS_NODE_PROJECT=tsconfig.tooling.json ts-node scripts/test --env=jsdom",
     "test:update": "yarn-or-npm test --updateSnapshot",
     "transpile": "yarn-or-npm babel -d build/transpiled ./src --extensions .es6,.js,.es,.jsx,.mjs,.ts,.tsx --ignore **/*.d.ts",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "codegen": "./node_modules/.bin/graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "api": "*",
@@ -42,6 +43,8 @@
     "express": "^4.16.4",
     "express-manifest-helpers": "^0.6.0",
     "glob": "^7.1.6",
+    "graphql": "^15.4.0",
+    "graphql-tag": "^2.11.0",
     "history": "^4.10.1",
     "i18next": "^19.5.5",
     "i18next-xhr-backend": "^3.2.2",
@@ -63,6 +66,12 @@
     "serve-static": "^1.13.2"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^1.19.2",
+    "@graphql-codegen/fragment-matcher": "^2.0.0",
+    "@graphql-codegen/import-types-preset": "^1.18.0",
+    "@graphql-codegen/typescript": "^1.17.11",
+    "@graphql-codegen/typescript-operations": "^1.17.10",
+    "@graphql-codegen/typescript-react-apollo": "^2.1.1",
     "@apollo/client": "^3.2.7",
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",

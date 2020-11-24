@@ -55,9 +55,6 @@ export const context = ({req}): GQLContext => {
     }
 }
 
-// const apolloServer = new ApolloServer({ schema: schemaWithPermissions, context });
-// export const serverlessHandler = apolloServer.createHandler({ path: '/api/graphql' })
-
 export const server = new ApolloServer({
     schema: schemaWithPermissions,
     context
