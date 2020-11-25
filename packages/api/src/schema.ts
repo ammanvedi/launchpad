@@ -1,6 +1,15 @@
 import gql from 'graphql-tag';
 
 export const schema = gql`
+    enum GQLError {
+        COGNITO_CREATION_FAILED
+        INVALID_ARGUMENTS
+        UNAUTHORISED
+        USER_EXISTS
+        INTERNAL_USER_CREATION_FAILED
+        NO_INTERNAL_ID
+    }
+    
     enum Role {
         USER
         DESIGNER
@@ -38,6 +47,13 @@ export const schema = gql`
         bio: String
         role: Role!
     }
+
+    input RegisterUserFromExternalProviderInput {
+        firstName: String
+        lastName: String
+        bio: String
+        role: Role!
+    }
     
     type Query {
         me: MeResponse!
@@ -45,5 +61,6 @@ export const schema = gql`
     
     type Mutation {
         register(user: RegisterUserInput): Boolean
+        registerUserFromExternalProvider(user: RegisterUserFromExternalProviderInput): User
     }
 `;

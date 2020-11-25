@@ -7,10 +7,6 @@ Parameters:
     Type: String
   unauthRoleArn:
     Type: String
-  
-  
-
-    
   identityPoolName:
     Type: String
                 
@@ -203,7 +199,36 @@ Resources:
       SmsConfiguration: 
         SnsCallerArn: !GetAtt SNSRole.Arn
         ExternalId: appb852c2f7_role_external_id
-    
+
+  CognitoUserPoolIdentityProviderFacebook:
+    Type: AWS::Cognito::UserPoolIdentityProvider
+    Properties:
+      ProviderName: Facebook
+      AttributeMapping:
+        email: email
+        id: username
+      ProviderDetails:
+#        client_id: ${env:FACEBOOK_AUTH_CLIENT_ID}
+#        client_secret: ${env:FACEBOOK_AUTH_CLIENT_SECRET}
+        authorize_scopes: public_profile,email
+      ProviderType: Facebook
+      UserPoolId:
+        Ref: UserPool
+
+  CognitoUserPoolIdentityProviderGoogle:
+    Type: AWS::Cognito::UserPoolIdentityProvider
+    Properties:
+      ProviderName: Google
+      AttributeMapping:
+        email: email
+        id: username
+      ProviderDetails:
+#        client_id: ${env:GOOGLE_AUTH_CLIENT_ID}
+#        client_secret: ${env:GOOGLE_AUTH_CLIENT_SECRET}
+        authorize_scopes: profile email
+      ProviderType: Google
+      UserPoolId:
+        Ref: UserPool
   
   UserPoolClientWeb:
   # Created provide application access to user pool
@@ -211,10 +236,26 @@ Resources:
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
       ClientName: appb852c2f7_app_clientWeb
-      
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
       UserPoolId: !Ref UserPool
+      SupportedIdentityProviders:
+        - Google
+        - Facebook
+      CallbackURLs:
+#        - ${env:CF_AUTH_CALLBACK_URLS}
+      LogoutURLs:
+#        - ${env:CF_AUTH_CALLBACK_URLS_SIGN_OUT}
+      AllowedOAuthFlows:
+        - code
+      AllowedOAuthScopes:
+        - email
+        - openid
+        - aws.cognito.signin.user.admin
+        - profile
+        - phone
+      AllowedOAuthFlowsUserPoolClient: true
     DependsOn: UserPool
+
   UserPoolClient:
   # Created provide application access to user pool
   # Depends on UserPool for ID reference

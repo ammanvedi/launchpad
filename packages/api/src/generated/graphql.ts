@@ -11,6 +11,15 @@ export type Scalars = {
   Float: number;
 };
 
+export enum GqlError {
+  CognitoCreationFailed = 'COGNITO_CREATION_FAILED',
+  InvalidArguments = 'INVALID_ARGUMENTS',
+  Unauthorised = 'UNAUTHORISED',
+  UserExists = 'USER_EXISTS',
+  InternalUserCreationFailed = 'INTERNAL_USER_CREATION_FAILED',
+  NoInternalId = 'NO_INTERNAL_ID'
+}
+
 export enum Role {
   User = 'USER',
   Designer = 'DESIGNER',
@@ -52,6 +61,13 @@ export type RegisterUserInput = {
   role: Role;
 };
 
+export type RegisterUserFromExternalProviderInput = {
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  bio?: Maybe<Scalars['String']>;
+  role: Role;
+};
+
 export type Query = {
   __typename?: 'Query';
   me: MeResponse;
@@ -60,11 +76,17 @@ export type Query = {
 export type Mutation = {
   __typename?: 'Mutation';
   register?: Maybe<Scalars['Boolean']>;
+  registerUserFromExternalProvider?: Maybe<User>;
 };
 
 
 export type MutationRegisterArgs = {
   user?: Maybe<RegisterUserInput>;
+};
+
+
+export type MutationRegisterUserFromExternalProviderArgs = {
+  user?: Maybe<RegisterUserFromExternalProviderInput>;
 };
 
 
@@ -145,6 +167,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  GQLError: GqlError;
   Role: Role;
   Consent: ResolverTypeWrapper<Consent>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
@@ -152,6 +175,7 @@ export type ResolversTypes = {
   User: ResolverTypeWrapper<User>;
   MeResponse: ResolverTypeWrapper<MeResponse>;
   RegisterUserInput: RegisterUserInput;
+  RegisterUserFromExternalProviderInput: RegisterUserFromExternalProviderInput;
   Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
@@ -165,6 +189,7 @@ export type ResolversParentTypes = {
   User: User;
   MeResponse: MeResponse;
   RegisterUserInput: RegisterUserInput;
+  RegisterUserFromExternalProviderInput: RegisterUserFromExternalProviderInput;
   Query: {};
   Mutation: {};
   Boolean: Scalars['Boolean'];
@@ -200,6 +225,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   register?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationRegisterArgs, never>>;
+  registerUserFromExternalProvider?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationRegisterUserFromExternalProviderArgs, never>>;
 };
 
 export type Resolvers<ContextType = any> = {

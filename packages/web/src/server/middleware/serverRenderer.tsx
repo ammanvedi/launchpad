@@ -29,15 +29,14 @@ const serverRenderer: any = () => async (
     res: express.Response
 ) => {
     const modules = new Set();
-    console.log(req.headers.cookie)
 
     const a0 = now();
-    const {Auth} = withSSRContext({req});
+    const {Auth, Storage} = withSSRContext({req});
     const a1 = now()
     console.log(`ssr context get: ${a1 - a0}`);
 
     const b0 = now();
-    const apolloClient = createApolloClient(Auth, true);
+    const apolloClient = createApolloClient(Auth, true, req);
     const b1 = now()
     console.log(`create apollo client: ${b1 - b0}`);
 

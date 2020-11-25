@@ -4,6 +4,8 @@ export type AuthState = {
     id: string,
     role: Role | '',
     email: string | '',
+    externalUsername: string | '',
+    sub: string | '',
 }
 
 export type AuthTokens = {
@@ -13,4 +15,5 @@ export type AuthTokens = {
 export interface IAuthorizer<Config extends Object> {
     validateToken(token: string): boolean
     getAuthState(tokens: AuthTokens): AuthState
+    linkExternalUserToInternalUser(externalId: string, internalId: string, role: Role): Promise<void>;
 }

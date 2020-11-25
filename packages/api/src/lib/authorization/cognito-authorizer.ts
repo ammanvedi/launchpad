@@ -2,11 +2,14 @@ import {AuthState, AuthTokens, IAuthorizer} from "./IAuthorizer";
 import {decodeIdToken, JWKData, jwtSignatureIsValid} from "./jwt";
 import {createLoggerSet} from "../logging/logger";
 import {Role} from "../../generated/graphql";
+import AWS  from 'aws-sdk';
 
 export type CognitoAuthorizerConfig = {
     jwk: JWKData<'RSA'>,
     iss: string,
     aud: string,
+    cognito: AWS.CognitoIdentityServiceProvider,
+    userPoolId: string,
 }
 
 export type CognitoIdToken = {
@@ -34,6 +37,8 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
         id: '',
         role: '',
         email: '',
+        externalUsername: '',
+        sub: ''
     }
 
     constructor(private readonly config: CognitoAuthorizerConfig) {
@@ -124,12 +129,45 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
         }
 
         return {
+            // the internal id of the user
             id: decodedIdToken['custom:internalId'],
             role: decodedIdToken['custom:role'],
             email: decodedIdToken['email'],
+            // for lookin up the user in the identity pool
+            externalUsername: decodedIdToken['cognito:username'],
+            // for uniquely identifying the user in the external pool
+            sub: decodedIdToken.sub,
         }
+    }
 
+    linkExternalUserToInternalUser(externalId: string, internalId: string, role: Role): Promise<void> {
 
+        return new Promise((res, rej) => {
+            const params = {
+                UserAttributes: [
+                    {
+                        Name: 'custom:internalId',
+                        Value: internalId
+                    },
+                    {
+                        Name: 'custom:role',
+                        Value: role
+                    },
+                ],
+                UserPoolId: this.config.userPoolId,
+                Username: externalId,
+            };
+            this.config.cognito.adminUpdateUserAttributes(params, function(err, data) {
+                if (err) {
+                    console.log(err)
+                    rej(err)
+                } else {
+                    console.log('no err', data)
+                    res()
+                }
+            });
+
+        })
     }
 
 }

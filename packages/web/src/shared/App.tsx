@@ -1,4 +1,3 @@
-// import React, { Suspense } from 'react';
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +9,8 @@ import Home from './pages/Home';
 import Page2 from './pages/Page-2';
 import routes from './routes';
 import css from './App.module.css';
+import SignUp from "pages/sign-up";
+import SignUpVerify from "pages/sign-up-verify";
 
 const App: React.FC<any> = () => {
     const { t } = useTranslation();
@@ -29,6 +30,8 @@ const App: React.FC<any> = () => {
                 <Route exact path={routes.home} component={Home} />
                 <Route exact path={routes.page1} component={PageOneAsync} />
                 <Route exact path={routes.page2} component={Page2} />
+                <Route exact path={routes.signUp} component={SignUp} />
+                <Route exact path={routes.signUpVerify} component={SignUpVerify} />
                 <Route render={() => '404!'} />
             </Switch>
             <h2>{t('router-headline')}</h2>

@@ -11,6 +11,15 @@ export type Scalars = {
   Float: number;
 };
 
+export enum GqlError {
+  CognitoCreationFailed = 'COGNITO_CREATION_FAILED',
+  InvalidArguments = 'INVALID_ARGUMENTS',
+  Unauthorised = 'UNAUTHORISED',
+  UserExists = 'USER_EXISTS',
+  InternalUserCreationFailed = 'INTERNAL_USER_CREATION_FAILED',
+  NoInternalId = 'NO_INTERNAL_ID'
+}
+
 export enum Role {
   User = 'USER',
   Designer = 'DESIGNER',
@@ -52,6 +61,13 @@ export type RegisterUserInput = {
   role: Role;
 };
 
+export type RegisterUserFromExternalProviderInput = {
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  bio?: Maybe<Scalars['String']>;
+  role: Role;
+};
+
 export type Query = {
   __typename?: 'Query';
   me: MeResponse;
@@ -60,6 +76,7 @@ export type Query = {
 export type Mutation = {
   __typename?: 'Mutation';
   register?: Maybe<Scalars['Boolean']>;
+  registerUserFromExternalProvider?: Maybe<User>;
 };
 
 
@@ -67,9 +84,37 @@ export type MutationRegisterArgs = {
   user?: Maybe<RegisterUserInput>;
 };
 
+
+export type MutationRegisterUserFromExternalProviderArgs = {
+  user?: Maybe<RegisterUserFromExternalProviderInput>;
+};
+
 export type GlobalMeFragmentFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'firstName' | 'lastName'>
+);
+
+export type RegisterExternalUserMutationVariables = Exact<{
+  user?: Maybe<RegisterUserFromExternalProviderInput>;
+}>;
+
+
+export type RegisterExternalUserMutation = (
+  { __typename?: 'Mutation' }
+  & { registerUserFromExternalProvider?: Maybe<(
+    { __typename?: 'User' }
+    & GlobalMeFragmentFragment
+  )> }
+);
+
+export type RegisterMutationVariables = Exact<{
+  input?: Maybe<RegisterUserInput>;
+}>;
+
+
+export type RegisterMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'register'>
 );
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
@@ -93,6 +138,68 @@ export const GlobalMeFragmentFragmentDoc = gql`
   lastName
 }
     `;
+export const RegisterExternalUserDocument = gql`
+    mutation registerExternalUser($user: RegisterUserFromExternalProviderInput) {
+  registerUserFromExternalProvider(user: $user) {
+    ...GlobalMeFragment
+  }
+}
+    ${GlobalMeFragmentFragmentDoc}`;
+export type RegisterExternalUserMutationFn = Apollo.MutationFunction<RegisterExternalUserMutation, RegisterExternalUserMutationVariables>;
+
+/**
+ * __useRegisterExternalUserMutation__
+ *
+ * To run a mutation, you first call `useRegisterExternalUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterExternalUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerExternalUserMutation, { data, loading, error }] = useRegisterExternalUserMutation({
+ *   variables: {
+ *      user: // value for 'user'
+ *   },
+ * });
+ */
+export function useRegisterExternalUserMutation(baseOptions?: Apollo.MutationHookOptions<RegisterExternalUserMutation, RegisterExternalUserMutationVariables>) {
+        return Apollo.useMutation<RegisterExternalUserMutation, RegisterExternalUserMutationVariables>(RegisterExternalUserDocument, baseOptions);
+      }
+export type RegisterExternalUserMutationHookResult = ReturnType<typeof useRegisterExternalUserMutation>;
+export type RegisterExternalUserMutationResult = Apollo.MutationResult<RegisterExternalUserMutation>;
+export type RegisterExternalUserMutationOptions = Apollo.BaseMutationOptions<RegisterExternalUserMutation, RegisterExternalUserMutationVariables>;
+export const RegisterDocument = gql`
+    mutation register($input: RegisterUserInput) {
+  register(user: $input)
+}
+    `;
+export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
+
+/**
+ * __useRegisterMutation__
+ *
+ * To run a mutation, you first call `useRegisterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerMutation, { data, loading, error }] = useRegisterMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
+        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, baseOptions);
+      }
+export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
+export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
+export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {

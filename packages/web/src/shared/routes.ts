@@ -2,7 +2,9 @@
 const routes = {
     home: '/',
     page1: '/page-1',
-    page2: '/page-2',
+    page2: '/social-sign-up',
+    signUp: '/sign-up',
+    signUpVerify: '/sign-up-verify'
 };
 
 export const getRoute = (
