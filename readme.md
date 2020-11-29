@@ -16,3 +16,6 @@ lerna bootstrap --force-local && lerna link --force-local && lerna run prisma:ge
 
 follow instructions here to enable sign in from various providers
 https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-social-idp.html
+launchpad-development-2.auth.eu-west-1.amazoncognito.com/oauth/idpresponse
+
+install terraform

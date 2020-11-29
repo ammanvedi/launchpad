@@ -23,6 +23,7 @@ const Page = () => {
 
     return (
         <div>
+            welcome to the sign in page, this page is lazy loaded using react-loadable
             {JSON.stringify(data)}
             <input type='text' value={username} onChange={e => setUsername(e.target.value)} placeholder='email' />
             <input type='text' value={password} onChange={e => setPassword(e.target.value)} placeholder='password' />

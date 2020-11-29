@@ -4,6 +4,9 @@ packages/api/out
 # Web Excludes
 packages/web/build
 
+# Terraform Excludes
+packages/terraform/graph.svg
+
 # Environment
 .env
 .env

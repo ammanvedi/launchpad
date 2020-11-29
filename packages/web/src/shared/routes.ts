@@ -1,8 +1,8 @@
 /* eslint-disable security/detect-object-injection */
 const routes = {
     home: '/',
-    page1: '/page-1',
-    page2: '/social-sign-up',
+    signIn: '/sign-in',
+    socialSignUp: '/social-sign-up',
     signUp: '/sign-up',
     signUpVerify: '/sign-up-verify'
 };

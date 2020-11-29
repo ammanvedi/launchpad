@@ -20,8 +20,6 @@ const history = createHistory();
 
 Amplify.configure({...amplifyConfig, ssr: true});
 
-// Create/use the store
-// history MUST be passed here if you want syncing between server on initial route
 const store =
     window.store ||
     configureStore({
