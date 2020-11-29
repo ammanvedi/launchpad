@@ -1,5 +1,5 @@
 import {Auth} from '@aws-amplify/auth';
-import {ApolloClient, HttpLink, InMemoryCache} from "@apollo/client";
+import {ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject} from "@apollo/client";
 import {setContext} from "@apollo/client/link/context";
 import Cookies from 'universal-cookie';
 
@@ -41,6 +41,7 @@ export const createApolloClient = (
     auth: typeof Auth,
     ssrMode: boolean,
     request: any = null,
+    initialStoreState: Object | null = null,
     uri: string = (process.env.PUBLIC_GRAPHQL_ENDPOINT || ''),
 
 ): ApolloClient<any> => {
@@ -62,7 +63,9 @@ export const createApolloClient = (
     return new ApolloClient({
         ssrMode,
         link: authLink.concat(httpLink),
-        cache: new InMemoryCache({}),
+        cache: initialStoreState
+            ? new InMemoryCache({}).restore(initialStoreState as NormalizedCacheObject)
+            : new InMemoryCache({}),
     })
     
 }

@@ -31,7 +31,7 @@ const store =
 window.onload = () => {
     Loadable.preloadReady().then(() => {
 
-        const apolloClient = createApolloClient(Auth, false);
+        const apolloClient = createApolloClient(Auth, false, null, window.__APOLLO_STATE__);
 
         hydrate(
             <ApolloProvider client={apolloClient}>
