@@ -14,10 +14,11 @@ import Amplify from '@aws-amplify/core';
 import {Auth} from '@aws-amplify/auth';
 import {createApolloClient} from "../shared/graphql/apollo";
 import {ApolloProvider} from "@apollo/client";
+import {amplifyConfig} from "../shared/amplify";
 
 const history = createHistory();
 
-Amplify.configure({...JSON.parse(process.env.NEXT_PUBLIC_AMPLIFY_CONFIG || ''), ssr: true});
+Amplify.configure({...amplifyConfig, ssr: true});
 
 // Create/use the store
 // history MUST be passed here if you want syncing between server on initial route

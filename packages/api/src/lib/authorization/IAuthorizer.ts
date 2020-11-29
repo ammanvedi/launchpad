@@ -13,6 +13,7 @@ export type AuthTokens = {
 }
 
 export interface IAuthorizer<Config extends Object> {
+    initialize(): Promise<void>
     validateToken(token: string): boolean
     getAuthState(tokens: AuthTokens): AuthState
     linkExternalUserToInternalUser(externalId: string, internalId: string, role: Role): Promise<void>;

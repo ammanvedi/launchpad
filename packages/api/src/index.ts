@@ -17,7 +17,7 @@ import AWS from 'aws-sdk';
 dotenv.config();
 
 AWS.config.update({
-    region: process.env.AWS_DEFAULT_REGION,
+    region: process.env.TF_VAR_aws_region,
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
@@ -25,19 +25,39 @@ AWS.config.update({
 const cognitoidentity = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
 
 const authorizer: IAuthorizer<CognitoAuthorizerConfig> = new CognitoAuthorizer( {
-    iss: process.env.AMPLIFY_ISSUER || '',
-    aud: process.env.AMPLIFY_AUD || '',
-    jwk: JSON.parse(process.env.AMPLIFY_JWK_RAW || ''),
+    iss: `https://cognito-idp.${process.env.TF_VAR_aws_region}.amazonaws.com/${process.env.AWS_USER_POOL_ID}`,
+    aud: process.env.AWS_USER_POOLS_WEB_CLIENT_ID || '',
     cognito: cognitoidentity,
-    userPoolId: process.env.AWS_USER_POOL_ID || ''
+    userPoolId: process.env.AWS_USER_POOL_ID || '',
+    jwkUrl: `https://cognito-idp.${process.env.TF_VAR_aws_region}.amazonaws.com/${process.env.AWS_USER_POOL_ID}/.well-known/jwks.json`
 });
 
 
 const db = new PrismaClient();
 
+const amplifyConfig = {
+    aws_project_region: process.env.TF_VAR_aws_region,
+    aws_cognito_region: process.env.TF_VAR_aws_region,
+    aws_user_pools_id: process.env.AWS_USER_POOL_ID,
+    aws_user_pools_web_client_id: process.env.AWS_USER_POOLS_WEB_CLIENT_ID,
+    oauth: {
+        domain: `${process.env.TF_VAR_user_pool_domain}.auth.${process.env.TF_VAR_aws_region}.amazoncognito.com`,
+        scope:[
+            "phone",
+            "email",
+            "openid",
+            "profile",
+            "aws.cognito.signin.user.admin"
+        ],
+        redirectSignIn: process.env.TF_VAR_sign_in_callback_url,
+        redirectSignOut: process.env.TF_VAR_sign_out_callback_url,
+        responseType: "code"
+    },
+    federationTarget :"COGNITO_USER_POOLS"
+};
 
 Amplify.configure({
-    ...JSON.parse(process.env.NEXT_PUBLIC_AMPLIFY_CONFIG || ''),
+    ...amplifyConfig,
     ssr: true
 });
 
@@ -71,6 +91,8 @@ export const server = new ApolloServer({
     context
 });
 
-server.listen().then(({ url }) => {
-    console.log(`Server running @ ${url}`);
-});
+authorizer.initialize()
+    .then(() => server.listen())
+    .then(({ url }) => {
+        console.log(`Server running @ ${url}`);
+    });

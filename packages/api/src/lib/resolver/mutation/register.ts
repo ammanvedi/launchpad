@@ -40,6 +40,7 @@ export const registerResolver: MutationResolvers<GQLContext>['register'] =
             }
         });
     } catch (e) {
+        console.log(e)
         throw new Error(GqlError.CognitoCreationFailed);
     }
 

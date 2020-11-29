@@ -4,6 +4,7 @@ https://docs.amplify.aws/cli/start/install
 setup .env
 ln -f ./.env ./packages/web/.env
 ln -f ./.env ./packages/api/.env
+ln -f ./.env ./packages/terraform/.env
 lerna bootstrap
 lerna run amplify:push
 lerna run dev

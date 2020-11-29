@@ -3,13 +3,14 @@ import {decodeIdToken, JWKData, jwtSignatureIsValid} from "./jwt";
 import {createLoggerSet} from "../logging/logger";
 import {Role} from "../../generated/graphql";
 import AWS  from 'aws-sdk';
+import fetch from 'node-fetch';
 
 export type CognitoAuthorizerConfig = {
-    jwk: JWKData<'RSA'>,
     iss: string,
     aud: string,
     cognito: AWS.CognitoIdentityServiceProvider,
     userPoolId: string,
+    jwkUrl: string,
 }
 
 export type CognitoIdToken = {
@@ -31,6 +32,8 @@ export type CognitoIdToken = {
 
 export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
 
+    private jwk: JWKData<'RSA'> | null = null;
+
     private log = createLoggerSet('CognitoAuthorizer');
 
     private static readonly nullAuthState: AuthState = {
@@ -41,8 +44,7 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
         sub: ''
     }
 
-    constructor(private readonly config: CognitoAuthorizerConfig) {
-    }
+    constructor(private readonly config: CognitoAuthorizerConfig) {}
 
     private isIssuerValid(iss: string): boolean {
         return iss === this.config.iss;
@@ -58,12 +60,12 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
     }
 
     public validateToken(accessToken: string): boolean {
-        if (!this.config.jwk) {
+        if (!this.jwk) {
             this.log.warn('Attempted token validation when no JWK data was available');
             return false;
         }
         try {
-            const signatureValid = jwtSignatureIsValid(accessToken, this.config.jwk);
+            const signatureValid = jwtSignatureIsValid(accessToken, this.jwk);
 
             if (!signatureValid) {
                 this.log.err('The jwt signature could not be verified');
@@ -157,17 +159,29 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
                 UserPoolId: this.config.userPoolId,
                 Username: externalId,
             };
-            this.config.cognito.adminUpdateUserAttributes(params, function(err, data) {
+            this.config.cognito.adminUpdateUserAttributes(params, (err, data) => {
                 if (err) {
-                    console.log(err)
+                    this.log.err('Failed to link external user')
+                    this.log.err(err.toString())
                     rej(err)
                 } else {
-                    console.log('no err', data)
                     res()
                 }
             });
 
         })
+    }
+
+    async initialize(): Promise<void> {
+        try {
+            const result = await fetch(this.config.jwkUrl);
+            const jwkJson = await result.json() as JWKData<'RSA'>;
+            this.log.info('Did fetch JWK keys')
+            this.jwk = jwkJson;
+        } catch (e) {
+            this.log.err('Initialisation of cognito authorizer failed');
+            this.log.err(e.toString());
+        }
     }
 
 }

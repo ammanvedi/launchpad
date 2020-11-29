@@ -1,0 +1,16 @@
+{
+  "name": "terraform",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "terraform:plan": "./node_modules/.bin/dotenv -- terraform plan",
+    "terraform:apply": "./node_modules/.bin/dotenv -- terraform apply",
+    "terraform:refresh": "./node_modules/.bin/dotenv -- terraform refresh"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv-cli": "^4.0.0"
+  }
+}

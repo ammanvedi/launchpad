@@ -1,6 +1,11 @@
 import React, {useState} from 'react';
 import {Auth} from '@aws-amplify/auth';
 import {useMeQuery} from "../../graphql/generated/graphql";
+import {amplifyConfig} from "../../amplify";
+
+const getSocialLink = (provider: "Facebook" | "Google"): string => {
+    return `https://${amplifyConfig.oauth.domain}/oauth2/authorize?identity_provider=${provider}&redirect_uri=${amplifyConfig.oauth.redirectSignIn}&response_type=CODE&client_id=${amplifyConfig.aws_user_pools_web_client_id}&scope=${amplifyConfig.oauth.scope.join(' ')}`
+}
 
 const Page = () => {
     const [username, setUsername] = useState<string>('');
@@ -22,9 +27,8 @@ const Page = () => {
             <input type='text' value={username} onChange={e => setUsername(e.target.value)} placeholder='email' />
             <input type='text' value={password} onChange={e => setPassword(e.target.value)} placeholder='password' />
             <button onClick={handleButtonClick} >Sign in</button>
-            dasasd
-            <a href='https://habu-auth-dev.auth.us-west-2.amazoncognito.com/oauth2/authorize?identity_provider=Facebook&redirect_uri=http://localhost:8500/social-sign-up&response_type=CODE&client_id=72s7db3lajg3ge295nrk5a1k5v&scope=aws.cognito.signin.user.admin email openid phone profile'>facebook</a>
-            <a href='https://habu-auth-dev.auth.us-west-2.amazoncognito.com/oauth2/authorize?identity_provider=Google&redirect_uri=http://localhost:8500/social-sign-up&response_type=CODE&client_id=72s7db3lajg3ge295nrk5a1k5v&scope=aws.cognito.signin.user.admin email openid phone profile'>google</a>
+            <a href={getSocialLink('Facebook')}>facebook</a>
+            <a href={getSocialLink('Google')}>google</a>
         </div>
     )
 }
