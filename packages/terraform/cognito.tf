@@ -27,7 +27,6 @@ variable "user_pool_name" {
   default = "up_launchpad_dev"
 }
 
-
 resource "aws_cognito_user_pool" "master_user_pool" {
   name = var.user_pool_name
 
@@ -57,9 +56,68 @@ resource "aws_cognito_user_pool" "master_user_pool" {
     }
   }
 
+  lambda_config {
+    custom_message = aws_lambda_function.custom_message_lambda.arn
+  }
+
 }
 
-#Identity Provider :: Facebook
+# Custom Message Lambda Function
+
+resource "aws_lambda_function" "custom_message_lambda" {
+  function_name = "custom_message_lambda"
+  handler = "custom-message.verificationEmail"
+  role = aws_iam_role.iam_for_lambda.arn
+  runtime = "nodejs12.x"
+  filename = "../lambda/custom-message.js.zip"
+}
+
+resource "aws_iam_role_policy" "lambda_policy" {
+  name   = "lambda_policy"
+  role   = aws_iam_role.iam_for_lambda.id
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt163546987325",
+      "Action": "logs:*",
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+  EOF
+}
+
+resource "aws_iam_role" "iam_for_lambda" {
+  name = "iam_for_lambda"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+  EOF
+}
+
+resource "aws_lambda_permission" "allow_cognito" {
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.custom_message_lambda.function_name
+  principal     = "cognito-identity.amazonaws.com"
+  source_arn    = aws_cognito_user_pool.master_user_pool.arn
+}
+
+# Identity Provider :: Facebook
 
 variable "facebook_client_id" {
   type = string
@@ -92,7 +150,7 @@ resource "aws_cognito_identity_provider" "facebook" {
 
 }
 
-#Identity Provider :: Google
+# Identity Provider :: Google
 
 variable "google_client_id" {
   type = string
