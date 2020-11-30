@@ -1,6 +1,8 @@
-'use strict';
+import {CognitoUserPoolTriggerEvent} from 'aws-lambda/trigger/cognito-user-pool-trigger'
 
-module.exports.verificationEmail = async (event, context, callback) => {
+module.exports.verificationEmail = async (event: CognitoUserPoolTriggerEvent, context, callback) => {
+
+    console.log(event);
 
     const template = (name, link) => `<html>
     <body style="background-color:#333; font-family: PT Sans,Trebuchet MS,sans-serif; ">
@@ -10,12 +12,10 @@ module.exports.verificationEmail = async (event, context, callback) => {
             <p style="Margin-top: 20px;Margin-bottom: 0;">&nbsp;</p>
             <img style="border: 0;display: block;height: auto; width: 100%;max-width: 373px;" alt="Animage" height="200" width="300"  src="https://picsum.photos/300/100" />
             <p style="Margin-top: 20px;Margin-bottom: 0;">&nbsp;</p>
-            <h2
-                style="font-size: 28px; margin-top: 20px; margin-bottom: 0;font-style: normal; font-weight: bold; color: #000;font-size: 24px;line-height: 32px;text-align: center;">Hi ${name}</h2>
+            <h2 style="font-size: 28px; margin-top: 20px; margin-bottom: 0;font-style: normal; font-weight: bold; color: #000;font-size: 24px;line-height: 32px;text-align: center;">Hi ${name}</h2>
             <p style="Margin-top: 20px;Margin-bottom: 0;">&nbsp;</p>
             <p style="Margin-top: 20px;Margin-bottom: 0;font-size: 16px;line-height: 24px; color: #000">Click the link below to confirm your signup. Cheers!</p>
             <p style="Margin-top: 20px;Margin-bottom: 0;">&nbsp;</p>
-
                 <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 24px;">
                     <div style="Margin-bottom: 20px;text-align: center;">
                         <a

@@ -69,21 +69,21 @@ resource "aws_lambda_function" "custom_message_lambda" {
   handler = "custom-message.verificationEmail"
   role = aws_iam_role.iam_for_lambda.arn
   runtime = "nodejs12.x"
-  filename = "../lambda/custom-message.js.zip"
+  filename = "../lambda/dist/custom-message.zip"
+  source_code_hash = base64sha256(file("../lambda/dist/custom-message.zip"))
 }
 
-resource "aws_iam_role_policy" "lambda_policy" {
+resource "aws_iam_role_policy" "logs" {
   name   = "lambda_policy"
-  role   = aws_iam_role.iam_for_lambda.id
+  role   = aws_iam_role.iam_for_lambda.name
   policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "Stmt163546987325",
       "Action": "logs:*",
       "Effect": "Allow",
-      "Resource": "*"
+      "Resource": "arn:aws:logs:*:*:*"
     }
   ]
 }
@@ -92,7 +92,6 @@ resource "aws_iam_role_policy" "lambda_policy" {
 
 resource "aws_iam_role" "iam_for_lambda" {
   name = "iam_for_lambda"
-
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -102,8 +101,7 @@ resource "aws_iam_role" "iam_for_lambda" {
       "Principal": {
         "Service": "lambda.amazonaws.com"
       },
-      "Effect": "Allow",
-      "Sid": ""
+      "Effect": "Allow"
     }
   ]
 }
@@ -113,8 +111,9 @@ resource "aws_iam_role" "iam_for_lambda" {
 resource "aws_lambda_permission" "allow_cognito" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.custom_message_lambda.function_name
-  principal     = "cognito-identity.amazonaws.com"
+  principal     = "cognito-idp.amazonaws.com"
   source_arn    = aws_cognito_user_pool.master_user_pool.arn
+  statement_id = "1"
 }
 
 # Identity Provider :: Facebook
