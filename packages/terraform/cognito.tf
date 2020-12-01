@@ -70,7 +70,7 @@ resource "aws_lambda_function" "custom_message_lambda" {
   role = aws_iam_role.iam_for_lambda.arn
   runtime = "nodejs12.x"
   filename = "../lambda/dist/custom-message.zip"
-  source_code_hash = base64sha256(file("../lambda/dist/custom-message.zip"))
+  source_code_hash = filebase64sha256("../lambda/dist/custom-message.zip")
 }
 
 resource "aws_iam_role_policy" "logs" {

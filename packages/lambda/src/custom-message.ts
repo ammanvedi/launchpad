@@ -1,44 +1,54 @@
 import {CognitoUserPoolTriggerEvent} from 'aws-lambda/trigger/cognito-user-pool-trigger'
+import {getSignUpEmail} from "./email/sign-up";
+import {getAdminCreateUserEmail} from "./email/admin-create-user";
+import {APP_NAME} from "./constants";
+import {getForgotPasswordEmail} from "./email/forgot-password";
+import {getMfaCodeEmail, getMfaCodeSms} from "./email/mfa-code";
+import {getUpdateUserAttributeEmail} from "./email/update-user-attribute";
+import {getVerifyUserAttributeEmail, getVerifyUserAttributeSms} from "./email/verify-user-attribute";
 
-module.exports.verificationEmail = async (event: CognitoUserPoolTriggerEvent, context, callback) => {
+export const verificationEmail = async (evt: CognitoUserPoolTriggerEvent, context, callback) => {
 
-    console.log(event);
+    const { codeParameter, usernameParameter } = evt.request;
 
-    const template = (name, link) => `<html>
-    <body style="background-color:#333; font-family: PT Sans,Trebuchet MS,sans-serif; ">
-      <div style="margin: 0 auto; width: 600px; background-color: #fff; font-size: 1.2rem; font-style: normal;font-weight: normal;line-height: 19px;" align="center">
-        <div style="padding: 20;">
-            <p style="Margin-top: 20px;Margin-bottom: 0;">&nbsp;</p>
-            <p style="Margin-top: 20px;Margin-bottom: 0;">&nbsp;</p>
-            <img style="border: 0;display: block;height: auto; width: 100%;max-width: 373px;" alt="Animage" height="200" width="300"  src="https://picsum.photos/300/100" />
-            <p style="Margin-top: 20px;Margin-bottom: 0;">&nbsp;</p>
-            <h2 style="font-size: 28px; margin-top: 20px; margin-bottom: 0;font-style: normal; font-weight: bold; color: #000;font-size: 24px;line-height: 32px;text-align: center;">Hi ${name}</h2>
-            <p style="Margin-top: 20px;Margin-bottom: 0;">&nbsp;</p>
-            <p style="Margin-top: 20px;Margin-bottom: 0;font-size: 16px;line-height: 24px; color: #000">Click the link below to confirm your signup. Cheers!</p>
-            <p style="Margin-top: 20px;Margin-bottom: 0;">&nbsp;</p>
-                <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 24px;">
-                    <div style="Margin-bottom: 20px;text-align: center;">
-                        <a
-                            style="border-radius: 4px;display: block;font-size: 14px;font-weight: bold;line-height: 24px;padding: 12px 24px 13px 24px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #ffffff !important;box-shadow: inset 0 -2px 0 0 rgba(0, 0, 0, 0.2);background-color: #3b5998;font-family: PT Sans, Trebuchet MS, sans-serif; letter-spacing: 0.05rem;"
-                            href="${link}">CLICK HERE TO VERIFY YOUR EMAIL</a>
-                        </div>
-                </div>
-        </div>
-      </div>
-    </body>
-  </html>`
+    switch(evt.triggerSource) {
 
-    const link = `https://<yourUserPoolDomain>/confirmUser?client_id=${event.callerContext.clientId}&user_name=${event.userName}&confirmation_code=`
-    const name = event.request.userAttributes.name.split(" ")[0]
+        /**
+         * For explanation of parameters please see the following documentation
+         * https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-custom-message.html
+         */
 
-    if (event.triggerSource === "CustomMessage_SignUp") {
+        case "CustomMessage_ResendCode":
+        case "CustomMessage_SignUp":
+            evt.response.emailSubject = `${APP_NAME} | Welcome`;
+            evt.response.emailMessage = getSignUpEmail(codeParameter);
+            break;
 
-        event.response = {
-            emailSubject: "AweseomeApp2000 | Confirm your email",
-            emailMessage: template(name, link + event.request.codeParameter)
-        }
+        case "CustomMessage_AdminCreateUser":
+            evt.response.emailSubject = `${APP_NAME} | Welcome`;
+            evt.response.emailMessage = getAdminCreateUserEmail(usernameParameter, codeParameter);
+            break;
+
+        case "CustomMessage_ForgotPassword":
+            evt.response.emailSubject = `${APP_NAME} | Forgotten Password`;
+            evt.response.emailMessage = getForgotPasswordEmail(codeParameter);
+            break;
+        case "CustomMessage_Authentication":
+            evt.response.emailSubject = `${APP_NAME} | MFA Code`;
+            evt.response.smsMessage = getMfaCodeSms(codeParameter)
+            evt.response.emailMessage = getMfaCodeEmail(codeParameter);
+            break;
+        case "CustomMessage_UpdateUserAttribute":
+            evt.response.emailSubject = `${APP_NAME} | Update User Info`;
+            evt.response.emailMessage = getUpdateUserAttributeEmail(codeParameter);
+            break;
+        case  "CustomMessage_VerifyUserAttribute":
+            evt.response.emailSubject = '';
+            evt.response.smsMessage = getVerifyUserAttributeSms(codeParameter);
+            evt.response.emailMessage = getVerifyUserAttributeEmail(codeParameter);
+            break;
     }
 
-    callback(null, event);
+    callback(null, evt);
 
 };
