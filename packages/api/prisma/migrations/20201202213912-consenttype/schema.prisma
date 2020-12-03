@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -29,7 +29,7 @@ enum ConsentType {
 model Consent {
     id Int @id @default(autoincrement())
     timestamp DateTime @default(now())
-    consentedTo ConsentType
+    consent ConsentType
     user User @relation(fields: [userId], references: [id])
     userId String
 }

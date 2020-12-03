@@ -11,13 +11,23 @@ export type Scalars = {
   Float: number;
 };
 
+export enum ConsentType {
+  TermsOfUse = 'TERMS_OF_USE',
+  PrivacyPolicy = 'PRIVACY_POLICY',
+  Cookies = 'COOKIES',
+  Tracking = 'TRACKING',
+  Analytics = 'ANALYTICS'
+}
+
 export enum GqlError {
   CognitoCreationFailed = 'COGNITO_CREATION_FAILED',
   InvalidArguments = 'INVALID_ARGUMENTS',
   Unauthorised = 'UNAUTHORISED',
   UserExists = 'USER_EXISTS',
   InternalUserCreationFailed = 'INTERNAL_USER_CREATION_FAILED',
-  NoInternalId = 'NO_INTERNAL_ID'
+  NoInternalId = 'NO_INTERNAL_ID',
+  DbError = 'DB_ERROR',
+  UserDoesNotExist = 'USER_DOES_NOT_EXIST'
 }
 
 export enum Role {
@@ -32,7 +42,7 @@ export type Consent = {
   __typename?: 'Consent';
   id: Scalars['ID'];
   timestamp: Scalars['String'];
-  consentType: Scalars['String'];
+  consentedTo: ConsentType;
 };
 
 export type User = {
@@ -50,6 +60,11 @@ export type User = {
 export type MeResponse = {
   __typename?: 'MeResponse';
   me?: Maybe<User>;
+};
+
+export type ConsentResponse = {
+  __typename?: 'ConsentResponse';
+  user?: Maybe<User>;
 };
 
 export type RegisterUserInput = {
@@ -75,8 +90,14 @@ export type Query = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addConsent?: Maybe<ConsentResponse>;
   register?: Maybe<Scalars['Boolean']>;
   registerUserFromExternalProvider?: Maybe<User>;
+};
+
+
+export type MutationAddConsentArgs = {
+  type?: Maybe<ConsentType>;
 };
 
 
@@ -167,6 +188,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  ConsentType: ConsentType;
   GQLError: GqlError;
   Role: Role;
   Consent: ResolverTypeWrapper<Consent>;
@@ -174,6 +196,7 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']>;
   User: ResolverTypeWrapper<User>;
   MeResponse: ResolverTypeWrapper<MeResponse>;
+  ConsentResponse: ResolverTypeWrapper<ConsentResponse>;
   RegisterUserInput: RegisterUserInput;
   RegisterUserFromExternalProviderInput: RegisterUserFromExternalProviderInput;
   Query: ResolverTypeWrapper<{}>;
@@ -188,6 +211,7 @@ export type ResolversParentTypes = {
   String: Scalars['String'];
   User: User;
   MeResponse: MeResponse;
+  ConsentResponse: ConsentResponse;
   RegisterUserInput: RegisterUserInput;
   RegisterUserFromExternalProviderInput: RegisterUserFromExternalProviderInput;
   Query: {};
@@ -198,7 +222,7 @@ export type ResolversParentTypes = {
 export type ConsentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Consent'] = ResolversParentTypes['Consent']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   timestamp?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  consentType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  consentedTo?: Resolver<ResolversTypes['ConsentType'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -219,11 +243,17 @@ export type MeResponseResolvers<ContextType = any, ParentType extends ResolversP
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ConsentResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ConsentResponse'] = ResolversParentTypes['ConsentResponse']> = {
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   me?: Resolver<ResolversTypes['MeResponse'], ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  addConsent?: Resolver<Maybe<ResolversTypes['ConsentResponse']>, ParentType, ContextType, RequireFields<MutationAddConsentArgs, never>>;
   register?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationRegisterArgs, never>>;
   registerUserFromExternalProvider?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationRegisterUserFromExternalProviderArgs, never>>;
 };
@@ -232,6 +262,7 @@ export type Resolvers<ContextType = any> = {
   Consent?: ConsentResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   MeResponse?: MeResponseResolvers<ContextType>;
+  ConsentResponse?: ConsentResponseResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
 };

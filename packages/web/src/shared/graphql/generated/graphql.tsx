@@ -11,13 +11,23 @@ export type Scalars = {
   Float: number;
 };
 
+export enum ConsentType {
+  TermsOfUse = 'TERMS_OF_USE',
+  PrivacyPolicy = 'PRIVACY_POLICY',
+  Cookies = 'COOKIES',
+  Tracking = 'TRACKING',
+  Analytics = 'ANALYTICS'
+}
+
 export enum GqlError {
   CognitoCreationFailed = 'COGNITO_CREATION_FAILED',
   InvalidArguments = 'INVALID_ARGUMENTS',
   Unauthorised = 'UNAUTHORISED',
   UserExists = 'USER_EXISTS',
   InternalUserCreationFailed = 'INTERNAL_USER_CREATION_FAILED',
-  NoInternalId = 'NO_INTERNAL_ID'
+  NoInternalId = 'NO_INTERNAL_ID',
+  DbError = 'DB_ERROR',
+  UserDoesNotExist = 'USER_DOES_NOT_EXIST'
 }
 
 export enum Role {
@@ -32,7 +42,7 @@ export type Consent = {
   __typename?: 'Consent';
   id: Scalars['ID'];
   timestamp: Scalars['String'];
-  consentType: Scalars['String'];
+  consentedTo: ConsentType;
 };
 
 export type User = {
@@ -50,6 +60,11 @@ export type User = {
 export type MeResponse = {
   __typename?: 'MeResponse';
   me?: Maybe<User>;
+};
+
+export type ConsentResponse = {
+  __typename?: 'ConsentResponse';
+  user?: Maybe<User>;
 };
 
 export type RegisterUserInput = {
@@ -75,8 +90,14 @@ export type Query = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addConsent?: Maybe<ConsentResponse>;
   register?: Maybe<Scalars['Boolean']>;
   registerUserFromExternalProvider?: Maybe<User>;
+};
+
+
+export type MutationAddConsentArgs = {
+  type?: Maybe<ConsentType>;
 };
 
 

@@ -1,4 +1,4 @@
-import {rule, shield, or} from "graphql-shield";
+import {rule, shield, or, and} from "graphql-shield";
 import {GQLContext} from "../context/context";
 import {GqlError} from "../../generated/graphql";
 
@@ -32,6 +32,7 @@ export const permissions = shield<any, GQLContext, any>({
         me: or(isAuthenticatedWithInternalId, isAuthenticatedWithExternalId)
     },
     Mutation: {
-        registerUserFromExternalProvider: isAuthenticatedWithExternalId
+        registerUserFromExternalProvider: isAuthenticatedWithExternalId,
+        addConsent: isAuthenticatedWithInternalId
     }
 }, {allowExternalErrors: true})

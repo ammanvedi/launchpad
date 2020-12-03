@@ -1,5 +1,6 @@
-import {GqlError, QueryResolvers, Resolvers} from "../../../generated/graphql";
+import {GqlError, QueryResolvers, Role} from "../../../generated/graphql";
 import {GQLContext} from "../../context/context";
+import {User as DbUser} from '@prisma/client'
 
 export const meResolver: QueryResolvers<GQLContext>['me'] = async (parent, args, context, info) => {
     /**
@@ -9,9 +10,13 @@ export const meResolver: QueryResolvers<GQLContext>['me'] = async (parent, args,
      */
     if (!context.authState.id) {
         throw new Error(GqlError.NoInternalId)
-    }
+    };
 
     return {
-        me: null
+        me: {
+            id: context.authState.id,
+            role: context.authState.role || Role.User,
+            email: context.authState.email,
+        }
     };
 }

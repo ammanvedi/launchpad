@@ -13,6 +13,7 @@ import Auth from '@aws-amplify/auth';
 import {permissions} from "./lib/authorization/rbac";
 import {ApolloServer} from 'apollo-server';
 import AWS from 'aws-sdk';
+import {loaders, prismaDb as db} from "./lib/data/data";
 
 dotenv.config();
 
@@ -33,7 +34,7 @@ const authorizer: IAuthorizer<CognitoAuthorizerConfig> = new CognitoAuthorizer( 
 });
 
 
-const db = new PrismaClient();
+
 
 const amplifyConfig = {
     aws_project_region: process.env.TF_VAR_aws_region,
@@ -81,7 +82,10 @@ export const context = ({req}): GQLContext => {
     return {
         authorizer,
         authState,
-        db,
+        data: {
+            db,
+            loaders
+        },
         amplifyAuth: Auth
     }
 }

@@ -10,7 +10,6 @@
     "prisma:generate": "./node_modules/.bin/prisma generate",
     "prisma:save-migration": "./node_modules/.bin/prisma migrate save --experimental",
     "prisma:apply-migration": "./node_modules/.bin/prisma migrate up --experimental",
-    "prisma:apply-schema": "npm run prisma:save-migration && npm run prisma:apply-migration",
     "codegen": "./node_modules/.bin/graphql-codegen --config codegen.yml",
     "postinstall": "npm run build"
   },
@@ -25,6 +24,7 @@
     "apollo-server-express": "^2.19.0",
     "aws-amplify": "^3.3.8",
     "aws-sdk": "^2.799.0",
+    "dataloader": "^2.0.0",
     "dotenv": "^8.2.0",
     "graphql-middleware": "^4.0.2",
     "graphql-shield": "^7.4.0",

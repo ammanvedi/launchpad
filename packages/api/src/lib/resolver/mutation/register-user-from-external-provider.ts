@@ -50,8 +50,6 @@ export const registerUserFromExternalProviderResolver: MutationResolvers<GQLCont
 
     context.authState.id = proposedId;
 
-    console.log('nwerwer')
-
     // @ts-ignore
     return meResolver(parent, args, context, info)
 }

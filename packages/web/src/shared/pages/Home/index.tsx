@@ -20,6 +20,7 @@ const App: React.FC<any> = () => {
             <Features />
             <h2>{t('i18n-example')}</h2>
             <p>
+                sdssd
                 <button value="de_DE" onClick={handleLocaleChange}>
                     DeutschXzXZX
                 </button>

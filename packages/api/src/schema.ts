@@ -1,6 +1,15 @@
 import gql from 'graphql-tag';
 
 export const schema = gql`
+    
+    enum ConsentType {
+        TERMS_OF_USE
+        PRIVACY_POLICY
+        COOKIES
+        TRACKING
+        ANALYTICS
+    }
+    
     enum GQLError {
         COGNITO_CREATION_FAILED
         INVALID_ARGUMENTS
@@ -8,6 +17,8 @@ export const schema = gql`
         USER_EXISTS
         INTERNAL_USER_CREATION_FAILED
         NO_INTERNAL_ID
+        DB_ERROR
+        USER_DOES_NOT_EXIST
     }
     
     enum Role {
@@ -21,7 +32,7 @@ export const schema = gql`
     type Consent {
         id: ID!
         timestamp: String!
-        consentType: String!
+        consentedTo: ConsentType!
     }
 
     type User {
@@ -37,6 +48,10 @@ export const schema = gql`
     
     type MeResponse {
         me: User
+    }
+    
+    type ConsentResponse {
+        user: User
     }
     
     input RegisterUserInput {
@@ -60,6 +75,7 @@ export const schema = gql`
     }
     
     type Mutation {
+        addConsent(type: ConsentType): ConsentResponse
         register(user: RegisterUserInput): Boolean
         registerUserFromExternalProvider(user: RegisterUserFromExternalProviderInput): User
     }
