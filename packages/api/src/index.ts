@@ -84,7 +84,7 @@ export const context = ({req}): GQLContext => {
         authState,
         data: {
             db,
-            loaders
+            loaders: loaders()
         },
         amplifyAuth: Auth
     }
