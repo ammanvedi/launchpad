@@ -8,14 +8,14 @@ const baseFieldResolver =
         async (parent: {id: string}, args: any, context: GQLContext) => {
     const u = await context.data.loaders.user.byId.load(parent.id)
     return u[baseField]
-}
+};
 
 export const userFieldsResolver: Resolvers<GQLContext>['User'] = {
     firstName: baseFieldResolver('firstName'),
     lastName: baseFieldResolver('lastName'),
     bio: baseFieldResolver('bio'),
     profileImage: baseFieldResolver('profileImage'),
-    consents: async (parent, args, context, info) => {
+    consents: async (parent, args, context) => {
         let consents: Array<Consent> = [];
         try {
             consents = await context.data.db.consent.findMany({

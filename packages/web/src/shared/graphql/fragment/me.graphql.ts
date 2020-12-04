@@ -5,5 +5,9 @@ export const GlobalMeFragment = gql`
         id
         firstName
         lastName
+        consents {
+            id
+            consentedTo
+        }
     }
 `;

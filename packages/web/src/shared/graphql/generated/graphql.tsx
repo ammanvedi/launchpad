@@ -113,6 +113,10 @@ export type MutationRegisterUserFromExternalProviderArgs = {
 export type GlobalMeFragmentFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'firstName' | 'lastName'>
+  & { consents?: Maybe<Array<(
+    { __typename?: 'Consent' }
+    & Pick<Consent, 'id' | 'consentedTo'>
+  )>> }
 );
 
 export type RegisterExternalUserMutationVariables = Exact<{
@@ -157,6 +161,10 @@ export const GlobalMeFragmentFragmentDoc = gql`
   id
   firstName
   lastName
+  consents {
+    id
+    consentedTo
+  }
 }
     `;
 export const RegisterExternalUserDocument = gql`

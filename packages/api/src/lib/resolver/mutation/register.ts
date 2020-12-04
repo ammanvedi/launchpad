@@ -1,13 +1,14 @@
-import {MutationResolvers, Role} from "../../../generated/graphql";
+import {MutationResolvers} from "../../../generated/graphql";
 import {GQLContext} from "../../context/context";
 import {createLoggerSet} from "../../logging/logger";
 import { v4 as uuidv4 } from 'uuid';
 import {GqlError} from "../../../generated/graphql";
+import {ConsentType} from '@prisma/client'
 
 const log = createLoggerSet('RegisterResolver')
 
 export const registerResolver: MutationResolvers<GQLContext>['register'] =
-    async (parent, args, context, info) => {
+    async (parent, args, context) => {
 
     if (!args.user) {
         throw new Error(GqlError.InvalidArguments);
@@ -40,7 +41,8 @@ export const registerResolver: MutationResolvers<GQLContext>['register'] =
             }
         });
     } catch (e) {
-        console.log(e)
+        log.err('Failed to create the user in cognito');
+        log.err(e.toString());
         throw new Error(GqlError.CognitoCreationFailed);
     }
 
@@ -49,15 +51,30 @@ export const registerResolver: MutationResolvers<GQLContext>['register'] =
      * an internal user with the rest of the data
      */
 
-    await context.db.user.create({data: {
-        id: proposedId,
-        externalId: signUpResult.userSub,
-        role,
-        bio,
-        lastName,
-        firstName,
-    }})
-
+    try {
+        await context.data.db.user.create({data: {
+                id: proposedId,
+                externalId: signUpResult.userSub,
+                role,
+                bio,
+                lastName,
+                firstName,
+                consents: {
+                    create: [
+                        {
+                            consentedTo: ConsentType.PRIVACY_POLICY,
+                        },
+                        {
+                            consentedTo: ConsentType.TERMS_OF_USE,
+                        }
+                    ]
+                }
+            }});
+    } catch (e) {
+        log.err('Failed to create user and consents');
+        log.err(e.toString());
+        throw new Error(GqlError.DbError);
+    }
 
     return true;
 }

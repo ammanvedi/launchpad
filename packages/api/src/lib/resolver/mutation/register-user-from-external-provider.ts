@@ -3,6 +3,7 @@ import {GQLContext} from "../../context/context";
 import {GqlError} from "../../../generated/graphql";
 import { v4 as uuidv4 } from 'uuid';
 import {meResolver} from "../query/me";
+import {ConsentType} from "@prisma/client";
 
 /**
  * A user will be redirected to the app already signed in, they will then try to
@@ -18,7 +19,7 @@ export const registerUserFromExternalProviderResolver: MutationResolvers<GQLCont
     }
 
     // First check that the user does not already exist based on external id
-    const existingUser = await context.db.user.findFirst({where:{
+    const existingUser = await context.data.db.user.findFirst({where:{
         externalId: context.authState.sub
     }});
 
@@ -29,9 +30,19 @@ export const registerUserFromExternalProviderResolver: MutationResolvers<GQLCont
     const proposedId = uuidv4();
 
     try {
-        await context.db.user.create({data: {
+        await context.data.db.user.create({data: {
             id: proposedId,
             externalId: context.authState.externalUsername,
+            consents: {
+                create: [
+                    {
+                        consentedTo: ConsentType.PRIVACY_POLICY,
+                    },
+                    {
+                        consentedTo: ConsentType.TERMS_OF_USE,
+                    }
+                ]
+            },
             ...args.user
         }});
     } catch {
