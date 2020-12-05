@@ -33,6 +33,7 @@ export const permissions = shield<any, GQLContext, any>({
     },
     Mutation: {
         registerUserFromExternalProvider: isAuthenticatedWithExternalId,
-        addConsent: isAuthenticatedWithInternalId
+        addConsent: isAuthenticatedWithInternalId,
+        updateUserProfileImage: isAuthenticatedWithInternalId
     }
 }, {allowExternalErrors: true})

@@ -5,6 +5,7 @@ export const GlobalMeFragment = gql`
         id
         firstName
         lastName
+        profileImage
         consents {
             id
             consentedTo

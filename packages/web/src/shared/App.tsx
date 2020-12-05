@@ -12,6 +12,7 @@ import SignUpVerify from "pages/sign-up-verify";
 import SocialSignUp from 'pages/social-sign-up';
 import Home from './pages/Home';
 import { SignInAsync } from 'pages/sign-in/index.lazy';
+import {ProfileLazy} from "pages/profile/index.lazy";
 
 const App: React.FC<any> = () => {
     const { t } = useTranslation();
@@ -31,6 +32,7 @@ const App: React.FC<any> = () => {
                 <Route exact path={routes.socialSignUp} component={SocialSignUp} />
                 <Route exact path={routes.signUp} component={SignUp} />
                 <Route exact path={routes.signUpVerify} component={SignUpVerify} />
+                <Route exact path={routes.profile} component={ProfileLazy} />
                 <Route render={() => '404!'} />
             </Switch>
             <h2>{t('router-headline')}</h2>

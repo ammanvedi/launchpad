@@ -9,7 +9,9 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Upload: any;
 };
+
 
 export enum ConsentType {
   TermsOfUse = 'TERMS_OF_USE',
@@ -93,6 +95,7 @@ export type Mutation = {
   addConsent?: Maybe<ConsentResponse>;
   register?: Maybe<Scalars['Boolean']>;
   registerUserFromExternalProvider?: Maybe<User>;
+  updateUserProfileImage?: Maybe<User>;
 };
 
 
@@ -110,9 +113,14 @@ export type MutationRegisterUserFromExternalProviderArgs = {
   user?: Maybe<RegisterUserFromExternalProviderInput>;
 };
 
+
+export type MutationUpdateUserProfileImageArgs = {
+  file: Scalars['Upload'];
+};
+
 export type GlobalMeFragmentFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'firstName' | 'lastName'>
+  & Pick<User, 'id' | 'firstName' | 'lastName' | 'profileImage'>
   & { consents?: Maybe<Array<(
     { __typename?: 'Consent' }
     & Pick<Consent, 'id' | 'consentedTo'>
@@ -142,6 +150,19 @@ export type RegisterMutation = (
   & Pick<Mutation, 'register'>
 );
 
+export type UploadUserProfileImageMutationVariables = Exact<{
+  file: Scalars['Upload'];
+}>;
+
+
+export type UploadUserProfileImageMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUserProfileImage?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'profileImage'>
+  )> }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -161,6 +182,7 @@ export const GlobalMeFragmentFragmentDoc = gql`
   id
   firstName
   lastName
+  profileImage
   consents {
     id
     consentedTo
@@ -229,6 +251,39 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const UploadUserProfileImageDocument = gql`
+    mutation uploadUserProfileImage($file: Upload!) {
+  updateUserProfileImage(file: $file) {
+    id
+    profileImage
+  }
+}
+    `;
+export type UploadUserProfileImageMutationFn = Apollo.MutationFunction<UploadUserProfileImageMutation, UploadUserProfileImageMutationVariables>;
+
+/**
+ * __useUploadUserProfileImageMutation__
+ *
+ * To run a mutation, you first call `useUploadUserProfileImageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadUserProfileImageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadUserProfileImageMutation, { data, loading, error }] = useUploadUserProfileImageMutation({
+ *   variables: {
+ *      file: // value for 'file'
+ *   },
+ * });
+ */
+export function useUploadUserProfileImageMutation(baseOptions?: Apollo.MutationHookOptions<UploadUserProfileImageMutation, UploadUserProfileImageMutationVariables>) {
+        return Apollo.useMutation<UploadUserProfileImageMutation, UploadUserProfileImageMutationVariables>(UploadUserProfileImageDocument, baseOptions);
+      }
+export type UploadUserProfileImageMutationHookResult = ReturnType<typeof useUploadUserProfileImageMutation>;
+export type UploadUserProfileImageMutationResult = Apollo.MutationResult<UploadUserProfileImageMutation>;
+export type UploadUserProfileImageMutationOptions = Apollo.BaseMutationOptions<UploadUserProfileImageMutation, UploadUserProfileImageMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {

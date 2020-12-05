@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
@@ -9,7 +9,9 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Upload: any;
 };
+
 
 export enum ConsentType {
   TermsOfUse = 'TERMS_OF_USE',
@@ -93,6 +95,7 @@ export type Mutation = {
   addConsent?: Maybe<ConsentResponse>;
   register?: Maybe<Scalars['Boolean']>;
   registerUserFromExternalProvider?: Maybe<User>;
+  updateUserProfileImage?: Maybe<User>;
 };
 
 
@@ -108,6 +111,11 @@ export type MutationRegisterArgs = {
 
 export type MutationRegisterUserFromExternalProviderArgs = {
   user?: Maybe<RegisterUserFromExternalProviderInput>;
+};
+
+
+export type MutationUpdateUserProfileImageArgs = {
+  file: Scalars['Upload'];
 };
 
 
@@ -188,6 +196,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Upload: ResolverTypeWrapper<Scalars['Upload']>;
   ConsentType: ConsentType;
   GQLError: GqlError;
   Role: Role;
@@ -206,6 +215,7 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  Upload: Scalars['Upload'];
   Consent: Consent;
   ID: Scalars['ID'];
   String: Scalars['String'];
@@ -218,6 +228,10 @@ export type ResolversParentTypes = {
   Mutation: {};
   Boolean: Scalars['Boolean'];
 };
+
+export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
+  name: 'Upload';
+}
 
 export type ConsentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Consent'] = ResolversParentTypes['Consent']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -256,9 +270,11 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   addConsent?: Resolver<Maybe<ResolversTypes['ConsentResponse']>, ParentType, ContextType, RequireFields<MutationAddConsentArgs, never>>;
   register?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationRegisterArgs, never>>;
   registerUserFromExternalProvider?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationRegisterUserFromExternalProviderArgs, never>>;
+  updateUserProfileImage?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateUserProfileImageArgs, 'file'>>;
 };
 
 export type Resolvers<ContextType = any> = {
+  Upload?: GraphQLScalarType;
   Consent?: ConsentResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   MeResponse?: MeResponseResolvers<ContextType>;

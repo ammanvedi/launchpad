@@ -45,5 +45,3 @@ model User {
   role          Role        @default(USER)
   consents      Consent[]
 }
-
-

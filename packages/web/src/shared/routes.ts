@@ -4,7 +4,8 @@ const routes = {
     signIn: '/sign-in',
     socialSignUp: '/social-sign-up',
     signUp: '/sign-up',
-    signUpVerify: '/sign-up-verify'
+    signUpVerify: '/sign-up-verify',
+    profile: '/me'
 };
 
 export const getRoute = (

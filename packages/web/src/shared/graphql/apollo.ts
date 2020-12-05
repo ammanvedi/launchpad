@@ -2,6 +2,7 @@ import {Auth} from '@aws-amplify/auth';
 import {ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject} from "@apollo/client";
 import {setContext} from "@apollo/client/link/context";
 import Cookies from 'universal-cookie';
+import {createUploadLink} from 'apollo-upload-client'
 
 const idTokenRegex = /CognitoIdentityServiceProvider\.[0-9a-z]+\.[0-9a-z\-_A-Z]+\.idToken/
 
@@ -43,7 +44,6 @@ export const createApolloClient = (
     request: any = null,
     initialStoreState: Object | null = null,
     uri: string = (process.env.PUBLIC_GRAPHQL_ENDPOINT || ''),
-
 ): ApolloClient<any> => {
 
     const authLink = setContext(async (_, req) => {
@@ -55,14 +55,16 @@ export const createApolloClient = (
         }
     });
 
-    const httpLink = new HttpLink({
+    const terminatingLinkConfig = {
         uri, // Server URL (must be absolute)
-        credentials: 'same-origin'
-    })
+        credentials: 'same-origin',
+    };
+
+    const terminatingLink = ssrMode ? new HttpLink(terminatingLinkConfig) : createUploadLink(terminatingLinkConfig)
 
     return new ApolloClient({
         ssrMode,
-        link: authLink.concat(httpLink),
+        link: authLink.concat(terminatingLink),
         cache: initialStoreState
             ? new InMemoryCache({}).restore(initialStoreState as NormalizedCacheObject)
             : new InMemoryCache({}),

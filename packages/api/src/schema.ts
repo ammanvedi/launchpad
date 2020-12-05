@@ -1,6 +1,7 @@
 import gql from 'graphql-tag';
 
 export const schema = gql`
+    scalar Upload
     
     enum ConsentType {
         TERMS_OF_USE
@@ -78,5 +79,6 @@ export const schema = gql`
         addConsent(type: ConsentType): ConsentResponse
         register(user: RegisterUserInput): Boolean
         registerUserFromExternalProvider(user: RegisterUserFromExternalProviderInput): User
+        updateUserProfileImage(file: Upload!): User
     }
 `;

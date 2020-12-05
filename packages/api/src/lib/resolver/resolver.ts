@@ -4,6 +4,7 @@ import {meResolver} from "./query/me";
 import {userFieldsResolver} from "./field/user";
 import {registerResolver} from "./mutation/register";
 import {registerUserFromExternalProviderResolver} from "./mutation/register-user-from-external-provider";
+import {updateUserProfileImageResolver} from "./mutation/update-user-profile-image";
 
 export const resolvers: Resolvers<GQLContext> = {
     Query: {
@@ -11,7 +12,8 @@ export const resolvers: Resolvers<GQLContext> = {
     },
     Mutation: {
         register: registerResolver,
-        registerUserFromExternalProvider: registerUserFromExternalProviderResolver
+        registerUserFromExternalProvider: registerUserFromExternalProviderResolver,
+        updateUserProfileImage: updateUserProfileImageResolver
     },
     User: userFieldsResolver
 };
