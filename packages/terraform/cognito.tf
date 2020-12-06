@@ -225,3 +225,14 @@ resource "aws_cognito_user_pool_domain" "main" {
   domain       = var.user_pool_domain
   user_pool_id = aws_cognito_user_pool.master_user_pool.id
 }
+
+# AWS S3 bucket
+
+variable "temp_media_uploads_bucket_name" {
+  type = string
+}
+
+resource "aws_s3_bucket" "temp_media_uploads" {
+  bucket = var.temp_media_uploads_bucket_name
+  acl = "private"
+}

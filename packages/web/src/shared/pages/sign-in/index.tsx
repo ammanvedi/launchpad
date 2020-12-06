@@ -30,6 +30,7 @@ const Page = () => {
             <button onClick={handleButtonClick} >Sign in</button>
             <a href={getSocialLink('Facebook')}>facebook</a>
             <a href={getSocialLink('Google')}>google</a>
+            <button>Forgot Passsword?</button>
         </div>
     )
 }

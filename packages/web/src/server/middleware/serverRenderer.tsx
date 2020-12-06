@@ -16,13 +16,11 @@ import {createApolloClient} from "../../shared/graphql/apollo";
 import {ApolloProvider} from "@apollo/client";
 import {getDataFromTree} from "@apollo/client/react/ssr";
 import {amplifyConfig} from "../../shared/amplify";
+import {getIdTokenFromRequest} from "auth/helpers";
 
 Amplify.configure({...amplifyConfig, ssr: true});
 
 const manifest = require('../../../build/react-loadable-ssr-addon.json');
-
-const helmetContext = {};
-const routerContext = {};
 
 const serverRenderer: any = () => async (
     req: express.Request & { store: Store },
@@ -31,6 +29,11 @@ const serverRenderer: any = () => async (
     const modules = new Set();
     const {Auth} = withSSRContext({req});
     const apolloClient = createApolloClient(Auth, true, req);
+    const helmetContext = {};
+    const routerContext = {
+        isLoggedIn: !!getIdTokenFromRequest(req)
+    };
+
 
     const AppTree = (
         <Loadable.Capture report={(moduleName: string) => modules.add(moduleName)}>

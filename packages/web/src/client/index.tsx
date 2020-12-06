@@ -18,7 +18,22 @@ import {amplifyConfig} from "../shared/amplify";
 
 const history = createHistory();
 
+Auth.configure({
+    Auth: {
+        region: process.env.TF_VAR_aws_region,
+        userPoolId: process.env.AWS_USER_POOL_ID,
+        userPoolWebClientId: process.env.AWS_USER_POOLS_WEB_CLIENT_ID,
+        cookieStorage: {
+            domain: process.env.AUTH_COOKIE_DOMAIN,
+            path: '/',
+            expires: 365,
+            secure: false
+        }
+    }
+});
+
 Amplify.configure({...amplifyConfig, ssr: true});
+
 
 const store =
     window.store ||

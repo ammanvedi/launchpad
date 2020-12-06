@@ -5,7 +5,10 @@ const routes = {
     socialSignUp: '/social-sign-up',
     signUp: '/sign-up',
     signUpVerify: '/sign-up-verify',
-    profile: '/me'
+    profile: '/me',
+    resendVerification: '/re-send-verification',
+    forgotPassword: '/forgot-password',
+    setNewPassword: '/set-new-password'
 };
 
 export const getRoute = (

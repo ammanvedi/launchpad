@@ -7,13 +7,14 @@ import {IAuthorizer} from "./lib/authorization/IAuthorizer";
 import {getAuthTokens} from "./lib/authorization/header";
 import {applyMiddleware} from "graphql-middleware";
 import { makeExecutableSchema } from 'graphql-tools';
-import {PrismaClient} from "@prisma/client";
 import Amplify from '@aws-amplify/core';
 import Auth from '@aws-amplify/auth';
 import {permissions} from "./lib/authorization/rbac";
 import {ApolloServer} from 'apollo-server';
 import AWS from 'aws-sdk';
 import {loaders, prismaDb as db} from "./lib/data/data";
+import {MediaManager} from "./lib/media/media-manager";
+import {CloudinaryMediaManager} from "./lib/media/cloudinary-media-manager";
 
 dotenv.config();
 
@@ -33,8 +34,11 @@ const authorizer: IAuthorizer<CognitoAuthorizerConfig> = new CognitoAuthorizer( 
     jwkUrl: `https://cognito-idp.${process.env.TF_VAR_aws_region}.amazonaws.com/${process.env.AWS_USER_POOL_ID}/.well-known/jwks.json`
 });
 
-
-
+const mediaManager: MediaManager = new CloudinaryMediaManager({
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
+    apiSecret: process.env.CLOUDINARY_SECRET_KEY || '',
+    apiKey: process.env.CLOUDINARY_KEY || ''
+})
 
 const amplifyConfig = {
     aws_project_region: process.env.TF_VAR_aws_region,
@@ -78,7 +82,6 @@ export const context = ({req}): GQLContext => {
 
     const authState = authorizer.getAuthState(authTokens);
 
-
     return {
         authorizer,
         authState,
@@ -86,7 +89,8 @@ export const context = ({req}): GQLContext => {
             db,
             loaders: loaders()
         },
-        amplifyAuth: Auth
+        amplifyAuth: Auth,
+        mediaManager
     }
 }
 
@@ -95,7 +99,12 @@ export const server = new ApolloServer({
     context
 });
 
-authorizer.initialize()
+const setup = Promise.all([
+    authorizer.initialize(),
+    mediaManager.createTempDir(process.env.MEDIA_TEMP_FOLDER || '')
+])
+
+setup
     .then(() => server.listen())
     .then(({ url }) => {
         console.log(`Server running @ ${url}`);

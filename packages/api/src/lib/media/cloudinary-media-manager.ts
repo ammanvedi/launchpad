@@ -8,9 +8,10 @@ type CloudinaryMediaManagerConfig = {
     apiSecret: string,
 }
 
-export class CloudinaryMediaManager implements MediaManager {
+export class CloudinaryMediaManager extends MediaManager {
 
     constructor(public readonly config: CloudinaryMediaManagerConfig) {
+        super()
         cloudinary.config({
             api_key: this.config.apiKey,
             api_secret: this.config.apiSecret,
@@ -18,7 +19,20 @@ export class CloudinaryMediaManager implements MediaManager {
         });
     }
 
-    storeImage(imageData: any): Promise<StringUrl> {
-        return Promise.resolve('');
+    async storeImage(imagePath: string): Promise<StringUrl> {
+
+        return new Promise((res, rej) => {
+            cloudinary.uploader.upload(imagePath, (err, result) => {
+                if(err) {
+                    return rej(err);
+                }
+
+                if(!result) {
+                    return rej('No error but no result either')
+                }
+
+                res(result.secure_url)
+            })
+        });
     }
 }

@@ -1,30 +1,54 @@
 import {Auth} from '@aws-amplify/auth';
 import {ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject} from "@apollo/client";
 import {setContext} from "@apollo/client/link/context";
-import Cookies from 'universal-cookie';
 import {createUploadLink} from 'apollo-upload-client'
+import {getIdTokenFromRequest, tokenIsExpired} from "auth/helpers";
+import {createLoggerSet} from "../../../../api/src/lib/logging/logger";
 
-const idTokenRegex = /CognitoIdentityServiceProvider\.[0-9a-z]+\.[0-9a-z\-_A-Z]+\.idToken/
-
-const getIdTokenFromRequest = (req:any): string | null => {
-    //console.log('rrrrrr', req)
-    const cookies = new Cookies(req.headers.cookie).getAll();
-    const cookieNames = Object.keys(cookies);
-    const idTokenCookie = cookieNames.find(name => idTokenRegex.test(name));
-    if (idTokenCookie) {
-        // @ts-ignore
-        return cookies[idTokenCookie];
-    }
-    return null;
-}
+const log = createLoggerSet('ApolloClient');
 
 const getHeaders = async (auth: typeof Auth, req: any): Promise<object> => {
     try {
         let token;
 
         if (req) {
-            token = getIdTokenFromRequest(req);
+            /**
+             * Now we are on the server side and we have the express request info
+             * the fastest way to get the token is to read it as a cookie
+             */
+            const cookieToken = getIdTokenFromRequest(req);
+            if (cookieToken) {
+                log.info('Found a Cognito cookie in request');
+                /**
+                 * However even if we get this token its possible that it could be
+                 * expired, for example if a user has stopped using the app for a
+                 * few hours and then come back.
+                 * If it is expired we should make a request to AWS for a new one
+                 * This might make the SSR take longer but this user would have
+                 * to do it client side anyway, and we mitigate this by only trying to do it
+                 * when the user has a token and it is expired
+                 */
+                const isExpired = await tokenIsExpired(cookieToken);
+
+                if(isExpired) {
+                    /**
+                     * Amplify SDK at the moment does nto provide a nice way to refresh the
+                     * users token server side, this means that if the user makes a request with an
+                     * expired token then we will not be able to server side render any content
+                     * that requires authentication
+                     *
+                     * This is not 100% ideal but the main point of server side rendering is to
+                     * appease SEO and to show the user data as quick as possible. Since we can
+                     * accomplish both of these we wont worry about this too much
+                     */
+                    log.err('Token was expired, refresh them and send to the server');
+                } else {
+                    log.info('Token is still valid')
+                    token = cookieToken;
+                }
+            }
         } else {
+            log.info('In browser, get current session')
             const session = await auth.currentSession();
             token = session.getIdToken().getJwtToken();
         }

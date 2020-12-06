@@ -29,7 +29,10 @@ export enum GqlError {
   InternalUserCreationFailed = 'INTERNAL_USER_CREATION_FAILED',
   NoInternalId = 'NO_INTERNAL_ID',
   DbError = 'DB_ERROR',
-  UserDoesNotExist = 'USER_DOES_NOT_EXIST'
+  UserDoesNotExist = 'USER_DOES_NOT_EXIST',
+  UploadFailed = 'UPLOAD_FAILED',
+  EntryExists = 'ENTRY_EXISTS',
+  Unknown = 'UNKNOWN'
 }
 
 export enum Role {
@@ -69,6 +72,11 @@ export type ConsentResponse = {
   user?: Maybe<User>;
 };
 
+export type HellowWorldData = {
+  __typename?: 'HellowWorldData';
+  hello?: Maybe<Scalars['String']>;
+};
+
 export type RegisterUserInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -88,6 +96,7 @@ export type RegisterUserFromExternalProviderInput = {
 export type Query = {
   __typename?: 'Query';
   me: MeResponse;
+  helloWorld: HellowWorldData;
 };
 
 export type Mutation = {
@@ -100,7 +109,7 @@ export type Mutation = {
 
 
 export type MutationAddConsentArgs = {
-  type?: Maybe<ConsentType>;
+  type: ConsentType;
 };
 
 
@@ -118,13 +127,38 @@ export type MutationUpdateUserProfileImageArgs = {
   file: Scalars['Upload'];
 };
 
+export type GlobalConsentsFragmentFragment = (
+  { __typename?: 'Consent' }
+  & Pick<Consent, 'id' | 'consentedTo'>
+);
+
 export type GlobalMeFragmentFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'firstName' | 'lastName' | 'profileImage'>
   & { consents?: Maybe<Array<(
     { __typename?: 'Consent' }
-    & Pick<Consent, 'id' | 'consentedTo'>
+    & GlobalConsentsFragmentFragment
   )>> }
+);
+
+export type AddConsentMutationVariables = Exact<{
+  type: ConsentType;
+}>;
+
+
+export type AddConsentMutation = (
+  { __typename?: 'Mutation' }
+  & { addConsent?: Maybe<(
+    { __typename?: 'ConsentResponse' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id'>
+      & { consents?: Maybe<Array<(
+        { __typename?: 'Consent' }
+        & GlobalConsentsFragmentFragment
+      )>> }
+    )> }
+  )> }
 );
 
 export type RegisterExternalUserMutationVariables = Exact<{
@@ -163,6 +197,17 @@ export type UploadUserProfileImageMutation = (
   )> }
 );
 
+export type HelloQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type HelloQuery = (
+  { __typename?: 'Query' }
+  & { helloWorld: (
+    { __typename?: 'HellowWorldData' }
+    & Pick<HellowWorldData, 'hello'>
+  ) }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -177,6 +222,12 @@ export type MeQuery = (
   ) }
 );
 
+export const GlobalConsentsFragmentFragmentDoc = gql`
+    fragment GlobalConsentsFragment on Consent {
+  id
+  consentedTo
+}
+    `;
 export const GlobalMeFragmentFragmentDoc = gql`
     fragment GlobalMeFragment on User {
   id
@@ -184,11 +235,47 @@ export const GlobalMeFragmentFragmentDoc = gql`
   lastName
   profileImage
   consents {
-    id
-    consentedTo
+    ...GlobalConsentsFragment
   }
 }
-    `;
+    ${GlobalConsentsFragmentFragmentDoc}`;
+export const AddConsentDocument = gql`
+    mutation addConsent($type: ConsentType!) {
+  addConsent(type: $type) {
+    user {
+      id
+      consents {
+        ...GlobalConsentsFragment
+      }
+    }
+  }
+}
+    ${GlobalConsentsFragmentFragmentDoc}`;
+export type AddConsentMutationFn = Apollo.MutationFunction<AddConsentMutation, AddConsentMutationVariables>;
+
+/**
+ * __useAddConsentMutation__
+ *
+ * To run a mutation, you first call `useAddConsentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddConsentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addConsentMutation, { data, loading, error }] = useAddConsentMutation({
+ *   variables: {
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useAddConsentMutation(baseOptions?: Apollo.MutationHookOptions<AddConsentMutation, AddConsentMutationVariables>) {
+        return Apollo.useMutation<AddConsentMutation, AddConsentMutationVariables>(AddConsentDocument, baseOptions);
+      }
+export type AddConsentMutationHookResult = ReturnType<typeof useAddConsentMutation>;
+export type AddConsentMutationResult = Apollo.MutationResult<AddConsentMutation>;
+export type AddConsentMutationOptions = Apollo.BaseMutationOptions<AddConsentMutation, AddConsentMutationVariables>;
 export const RegisterExternalUserDocument = gql`
     mutation registerExternalUser($user: RegisterUserFromExternalProviderInput) {
   registerUserFromExternalProvider(user: $user) {
@@ -284,6 +371,38 @@ export function useUploadUserProfileImageMutation(baseOptions?: Apollo.MutationH
 export type UploadUserProfileImageMutationHookResult = ReturnType<typeof useUploadUserProfileImageMutation>;
 export type UploadUserProfileImageMutationResult = Apollo.MutationResult<UploadUserProfileImageMutation>;
 export type UploadUserProfileImageMutationOptions = Apollo.BaseMutationOptions<UploadUserProfileImageMutation, UploadUserProfileImageMutationVariables>;
+export const HelloDocument = gql`
+    query hello {
+  helloWorld {
+    hello
+  }
+}
+    `;
+
+/**
+ * __useHelloQuery__
+ *
+ * To run a query within a React component, call `useHelloQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHelloQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHelloQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useHelloQuery(baseOptions?: Apollo.QueryHookOptions<HelloQuery, HelloQueryVariables>) {
+        return Apollo.useQuery<HelloQuery, HelloQueryVariables>(HelloDocument, baseOptions);
+      }
+export function useHelloLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HelloQuery, HelloQueryVariables>) {
+          return Apollo.useLazyQuery<HelloQuery, HelloQueryVariables>(HelloDocument, baseOptions);
+        }
+export type HelloQueryHookResult = ReturnType<typeof useHelloQuery>;
+export type HelloLazyQueryHookResult = ReturnType<typeof useHelloLazyQuery>;
+export type HelloQueryResult = Apollo.QueryResult<HelloQuery, HelloQueryVariables>;
 export const MeDocument = gql`
     query me {
   me {

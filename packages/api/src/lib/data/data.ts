@@ -1,30 +1,26 @@
 import DataLoader from "dataloader";
-import {PrismaClient, User} from '@prisma/client';
-import {GqlError} from "../../generated/graphql";
-import {alignResponsesToBatchKeys} from "./helpers";
+import {Consent, PrismaClient, User} from '@prisma/client';
+import {userBatchLoader} from "./data-loader/user";
+import {consentsForUserIdBatchLoader} from "./data-loader/consent";
+
 
 export type DataLoaders = {
     user: {
         byId: DataLoader<string, User>
+    },
+    consents: {
+        forUserId: DataLoader<string, Array<Consent>>
     }
 }
 
 export const prismaDb = new PrismaClient();
 
-const userBatchLoader: DataLoader.BatchLoadFn<string, User> = async (ids) => {
-    const users = await prismaDb.user.findMany({
-        where: {
-            id: {
-                in: (ids as Array<string>)
-            }
-        }
-    });
-    const errors = () => new Error(GqlError.UserDoesNotExist);
-    return alignResponsesToBatchKeys(ids, users, errors)
-}
 
 export const loaders = (): DataLoaders => ({
     user: {
         byId: new DataLoader(userBatchLoader)
+    },
+    consents: {
+        forUserId: new DataLoader(consentsForUserIdBatchLoader)
     }
 })

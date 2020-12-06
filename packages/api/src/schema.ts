@@ -20,6 +20,9 @@ export const schema = gql`
         NO_INTERNAL_ID
         DB_ERROR
         USER_DOES_NOT_EXIST
+        UPLOAD_FAILED
+        ENTRY_EXISTS
+        UNKNOWN
     }
     
     enum Role {
@@ -55,6 +58,10 @@ export const schema = gql`
         user: User
     }
     
+    type HellowWorldData {
+        hello: String
+    }
+    
     input RegisterUserInput {
         email: String!
         password: String!
@@ -73,10 +80,11 @@ export const schema = gql`
     
     type Query {
         me: MeResponse!
+        helloWorld: HellowWorldData!
     }
     
     type Mutation {
-        addConsent(type: ConsentType): ConsentResponse
+        addConsent(type: ConsentType!): ConsentResponse
         register(user: RegisterUserInput): Boolean
         registerUserFromExternalProvider(user: RegisterUserFromExternalProviderInput): User
         updateUserProfileImage(file: Upload!): User

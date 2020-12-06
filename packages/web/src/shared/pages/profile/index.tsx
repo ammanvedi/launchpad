@@ -1,9 +1,21 @@
 import React from 'react';
-import {useMeQuery, useUploadUserProfileImageMutation} from "../../graphql/generated/graphql";
+import {
+    ConsentType,
+    useAddConsentMutation, useHelloQuery,
+    useMeQuery,
+    useUploadUserProfileImageMutation
+} from "../../graphql/generated/graphql";
+import {Auth} from '@aws-amplify/auth';
 
 const Page = () => {
     const {data} = useMeQuery();
-    const [upload] = useUploadUserProfileImageMutation()
+    const {data: helloData} = useHelloQuery();
+    const [upload] = useUploadUserProfileImageMutation();
+    const [consentToCookie] = useAddConsentMutation({
+        variables: {
+            type: ConsentType.Cookies
+        }
+    })
 
     // @ts-ignore
     const onChange = ({target: {files: [file]}}) => {
@@ -14,12 +26,22 @@ const Page = () => {
         })
     }
 
+    const signOut = () => {
+        Auth.signOut()
+            .then(() => {
+                console.log('signed out')
+            })
+            .catch(e => {
+                conssole.log(';err signing out', e)
+            })
+    }
+
     return (
         <div>
-            welcome to the sign in page, this page is lazy loaded using react-loadable
-            {JSON.stringify(data)}
+            welcome to your profile page {data?.me.me?.firstName}
+            <div/>
             {!!data?.me.me?.profileImage && (
-                <img src={data?.me.me?.profileImage} />
+                <img width={100} height={100} src={data?.me.me?.profileImage} />
             )}
             Update profile image
             <input
@@ -27,6 +49,18 @@ const Page = () => {
                 required
                 onChange={onChange}
             />
+            <pre>
+               {JSON.stringify(data, null, 2)}
+            </pre>
+            <pre>
+               {JSON.stringify(helloData, null, 2)}
+            </pre>
+            <button onClick={consentToCookie}>
+                Click here to consent to cookie tracking
+            </button>
+            <button onClick={signOut}>
+                Log out
+            </button>
         </div>
     )
 }

@@ -13,6 +13,9 @@ import SocialSignUp from 'pages/social-sign-up';
 import Home from './pages/Home';
 import { SignInAsync } from 'pages/sign-in/index.lazy';
 import {ProfileLazy} from "pages/profile/index.lazy";
+import {ReSendVerificationLazy} from "pages/re-send-verification-email/index.lazy";
+import {ForgotPassswordLazy} from "pages/forgot-password/index.lazy";
+import {SetNewPasswordLazy} from "pages/set-new-password/index.lazy";
 
 const App: React.FC<any> = () => {
     const { t } = useTranslation();
@@ -33,6 +36,9 @@ const App: React.FC<any> = () => {
                 <Route exact path={routes.signUp} component={SignUp} />
                 <Route exact path={routes.signUpVerify} component={SignUpVerify} />
                 <Route exact path={routes.profile} component={ProfileLazy} />
+                <Route exact path={routes.resendVerification} component={ReSendVerificationLazy} />
+                <Route exact path={routes.forgotPassword} component={ForgotPassswordLazy} />
+                <Route exact path={routes.setNewPassword} component={SetNewPasswordLazy} />
                 <Route render={() => '404!'} />
             </Switch>
             <h2>{t('router-headline')}</h2>
@@ -45,6 +51,21 @@ const App: React.FC<any> = () => {
                 </li>
                 <li>
                     <Link to="/sign-up">Sign Up</Link>
+                </li>
+                <li>
+                    <Link to="/sign-up-verify">Verify Sign Up</Link>
+                </li>
+                <li>
+                    <Link to="/me">Profile (requires authorisation)</Link>
+                </li>
+                <li>
+                    <Link to={routes.resendVerification}>Re send verification email</Link>
+                </li>
+                <li>
+                    <Link to={routes.forgotPassword}>Forgot password</Link>
+                </li>
+                <li>
+                    <Link to={routes.setNewPassword}>Set new password</Link>
                 </li>
             </ul>
         </div>

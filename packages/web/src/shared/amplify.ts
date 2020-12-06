@@ -1,6 +1,6 @@
 export const amplifyConfig = {
     aws_project_region: process.env.TF_VAR_aws_region,
-    aws_cognito_region: process.env.AWS_DEFAULT_REGION,
+    aws_cognito_region: process.env.TF_VAR_aws_region,
     aws_user_pools_id: process.env.AWS_USER_POOL_ID,
     aws_user_pools_web_client_id: process.env.AWS_USER_POOLS_WEB_CLIENT_ID,
     oauth: {

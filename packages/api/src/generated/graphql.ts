@@ -29,7 +29,10 @@ export enum GqlError {
   InternalUserCreationFailed = 'INTERNAL_USER_CREATION_FAILED',
   NoInternalId = 'NO_INTERNAL_ID',
   DbError = 'DB_ERROR',
-  UserDoesNotExist = 'USER_DOES_NOT_EXIST'
+  UserDoesNotExist = 'USER_DOES_NOT_EXIST',
+  UploadFailed = 'UPLOAD_FAILED',
+  EntryExists = 'ENTRY_EXISTS',
+  Unknown = 'UNKNOWN'
 }
 
 export enum Role {
@@ -69,6 +72,11 @@ export type ConsentResponse = {
   user?: Maybe<User>;
 };
 
+export type HellowWorldData = {
+  __typename?: 'HellowWorldData';
+  hello?: Maybe<Scalars['String']>;
+};
+
 export type RegisterUserInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -88,6 +96,7 @@ export type RegisterUserFromExternalProviderInput = {
 export type Query = {
   __typename?: 'Query';
   me: MeResponse;
+  helloWorld: HellowWorldData;
 };
 
 export type Mutation = {
@@ -100,7 +109,7 @@ export type Mutation = {
 
 
 export type MutationAddConsentArgs = {
-  type?: Maybe<ConsentType>;
+  type: ConsentType;
 };
 
 
@@ -206,6 +215,7 @@ export type ResolversTypes = {
   User: ResolverTypeWrapper<User>;
   MeResponse: ResolverTypeWrapper<MeResponse>;
   ConsentResponse: ResolverTypeWrapper<ConsentResponse>;
+  HellowWorldData: ResolverTypeWrapper<HellowWorldData>;
   RegisterUserInput: RegisterUserInput;
   RegisterUserFromExternalProviderInput: RegisterUserFromExternalProviderInput;
   Query: ResolverTypeWrapper<{}>;
@@ -222,6 +232,7 @@ export type ResolversParentTypes = {
   User: User;
   MeResponse: MeResponse;
   ConsentResponse: ConsentResponse;
+  HellowWorldData: HellowWorldData;
   RegisterUserInput: RegisterUserInput;
   RegisterUserFromExternalProviderInput: RegisterUserFromExternalProviderInput;
   Query: {};
@@ -262,12 +273,18 @@ export type ConsentResponseResolvers<ContextType = any, ParentType extends Resol
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type HellowWorldDataResolvers<ContextType = any, ParentType extends ResolversParentTypes['HellowWorldData'] = ResolversParentTypes['HellowWorldData']> = {
+  hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   me?: Resolver<ResolversTypes['MeResponse'], ParentType, ContextType>;
+  helloWorld?: Resolver<ResolversTypes['HellowWorldData'], ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  addConsent?: Resolver<Maybe<ResolversTypes['ConsentResponse']>, ParentType, ContextType, RequireFields<MutationAddConsentArgs, never>>;
+  addConsent?: Resolver<Maybe<ResolversTypes['ConsentResponse']>, ParentType, ContextType, RequireFields<MutationAddConsentArgs, 'type'>>;
   register?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationRegisterArgs, never>>;
   registerUserFromExternalProvider?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationRegisterUserFromExternalProviderArgs, never>>;
   updateUserProfileImage?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateUserProfileImageArgs, 'file'>>;
@@ -279,6 +296,7 @@ export type Resolvers<ContextType = any> = {
   User?: UserResolvers<ContextType>;
   MeResponse?: MeResponseResolvers<ContextType>;
   ConsentResponse?: ConsentResponseResolvers<ContextType>;
+  HellowWorldData?: HellowWorldDataResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
 };
