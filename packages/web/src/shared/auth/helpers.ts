@@ -239,13 +239,3 @@ export const getExpires = (days: number) => {
     result.setDate(result.getDate() + days);
     return result;
 }
-
-/**
- * In order to handle cookies on the server side then we need to
- * 1. validate that we have all the cookies that we need, i.e. id token, access, and refresh token
- * 2. check the id token for expiry
- * 3. if it is expired make a post request and get new tokens
- * 4. set these new tokens in the response and use the new id token to make whatever
- *  request we need to right now
- * https://docs.aws.amazon.com/cognito/latest/developerguide/token-endpoint.html
- */

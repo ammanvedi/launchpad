@@ -22,7 +22,8 @@ export const ProtectedRoute = ({
                  * We are now rendering on the client side
                  * we need to check if the user is logged in
                  * we need to do this synchronously so we attempt to
-                 * read user tokens from local storage
+                 * read user tokens from document Cookie
+                 * TODO
                  */
             }
             /**
