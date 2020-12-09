@@ -11,12 +11,10 @@ import IntlProvider from '../../shared/i18n/IntlProvider';
 import App from '../../shared/App';
 import Html from '../components/HTML';
 import Amplify from '@aws-amplify/core';
-import {withSSRContext} from "aws-amplify";
 import {createApolloClient} from "../../shared/graphql/apollo";
 import {ApolloProvider} from "@apollo/client";
 import {getDataFromTree} from "@apollo/client/react/ssr";
 import {amplifyConfig} from "../../shared/amplify";
-import {getIdTokenFromRequest} from "auth/helpers";
 
 Amplify.configure({...amplifyConfig, ssr: true});
 
@@ -27,13 +25,12 @@ const serverRenderer: any = () => async (
     res: express.Response
 ) => {
     const modules = new Set();
-    const {Auth} = withSSRContext({req});
-    const apolloClient = createApolloClient(Auth, true, req);
+    const getIdToken = () => Promise.resolve(res.locals.idToken)
+    const apolloClient = createApolloClient(true, getIdToken);
     const helmetContext = {};
     const routerContext = {
-        isLoggedIn: !!getIdTokenFromRequest(req)
+        isLoggedIn: res.locals.isLoggedIn
     };
-
 
     const AppTree = (
         <Loadable.Capture report={(moduleName: string) => modules.add(moduleName)}>

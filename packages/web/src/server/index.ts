@@ -13,6 +13,7 @@ import serverRenderer from './middleware/serverRenderer';
 import addStore from './middleware/addStore';
 import webhookVerification from './middleware/webhookVerification';
 import { i18nextXhr, refreshTranslations } from './middleware/i18n';
+import {keepTokensFresh} from "auth/helpers";
 
 require('dotenv').config();
 
@@ -24,6 +25,11 @@ app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get('/favicon.ico', (_req, res) => {
+    res.status(204);
+    res.end()
+});
 
 app.get('/locales/refresh', webhookVerification, refreshTranslations);
 
@@ -40,8 +46,8 @@ app.use(
     })
 );
 
+app.use(keepTokensFresh);
 app.use(serverRenderer());
-
 app.use(errorHandler);
 
 preloadAll()

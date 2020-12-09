@@ -29,6 +29,11 @@ const HTML = ({
             {css.filter(Boolean).map((href) => (
                 <link key={href} rel="stylesheet" href={href} />
             ))}
+
+        </head>
+        <body>
+            {/* eslint-disable-next-line react/no-danger */}
+            <div id="app" dangerouslySetInnerHTML={{ __html: children }} />
             <script
                 // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{
@@ -45,10 +50,6 @@ const HTML = ({
                     __html: `window.__APOLLO_STATE__ = ${apolloState}`,
                 }}
             />
-        </head>
-        <body>
-            {/* eslint-disable-next-line react/no-danger */}
-            <div id="app" dangerouslySetInnerHTML={{ __html: children }} />
             {scripts.filter(Boolean).map((src) => (
                 <script key={src} src={src} />
             ))}

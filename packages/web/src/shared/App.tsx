@@ -24,7 +24,7 @@ const App: React.FC<any> = () => {
             <Helmet
                 defaultTitle="Launchpad"
                 titleTemplate="%s – Launchpad"
-                link={[{ rel: 'icon', type: 'image/png', href: favicon }]}
+                link={[{ rel: 'shortcut icon', type: 'image/png', href: favicon }]}
             />
             <h1>
                 <ReactLogo className={css.reactLogo} /> Launchpad

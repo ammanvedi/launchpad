@@ -18,3 +18,17 @@ export const amplifyConfig = {
     },
     federationTarget :"COGNITO_USER_POOLS"
 };
+
+export const amplifyAuthConfig = {
+    region: process.env.TF_VAR_aws_region,
+        userPoolId: process.env.AWS_USER_POOL_ID,
+    userPoolWebClientId: process.env.AWS_USER_POOLS_WEB_CLIENT_ID,
+    cookieStorage: {
+        domain: process.env.AUTH_COOKIE_DOMAIN,
+        path: process.env.AUTH_COOKIE_PATH,
+        expires: parseInt(process.env.AUTH_COOKIE_EXPIRY_DAYS || '365'),
+        secure: JSON.parse(process.env.AUTH_COOKIE_SECURE || '')
+    }
+}
+
+export const COGNITO_URL = `https://cognito-idp.${process.env.TF_VAR_aws_region}.amazonaws.com/`;
