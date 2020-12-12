@@ -1,7 +1,12 @@
-import webpack, { Compiler } from 'webpack';
+// @ts-ignore
+import webpack  from 'webpack';
+// @ts-ignore
 import nodemon from 'nodemon';
+// @ts-ignore
 import express from 'express';
+// @ts-ignore
 import webpackDevMiddleware from 'webpack-dev-middleware';
+// @ts-ignore
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import paths from '../config/paths';
 import getConfig from '../config/webpack.config.ts';

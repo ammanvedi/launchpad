@@ -6,7 +6,6 @@ type Props = {
     linkElements: any;
     helmetContext: any;
     scriptElements: any;
-    state: string;
     recoilState: string;
     apolloState: string;
 };
@@ -16,7 +15,6 @@ const HTML = ({
     styleElements,
     linkElements,
     scriptElements,
-    state = '{}',
     recoilState = '{}',
     apolloState = '{}',
     helmetContext: { helmet },
@@ -34,29 +32,14 @@ const HTML = ({
             {styleElements}
         </head>
         <body>
-            {/* eslint-disable-next-line react/no-danger */}
             <div id="app" dangerouslySetInnerHTML={{ __html: children }} />
             <script
-                // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{
-                    // TODO: Add jsesc/stringify here
-                    // see: https://twitter.com/HenrikJoreteg/status/1143953338284703744
-                    __html: `window.__PRELOADED_STATE__ = ${state}`,
-                }}
-            />
-            <script
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{
-                    // TODO: Add jsesc/stringify here
-                    // see: https://twitter.com/HenrikJoreteg/status/1143953338284703744
                     __html: `window.__PRELOADED_RECOIL_STATE__ = ${recoilState}`,
                 }}
             />
             <script
-                // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{
-                    // TODO: Add jsesc/stringify here
-                    // see: https://twitter.com/HenrikJoreteg/status/1143953338284703744
                     __html: `window.__APOLLO_STATE__ = ${apolloState}`,
                 }}
             />

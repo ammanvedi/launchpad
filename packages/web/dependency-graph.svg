@@ -440,18 +440,18 @@
 <path fill="none" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" d="M56.1022,-209.959C62.3722,-220.2808 73.9867,-236.8437 88.5,-245.8581 95.9708,-250.4983 104.7653,-253.7031 113.3604,-255.9166"/>
 <polygon fill="#000000" fill-opacity="0.200000" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" points="112.9397,-257.9748 119.2603,-257.296 113.896,-253.8851 112.9397,-257.9748"/>
 </g>
-<!-- src/server/middleware/errorHandler.ts -->
+<!-- src/server/middleware/error-handler.ts -->
 <g id="node13" class="node">
-<title>src/server/middleware/errorHandler.ts</title>
-<g id="a_node13"><a xlink:href="src/server/middleware/errorHandler.ts" xlink:title="errorHandler.ts">
+<title>src/server/middleware/error-handler.ts</title>
+<g id="a_node13"><a xlink:href="src/server/middleware/error-handler.ts" xlink:title="error-handler.ts">
 <path fill="#ddfeff" stroke="#000000" d="M184,-179.8581C184,-179.8581 118,-179.8581 118,-179.8581 115,-179.8581 112,-176.8581 112,-173.8581 112,-173.8581 112,-167.8581 112,-167.8581 112,-164.8581 115,-161.8581 118,-161.8581 118,-161.8581 184,-161.8581 184,-161.8581 187,-161.8581 190,-164.8581 190,-167.8581 190,-167.8581 190,-173.8581 190,-173.8581 190,-176.8581 187,-179.8581 184,-179.8581"/>
-<text text-anchor="middle" x="151" y="-168.6581" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#000000">errorHandler.ts</text>
+<text text-anchor="middle" x="151" y="-168.6581" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#000000">error-handler.ts</text>
 </a>
 </g>
 </g>
-<!-- src/server/index.ts&#45;&gt;src/server/middleware/errorHandler.ts -->
+<!-- src/server/index.ts&#45;&gt;src/server/middleware/error-handler.ts -->
 <g id="edge9" class="edge">
-<title>src/server/index.ts&#45;&gt;src/server/middleware/errorHandler.ts</title>
+<title>src/server/index.ts&#45;&gt;src/server/middleware/error-handler.ts</title>
 <path fill="none" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" d="M72.2227,-191.7487C77.4878,-189.6614 83.1545,-187.5588 88.5,-185.8581 94.0826,-184.082 100.0041,-182.4035 105.8906,-180.8573"/>
 <polygon fill="#000000" fill-opacity="0.200000" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" points="106.4601,-182.8793 111.7516,-179.3565 105.4182,-178.8106 106.4601,-182.8793"/>
 </g>
@@ -470,18 +470,18 @@
 <path fill="none" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" d="M78.0614,-200.8581C90.2897,-200.8581 104.855,-200.8581 117.7426,-200.8581"/>
 <polygon fill="#000000" fill-opacity="0.200000" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" points="117.917,-202.9582 123.9169,-200.8581 117.9169,-198.7582 117.917,-202.9582"/>
 </g>
-<!-- src/server/middleware/serverRenderer.tsx -->
+<!-- src/server/middleware/server-renderer.tsx -->
 <g id="node15" class="node">
-<title>src/server/middleware/serverRenderer.tsx</title>
-<g id="a_node15"><a xlink:href="src/server/middleware/serverRenderer.tsx" xlink:title="serverRenderer.tsx">
+<title>src/server/middleware/server-renderer.tsx</title>
+<g id="a_node15"><a xlink:href="src/server/middleware/server-renderer.tsx" xlink:title="server-renderer.tsx">
 <path fill="#bbfeff" stroke="#000000" d="M192.5,-239.8581C192.5,-239.8581 109.5,-239.8581 109.5,-239.8581 106.5,-239.8581 103.5,-236.8581 103.5,-233.8581 103.5,-233.8581 103.5,-227.8581 103.5,-227.8581 103.5,-224.8581 106.5,-221.8581 109.5,-221.8581 109.5,-221.8581 192.5,-221.8581 192.5,-221.8581 195.5,-221.8581 198.5,-224.8581 198.5,-227.8581 198.5,-227.8581 198.5,-233.8581 198.5,-233.8581 198.5,-236.8581 195.5,-239.8581 192.5,-239.8581"/>
-<text text-anchor="middle" x="151" y="-228.6581" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#000000">serverRenderer.tsx</text>
+<text text-anchor="middle" x="151" y="-228.6581" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#000000">server-renderer.tsx</text>
 </a>
 </g>
 </g>
-<!-- src/server/index.ts&#45;&gt;src/server/middleware/serverRenderer.tsx -->
+<!-- src/server/index.ts&#45;&gt;src/server/middleware/server-renderer.tsx -->
 <g id="edge11" class="edge">
-<title>src/server/index.ts&#45;&gt;src/server/middleware/serverRenderer.tsx</title>
+<title>src/server/index.ts&#45;&gt;src/server/middleware/server-renderer.tsx</title>
 <path fill="none" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" d="M72.2227,-209.9676C77.4878,-212.0548 83.1545,-214.1574 88.5,-215.8581 93.3915,-217.4143 98.543,-218.8956 103.7033,-220.2786"/>
 <polygon fill="#000000" fill-opacity="0.200000" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" points="103.4141,-222.3734 109.7499,-221.8556 104.4741,-218.3093 103.4141,-222.3734"/>
 </g>
@@ -506,9 +506,9 @@
 <path fill="none" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" d="M182.625,-260.7529C194.1348,-262.455 206.1189,-266.6153 213.5,-275.8581 235.6891,-303.6437 199.1542,-888.1984 221.5,-915.8581 227.3603,-923.1119 236.3558,-926.8336 245.4813,-928.624"/>
 <polygon fill="#000000" fill-opacity="0.200000" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" points="245.2166,-930.7079 251.4652,-929.5394 245.8518,-926.5562 245.2166,-930.7079"/>
 </g>
-<!-- src/server/middleware/errorHandler.ts&#45;&gt;path -->
+<!-- src/server/middleware/error-handler.ts&#45;&gt;path -->
 <g id="edge18" class="edge">
-<title>src/server/middleware/errorHandler.ts&#45;&gt;path</title>
+<title>src/server/middleware/error-handler.ts&#45;&gt;path</title>
 <path fill="none" stroke="#000000" stroke-dasharray="5,2" stroke-opacity="0.200000" d="M153.658,-161.7558C160.6933,-139.361 182.0205,-81.3424 221.5,-52.8581 297.1742,1.7406 415.7891,-15.4334 472.9809,-28.2546"/>
 <polygon fill="#000000" fill-opacity="0.200000" stroke="#000000" stroke-opacity="0.200000" points="472.6649,-30.3367 478.9829,-29.6351 473.6064,-26.2436 472.6649,-30.3367"/>
 </g>
@@ -539,21 +539,21 @@
 <path fill="none" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" d="M178.0395,-196.1925C197.2004,-192.8863 223.0733,-188.4219 243.7634,-184.8519"/>
 <polygon fill="#000000" fill-opacity="0.200000" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" points="244.172,-186.9125 249.7275,-183.8228 243.4578,-182.7737 244.172,-186.9125"/>
 </g>
-<!-- src/server/middleware/serverRenderer.tsx&#45;&gt;src/shared/App.tsx -->
+<!-- src/server/middleware/server-renderer.tsx&#45;&gt;src/shared/App.tsx -->
 <g id="edge22" class="edge">
-<title>src/server/middleware/serverRenderer.tsx&#45;&gt;src/shared/App.tsx</title>
+<title>src/server/middleware/server-renderer.tsx&#45;&gt;src/shared/App.tsx</title>
 <path fill="none" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" d="M198.6377,-235.5128C204.2917,-237.8927 209.4731,-241.2265 213.5,-245.8581 225.6579,-259.8418 212.974,-312.4062 221.5,-328.8581 253.7703,-391.1271 325.9578,-437.736 363.2343,-458.6682"/>
 <polygon fill="#000000" fill-opacity="0.200000" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" points="362.639,-460.7387 368.9057,-461.8057 364.6721,-457.0636 362.639,-460.7387"/>
 </g>
-<!-- src/server/middleware/serverRenderer.tsx&#45;&gt;src/shared/i18n/IntlProvider.tsx -->
+<!-- src/server/middleware/server-renderer.tsx&#45;&gt;src/shared/i18n/IntlProvider.tsx -->
 <g id="edge23" class="edge">
-<title>src/server/middleware/serverRenderer.tsx&#45;&gt;src/shared/i18n/IntlProvider.tsx</title>
+<title>src/server/middleware/server-renderer.tsx&#45;&gt;src/shared/i18n/IntlProvider.tsx</title>
 <path fill="none" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" d="M198.7632,-235.8056C204.3257,-238.1513 209.4487,-241.3975 213.5,-245.8581 230.6992,-264.7951 204.5161,-283.7279 221.5,-302.8581 283.9103,-373.1556 368.2065,-282.7184 426,-356.8581 437.7503,-371.9318 424.8838,-1028.0599 434,-1044.8581 442.9985,-1061.4396 460.4941,-1073.3035 475.9851,-1081.0882"/>
 <polygon fill="#000000" fill-opacity="0.200000" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" points="475.2641,-1083.0714 481.5822,-1083.7728 477.0805,-1079.2845 475.2641,-1083.0714"/>
 </g>
-<!-- src/server/middleware/serverRenderer.tsx&#45;&gt;src/server/components/HTML.tsx -->
+<!-- src/server/middleware/server-renderer.tsx&#45;&gt;src/server/components/HTML.tsx -->
 <g id="edge24" class="edge">
-<title>src/server/middleware/serverRenderer.tsx&#45;&gt;src/server/components/HTML.tsx</title>
+<title>src/server/middleware/server-renderer.tsx&#45;&gt;src/server/components/HTML.tsx</title>
 <path fill="none" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" d="M190.0818,-239.9271C197.8578,-241.819 205.9513,-243.8503 213.5,-245.8581 223.7577,-248.5865 234.8644,-251.7535 244.9456,-254.7105"/>
 <polygon fill="#000000" fill-opacity="0.200000" stroke="#000000" stroke-width="2" stroke-opacity="0.200000" points="244.3996,-256.7388 250.7486,-256.4223 245.588,-252.7104 244.3996,-256.7388"/>
 </g>

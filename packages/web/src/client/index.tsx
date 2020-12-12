@@ -1,14 +1,10 @@
 import "regenerator-runtime/runtime";
 import * as React from 'react';
 import { hydrate } from 'react-dom';
-import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-
-import { configureStore } from '../shared/store';
 import App from '../shared/App';
-import IntlProvider from '../shared/i18n/IntlProvider';
-import createHistory from '../shared/store/history';
+import createHistory from 'history/history';
 import Amplify from '@aws-amplify/core';
 import {Auth} from '@aws-amplify/auth';
 import {createApolloClient} from "../shared/graphql/apollo";
@@ -26,12 +22,6 @@ Auth.configure({
 
 Amplify.configure({...amplifyConfig, ssr: true});
 
-
-const store =
-    window.store ||
-    configureStore({
-        initialState: window.__PRELOADED_STATE__,
-    });
 
 loadableReady(() => {
     const getIdToken = async () => {
@@ -51,15 +41,11 @@ loadableReady(() => {
                     set(atoms[k], initialState[k])
                 })
             }}>
-                <Provider store={store}>
-                    <Router history={history}>
-                        <IntlProvider>
-                            <HelmetProvider>
-                                <App />
-                            </HelmetProvider>
-                        </IntlProvider>
-                    </Router>
-                </Provider>
+                <Router history={history}>
+                    <HelmetProvider>
+                        <App />
+                    </HelmetProvider>
+                </Router>
             </RecoilRoot>
         </ApolloProvider>
         ,

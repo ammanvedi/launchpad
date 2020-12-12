@@ -65,20 +65,6 @@ export const server = [
         __SERVER__: 'true',
         __BROWSER__: 'false',
     }),
-    // We should make sure to have our locales in shared/i18n/locales ready at build time.
-    // They are then copied into the server build folder so they can be accessed via
-    // i18next-xhr-backend and our custom /locales/:locale/:namespace endpoint.
-    new CopyPlugin({
-        patterns: [
-            {
-                from: paths.locales,
-                to: path.join(paths.serverBuild, 'locales'),
-                globOptions: {
-                    ignore: ['*.missing.json'],
-                },
-            },
-        ],
-    }),
     new WaitPlugin(loadableManifest),
 ];
 
