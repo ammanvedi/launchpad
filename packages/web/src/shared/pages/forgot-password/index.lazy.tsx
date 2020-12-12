@@ -1,9 +1,3 @@
-import Loadable from 'react-loadable';
-import React from 'react';
+import loadable from '@loadable/component'
 
-export const ForgotPassswordLazy = Loadable({
-    loader: () => import(/* webpackChunkName: "forgot-password" */ './index'),
-    loading() {
-        return <div>LOOOOADING</div>;
-    },
-});
+export const ForgotPassswordLazy = loadable(() => import(/* webpackChunkName: "forgot-password" */ './index'))

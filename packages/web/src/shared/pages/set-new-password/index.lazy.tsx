@@ -1,9 +1,3 @@
-import Loadable from 'react-loadable';
-import React from 'react';
+import loadable from '@loadable/component'
 
-export const SetNewPasswordLazy = Loadable({
-    loader: () => import(/* webpackChunkName: "set-new-password" */ './index'),
-    loading() {
-        return <div>LOOOOADING</div>;
-    },
-});
+export const SetNewPasswordLazy = loadable(() => import(/* webpackChunkName: "set-new-password" */ './index'))

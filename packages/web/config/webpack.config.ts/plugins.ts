@@ -8,11 +8,11 @@ import CopyPlugin from 'copy-webpack-plugin';
 import { TypedCssModulesPlugin } from 'typed-css-modules-webpack-plugin';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 const Dotenv = require('dotenv-webpack');
-import ReactLoadableSSRAddon from 'react-loadable-ssr-addon';
 import paths from '../paths';
 import { clientOnly } from '../../scripts/utils';
 import envBuilder from '../env';
 import { WaitPlugin } from './wait-plugin';
+import LoadablePlugin from '@loadable/webpack-plugin';
 
 const env = envBuilder();
 
@@ -20,7 +20,7 @@ const isProfilerEnabled = () => process.argv.includes('--profile');
 
 const isDev = () => process.env.NODE_ENV === 'development';
 
-const loadableManifest = path.join(process.cwd(), 'build', 'react-loadable-ssr-addon.json');
+const loadableManifest = path.join(process.cwd(), 'build', 'client', 'static', 'loadable-stats.json');
 
 export const shared = [
     new MiniCssExtractPlugin({
@@ -57,9 +57,7 @@ export const client = [
                 sockIntegration: 'whm',
             },
         }),
-    new ReactLoadableSSRAddon({
-        filename: loadableManifest,
-    }),
+    new LoadablePlugin()
 ].filter(Boolean);
 
 export const server = [

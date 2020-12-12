@@ -2,18 +2,22 @@ import * as React from 'react';
 
 type Props = {
     children: any;
-    css: string[];
+    styleElements: any;
+    linkElements: any;
     helmetContext: any;
-    scripts: string[];
+    scriptElements: any;
     state: string;
+    recoilState: string;
     apolloState: string;
 };
 
 const HTML = ({
     children,
-    css = [],
-    scripts = [],
+    styleElements,
+    linkElements,
+    scriptElements,
     state = '{}',
+    recoilState = '{}',
     apolloState = '{}',
     helmetContext: { helmet },
 }: Props) => (
@@ -26,10 +30,8 @@ const HTML = ({
             {helmet.meta.toComponent()}
             {helmet.link.toComponent()}
             {helmet.script.toComponent()}
-            {css.filter(Boolean).map((href) => (
-                <link key={href} rel="stylesheet" href={href} />
-            ))}
-
+            {linkElements}
+            {styleElements}
         </head>
         <body>
             {/* eslint-disable-next-line react/no-danger */}
@@ -47,12 +49,18 @@ const HTML = ({
                 dangerouslySetInnerHTML={{
                     // TODO: Add jsesc/stringify here
                     // see: https://twitter.com/HenrikJoreteg/status/1143953338284703744
+                    __html: `window.__PRELOADED_RECOIL_STATE__ = ${recoilState}`,
+                }}
+            />
+            <script
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{
+                    // TODO: Add jsesc/stringify here
+                    // see: https://twitter.com/HenrikJoreteg/status/1143953338284703744
                     __html: `window.__APOLLO_STATE__ = ${apolloState}`,
                 }}
             />
-            {scripts.filter(Boolean).map((src) => (
-                <script key={src} src={src} />
-            ))}
+            {scriptElements}
         </body>
     </html>
 );

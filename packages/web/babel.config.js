@@ -30,6 +30,10 @@ module.exports = (api) => {
             '@babel/proposal-optional-chaining',
             '@babel/syntax-dynamic-import',
             'macros',
+            "@loadable/babel-plugin",
+            ["babel-plugin-styled-components", {
+                "pure": true
+            }],
             isDev && isTargetWeb && 'react-refresh/babel',
         ].filter(Boolean),
         env: {

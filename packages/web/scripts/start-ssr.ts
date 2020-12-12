@@ -95,6 +95,8 @@ const start = async () => {
         await compilerPromise('server', serverCompiler);
     } catch (error) {
         logMessage(error, 'error');
+    } finally {
+        logMessage('Server and Client compiled', 'warning');
     }
 
     const script = nodemon({
@@ -102,6 +104,10 @@ const start = async () => {
         ignore: ['src', 'scripts', 'config', './*.*', 'build/client', '**/locales', '**/tmp'],
         delay: 200,
     });
+
+    script.on('start', () => {
+        logMessage('Server side app script demon started', 'warning');
+    })
 
     script.on('restart', () => {
         logMessage('Server side app has been restarted.', 'warning');

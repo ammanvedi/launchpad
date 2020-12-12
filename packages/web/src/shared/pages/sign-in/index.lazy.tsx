@@ -1,9 +1,3 @@
-import Loadable from 'react-loadable';
-import React from 'react';
+import loadable from '@loadable/component'
 
-export const SignInAsync = Loadable({
-    loader: () => import(/* webpackChunkName: "page-one" */ './index'),
-    loading() {
-        return <div>LOOOOADING</div>;
-    },
-});
+export const SignInAsync = loadable(() => import(/* webpackChunkName: "sign-in" */ './index'))

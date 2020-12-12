@@ -1,9 +1,3 @@
-import Loadable from 'react-loadable';
-import React from 'react';
+import loadable from '@loadable/component'
 
-export const ProfileLazy = Loadable({
-    loader: () => import(/* webpackChunkName: "profile" */ './index'),
-    loading() {
-        return <div>LOOOOADING</div>;
-    },
-});
+export const ProfileLazy = loadable(() => import(/* webpackChunkName: "profile" */ './index'))

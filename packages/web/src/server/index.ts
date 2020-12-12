@@ -5,7 +5,6 @@ import cors from 'cors';
 import chalk from 'chalk';
 import manifestHelpers from 'express-manifest-helpers';
 import bodyParser from 'body-parser';
-import { preloadAll } from 'react-loadable';
 import paths from '../../config/paths';
 // import { configureStore } from '../shared/store';
 import errorHandler from './middleware/errorHandler';
@@ -50,17 +49,11 @@ app.use(keepTokensFresh);
 app.use(serverRenderer());
 app.use(errorHandler);
 
-preloadAll()
-    .then(() => {
-        app.listen(process.env.PORT || 8500, () => {
-            console.log(
-                `[${new Date().toISOString()}]`,
-                chalk.blue(`App is running: http://localhost:${process.env.PORT || 8500}`)
-            );
-        });
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+app.listen(process.env.PORT || 8500, () => {
+    console.log(
+        `[${new Date().toISOString()}]`,
+        chalk.blue(`App is running: http://localhost:${process.env.PORT || 8500}`)
+    );
+});
 
 export default app;

@@ -28,7 +28,6 @@ const babelLoader = {
                     },
                 },
             ],
-            require('react-loadable/babel'),
         ],
         cacheDirectory: true,
         cacheCompression: process.env.NODE_ENV === 'production',
