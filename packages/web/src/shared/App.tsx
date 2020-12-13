@@ -38,7 +38,6 @@ const App: React.FC<any> = () => {
                 <Route exact path={routes.setNewPassword} component={SetNewPasswordLazy} />
                 <Route render={() => '404!'} />
             </Switch>
-            <h2>{t('router-headline')}</h2>
             <ul>
                 <li>
                     <Link to="/">Home</Link>
