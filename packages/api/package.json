@@ -4,7 +4,6 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "preinstall": "npm i --package-lock-only",
     "build": "mkdir -p ./out && ./node_modules/.bin/tsc",
     "build:with-bootstrap": "npm run build",
     "start": "node out/index.js",

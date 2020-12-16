@@ -8,7 +8,6 @@
     "yarn": "^1.22.0"
   },
   "scripts": {
-    "preinstall": "npm i --package-lock-only",
     "start": "node ./build/server/server.js",
     "analyze": "npm run build:with-stats && npm run start:analyzer",
     "build": "cross-env NODE_ENV=production TS_NODE_PROJECT=tsconfig.tooling.json ts-node scripts/build",
