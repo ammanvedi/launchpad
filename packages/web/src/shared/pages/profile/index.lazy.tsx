@@ -1,3 +1,5 @@
-import loadable from '@loadable/component'
+import loadable from '@loadable/component';
 
-export const ProfileLazy = loadable(() => import(/* webpackChunkName: "profile" */ './index'))
+export const ProfileLazy = loadable(
+    () => import(/* webpackChunkName: "profile" */ './index'),
+);

@@ -4,4 +4,4 @@ export const getUpdateUserAttributeEmail = (code: string) => `
     <br />
     <strong>${code}</strong>
 
-`
+`;

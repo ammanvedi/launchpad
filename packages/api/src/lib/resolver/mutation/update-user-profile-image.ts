@@ -1,19 +1,24 @@
-import {GqlError, MutationResolvers, Role} from "../../../generated/graphql";
-import {GQLContext} from "../../context/context";
-import {createLoggerSet} from "../../logging/logger";
+import { GqlError, MutationResolvers, Role } from '../../../generated/graphql';
+import { GQLContext } from '../../context/context';
+import { createLoggerSet } from '../../logging/logger';
 
-const log = createLoggerSet('updateUserProfileImageResolverLogger')
+const log = createLoggerSet('updateUserProfileImageResolverLogger');
 
-export const updateUserProfileImageResolver: MutationResolvers<GQLContext>['updateUserProfileImage'] =
-    async (parent, {file}, {mediaManager, authState, data}) => {
-
+export const updateUserProfileImageResolver: MutationResolvers<GQLContext>['updateUserProfileImage'] = async (
+    parent,
+    { file },
+    { mediaManager, authState, data },
+) => {
     const { filename, createReadStream } = await file;
 
     let tempFilePath: string | null = null;
     let finalPath: string | null = null;
     try {
         log.info('Writing to temp directory');
-        tempFilePath = await mediaManager.writeStreamToTempDirectory(createReadStream(), filename);
+        tempFilePath = await mediaManager.writeStreamToTempDirectory(
+            createReadStream(),
+            filename,
+        );
 
         log.info('Store image');
         finalPath = await mediaManager.storeImage(tempFilePath);
@@ -24,12 +29,12 @@ export const updateUserProfileImageResolver: MutationResolvers<GQLContext>['upda
         log.info('Setting user image in database');
         const updatedUser = await data.db.user.update({
             where: {
-                id: authState.id
+                id: authState.id,
             },
             data: {
                 profileImage: finalPath,
-                consents: {}
-            }
+                consents: {},
+            },
         });
         /**
          * since we get the updated data here anyway we may as well prime the
@@ -48,5 +53,5 @@ export const updateUserProfileImageResolver: MutationResolvers<GQLContext>['upda
         email: authState.email,
         role: authState.role as Role,
         profileImage: finalPath,
-    }
-}
+    };
+};

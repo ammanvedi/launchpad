@@ -5,7 +5,7 @@ export const GlobalConsentsFragment = gql`
         id
         consentedTo
     }
-`
+`;
 
 export const GlobalMeFragment = gql`
     ${GlobalConsentsFragment}

@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 export const schema = gql`
     scalar Upload
-    
+
     enum ConsentType {
         TERMS_OF_USE
         PRIVACY_POLICY
@@ -10,7 +10,7 @@ export const schema = gql`
         TRACKING
         ANALYTICS
     }
-    
+
     enum GQLError {
         COGNITO_CREATION_FAILED
         INVALID_ARGUMENTS
@@ -24,7 +24,7 @@ export const schema = gql`
         ENTRY_EXISTS
         UNKNOWN
     }
-    
+
     enum Role {
         USER
         DESIGNER
@@ -32,7 +32,7 @@ export const schema = gql`
         DESIGNER_MANUFACTURER
         PARTNER
     }
-    
+
     type Consent {
         id: ID!
         timestamp: String!
@@ -49,19 +49,19 @@ export const schema = gql`
         role: Role!
         consents: [Consent!]
     }
-    
+
     type MeResponse {
         me: User
     }
-    
+
     type ConsentResponse {
         user: User
     }
-    
+
     type HellowWorldData {
         hello: String
     }
-    
+
     input RegisterUserInput {
         email: String!
         password: String!
@@ -77,16 +77,18 @@ export const schema = gql`
         bio: String
         role: Role!
     }
-    
+
     type Query {
         me: MeResponse!
         helloWorld: HellowWorldData!
     }
-    
+
     type Mutation {
         addConsent(type: ConsentType!): ConsentResponse
         register(user: RegisterUserInput): Boolean
-        registerUserFromExternalProvider(user: RegisterUserFromExternalProviderInput): User
+        registerUserFromExternalProvider(
+            user: RegisterUserFromExternalProviderInput
+        ): User
         updateUserProfileImage(file: Upload!): User
     }
 `;

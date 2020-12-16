@@ -12,7 +12,9 @@ const errorHandler = (err: Error, _req: any, res: Response, _next: any) =>
                 .split('\n')
                 .map((line: string) => line.trim())
                 .map((line: string) => line.split(path.sep).join('/'))
-                .map((line: string) => line.replace(process.cwd().split(path.sep).join('/'), '.')),
+                .map((line: string) =>
+                    line.replace(process.cwd().split(path.sep).join('/'), '.'),
+                ),
     });
 
 export default errorHandler;

@@ -1,23 +1,21 @@
-import {ApolloClient, InMemoryCache, NormalizedCacheObject} from "@apollo/client";
-import {setContext} from "@apollo/client/link/context";
-import {createUploadLink} from 'apollo-upload-client'
-import { BatchHttpLink } from "apollo-link-batch-http";
+import { ApolloClient, InMemoryCache, NormalizedCacheObject } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { createUploadLink } from 'apollo-upload-client';
+import { BatchHttpLink } from 'apollo-link-batch-http';
 
 export const createApolloClient = (
     ssrMode: boolean,
     getIdToken: () => Promise<string>,
     initialStoreState: Object | null = null,
-    uri: string = (process.env.PUBLIC_GRAPHQL_ENDPOINT || ''),
+    uri: string = process.env.PUBLIC_GRAPHQL_ENDPOINT || '',
 ): ApolloClient<any> => {
-
-
     const authLink = setContext(async (_, req) => {
         return {
             headers: {
                 ...req.headers,
-                'x-id-token': await getIdToken() || ''
-            }
-        }
+                'x-id-token': (await getIdToken()) || '',
+            },
+        };
     });
 
     const terminatingLinkConfig = {
@@ -25,9 +23,13 @@ export const createApolloClient = (
         credentials: 'same-origin',
     };
 
-    const terminatingLink = ssrMode ? new BatchHttpLink({
-        ...terminatingLinkConfig, batchMax: 100, batchInterval: 50
-    }) : createUploadLink(terminatingLinkConfig)
+    const terminatingLink = ssrMode
+        ? new BatchHttpLink({
+              ...terminatingLinkConfig,
+              batchMax: 100,
+              batchInterval: 50,
+          })
+        : createUploadLink(terminatingLinkConfig);
 
     return new ApolloClient({
         ssrMode,
@@ -36,6 +38,5 @@ export const createApolloClient = (
         cache: initialStoreState
             ? new InMemoryCache({}).restore(initialStoreState as NormalizedCacheObject)
             : new InMemoryCache({}),
-    })
-    
-}
+    });
+};

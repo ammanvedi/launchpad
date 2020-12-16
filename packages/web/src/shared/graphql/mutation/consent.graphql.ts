@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import {GlobalConsentsFragment} from "graphql/fragment/me.graphql";
+import { GlobalConsentsFragment } from 'graphql/fragment/me.graphql';
 
 export const addConsentMutation = gql`
     ${GlobalConsentsFragment}

@@ -8,7 +8,7 @@ import bodyParser from 'body-parser';
 import paths from '../../config/paths';
 import errorHandler from './middleware/error-handler';
 import serverRenderer from './middleware/server-renderer';
-import {keepTokensFresh} from "auth/helpers";
+import { keepTokensFresh } from 'auth/helpers';
 
 require('dotenv').config();
 
@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/favicon.ico', (_req, res) => {
     res.status(204);
-    res.end()
+    res.end();
 });
 
 const manifestPath = path.join(paths.clientBuild, paths.publicPath);
@@ -31,7 +31,7 @@ const manifestPath = path.join(paths.clientBuild, paths.publicPath);
 app.use(
     manifestHelpers({
         manifestPath: `${manifestPath}/manifest.json`,
-    })
+    }),
 );
 
 app.use(keepTokensFresh);
@@ -41,7 +41,7 @@ app.use(errorHandler);
 app.listen(process.env.PORT || 8500, () => {
     console.log(
         `[${new Date().toISOString()}]`,
-        chalk.blue(`App is running: http://localhost:${process.env.PORT || 8500}`)
+        chalk.blue(`App is running: http://localhost:${process.env.PORT || 8500}`),
     );
 });
 

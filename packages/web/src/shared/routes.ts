@@ -8,13 +8,13 @@ const routes = {
     profile: '/me',
     resendVerification: '/re-send-verification',
     forgotPassword: '/forgot-password',
-    setNewPassword: '/set-new-password'
+    setNewPassword: '/set-new-password',
 };
 
 export const getRoute = (
     path: string,
     params?: { [key: string]: string | number },
-    routesConfig: any = routes
+    routesConfig: any = routes,
 ) =>
     path.split('.').reduce((routeBranch: any, pathItem: string) => {
         if (routeBranch && routeBranch[pathItem]) {

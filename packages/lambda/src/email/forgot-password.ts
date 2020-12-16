@@ -4,4 +4,4 @@ export const getForgotPasswordEmail = (code: string) => `
     <br />
     <strong>${code}</strong>
 
-`
+`;

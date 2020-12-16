@@ -1,15 +1,17 @@
-import {MutationResolvers} from "../../../generated/graphql";
-import {GQLContext} from "../../context/context";
-import {createLoggerSet} from "../../logging/logger";
+import { MutationResolvers } from '../../../generated/graphql';
+import { GQLContext } from '../../context/context';
+import { createLoggerSet } from '../../logging/logger';
 import { v4 as uuidv4 } from 'uuid';
-import {GqlError} from "../../../generated/graphql";
-import {ConsentType} from '@prisma/client'
+import { GqlError } from '../../../generated/graphql';
+import { ConsentType } from '@prisma/client';
 
-const log = createLoggerSet('RegisterResolver')
+const log = createLoggerSet('RegisterResolver');
 
-export const registerResolver: MutationResolvers<GQLContext>['register'] =
-    async (parent, args, context) => {
-
+export const registerResolver: MutationResolvers<GQLContext>['register'] = async (
+    parent,
+    args,
+    context,
+) => {
     if (!args.user) {
         throw new Error(GqlError.InvalidArguments);
     }
@@ -18,14 +20,7 @@ export const registerResolver: MutationResolvers<GQLContext>['register'] =
      */
     const proposedId = uuidv4();
 
-    const {
-        email,
-        password,
-        lastName,
-        firstName,
-        bio,
-        role,
-    } = args.user;
+    const { email, password, lastName, firstName, bio, role } = args.user;
 
     /**
      * Attempt to create a user in cognito land
@@ -37,8 +32,8 @@ export const registerResolver: MutationResolvers<GQLContext>['register'] =
             password,
             attributes: {
                 'custom:role': role,
-                'custom:internalId': proposedId
-            }
+                'custom:internalId': proposedId,
+            },
         });
     } catch (e) {
         log.err('Failed to create the user in cognito');
@@ -52,7 +47,8 @@ export const registerResolver: MutationResolvers<GQLContext>['register'] =
      */
 
     try {
-        await context.data.db.user.create({data: {
+        await context.data.db.user.create({
+            data: {
                 id: proposedId,
                 externalId: signUpResult.userSub,
                 role,
@@ -66,10 +62,11 @@ export const registerResolver: MutationResolvers<GQLContext>['register'] =
                         },
                         {
                             consentedTo: ConsentType.TERMS_OF_USE,
-                        }
-                    ]
-                }
-            }});
+                        },
+                    ],
+                },
+            },
+        });
     } catch (e) {
         log.err('Failed to create user and consents');
         log.err(e.toString());
@@ -77,4 +74,4 @@ export const registerResolver: MutationResolvers<GQLContext>['register'] =
     }
 
     return true;
-}
+};

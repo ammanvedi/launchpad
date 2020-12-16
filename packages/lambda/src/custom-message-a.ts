@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports.verificationEmail = async (event, context, callback) => {
-
     const template = (name, link) => `<html>
     <body style="background-color:#333; font-family: PT Sans,Trebuchet MS,sans-serif; ">
       <div style="margin: 0 auto; width: 600px; background-color: #fff; font-size: 1.2rem; font-style: normal;font-weight: normal;line-height: 19px;" align="center">
@@ -24,19 +23,17 @@ module.exports.verificationEmail = async (event, context, callback) => {
         </div>
       </div>
     </body>
-  </html>`
+  </html>`;
 
-    const link = `https://<yourUserPoolDomain>/confirmUser?client_id=${event.callerContext.clientId}&user_name=${event.userName}&confirmation_code=`
-    const name = event.request.userAttributes.name.split(" ")[0]
+    const link = `https://<yourUserPoolDomain>/confirmUser?client_id=${event.callerContext.clientId}&user_name=${event.userName}&confirmation_code=`;
+    const name = event.request.userAttributes.name.split(' ')[0];
 
-    if (event.triggerSource === "CustomMessage_SignUp") {
-
+    if (event.triggerSource === 'CustomMessage_SignUp') {
         event.response = {
-            emailSubject: "AweseomeApp2000 | Confirm your email",
-            emailMessage: template(name, link + event.request.codeParameter)
-        }
+            emailSubject: 'AweseomeApp2000 | Confirm your email',
+            emailMessage: template(name, link + event.request.codeParameter),
+        };
     }
 
     callback(null, event);
-
 };

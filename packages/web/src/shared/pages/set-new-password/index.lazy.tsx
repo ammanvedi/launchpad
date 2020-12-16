@@ -1,3 +1,5 @@
-import loadable from '@loadable/component'
+import loadable from '@loadable/component';
 
-export const SetNewPasswordLazy = loadable(() => import(/* webpackChunkName: "set-new-password" */ './index'))
+export const SetNewPasswordLazy = loadable(
+    () => import(/* webpackChunkName: "set-new-password" */ './index'),
+);

@@ -1,19 +1,23 @@
 import * as React from 'react';
-import {useEffect, useState} from 'react';
-import {GqlError, Role, useMeQuery, useRegisterExternalUserMutation} from "../../graphql/generated/graphql";
+import { useEffect, useState } from 'react';
+import {
+    GqlError,
+    Role,
+    useMeQuery,
+    useRegisterExternalUserMutation,
+} from '../../graphql/generated/graphql';
 
 const Page = () => {
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
     const [bio, setBio] = useState<string>('');
-    const {data, error} = useMeQuery({ssr: false, errorPolicy: 'all'});
+    const { data, error } = useMeQuery({ ssr: false, errorPolicy: 'all' });
     const [signUpExternalUser] = useRegisterExternalUserMutation();
 
     useEffect(() => {
-        if(!!data?.me && !error) {
-            console.log('user was already registered lets redirect home')
+        if (!!data?.me && !error) {
+            console.log('user was already registered lets redirect home');
         }
-
     }, [data, error]);
 
     const handleButtonClick = async () => {
@@ -29,16 +33,16 @@ const Page = () => {
                         bio,
                         firstName,
                         lastName,
-                        role: Role.User
-                    }
-                }
+                        role: Role.User,
+                    },
+                },
             }).then((data) => {
-                console.log(data)
-            })
+                console.log(data);
+            });
         } catch (error) {
             console.log('error signing up:', error);
         }
-    }
+    };
 
     const shouldSignUpUser = error?.message === GqlError.NoInternalId;
 
@@ -47,14 +51,29 @@ const Page = () => {
             {shouldSignUpUser && (
                 <div>
                     sign up
-                    <input type='text' value={firstName} onChange={e => setFirstName(e.target.value)} placeholder='firstname' />
-                    <input type='text' value={lastName} onChange={e => setLastName(e.target.value)} placeholder='lastname' />
-                    <input type='text' value={bio} onChange={e => setBio(e.target.value)} placeholder='bio' />
-                    <button onClick={handleButtonClick} >Sign up</button>
+                    <input
+                        type="text"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        placeholder="firstname"
+                    />
+                    <input
+                        type="text"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        placeholder="lastname"
+                    />
+                    <input
+                        type="text"
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
+                        placeholder="bio"
+                    />
+                    <button onClick={handleButtonClick}>Sign up</button>
                 </div>
             )}
         </div>
-    )
+    );
 };
 
 export default Page;

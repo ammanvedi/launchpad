@@ -1,3 +1,5 @@
-import loadable from '@loadable/component'
+import loadable from '@loadable/component';
 
-export const ReSendVerificationLazy = loadable(() => import(/* webpackChunkName: "resend-verification" */ './index'))
+export const ReSendVerificationLazy = loadable(
+    () => import(/* webpackChunkName: "resend-verification" */ './index'),
+);

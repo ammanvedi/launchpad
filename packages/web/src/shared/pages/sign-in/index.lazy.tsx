@@ -1,3 +1,5 @@
-import loadable from '@loadable/component'
+import loadable from '@loadable/component';
 
-export const SignInAsync = loadable(() => import(/* webpackChunkName: "sign-in" */ './index'))
+export const SignInAsync = loadable(
+    () => import(/* webpackChunkName: "sign-in" */ './index'),
+);

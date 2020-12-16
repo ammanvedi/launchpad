@@ -1,5 +1,8 @@
-import {exampleAtom} from "state/atom/example";
+import { exampleAtom } from 'state/atom/example';
+import { RecoilState } from 'recoil';
 
-export default {
-    example: exampleAtom
-}
+const AllAtoms: { [key: string]: RecoilState<any> } = {
+    example: exampleAtom,
+};
+
+export default AllAtoms;

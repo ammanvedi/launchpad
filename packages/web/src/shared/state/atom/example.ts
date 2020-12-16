@@ -1,6 +1,6 @@
-import {atom} from "recoil";
+import { atom } from 'recoil';
 
 export const exampleAtom = atom<Array<string>>({
     key: 'example',
-    default: ['a', 'b', 'c']
+    default: ['a', 'b', 'c'],
 });

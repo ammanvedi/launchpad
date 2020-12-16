@@ -6,4 +6,4 @@ export const getSignUpEmail = (code: string) => `
     <br />
     <br />
     <strong>${code}</strong>
-`
+`;

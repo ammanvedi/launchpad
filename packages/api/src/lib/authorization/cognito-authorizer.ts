@@ -1,37 +1,35 @@
-import {AuthState, AuthTokens, IAuthorizer} from "./IAuthorizer";
-import {decodeIdToken, JWKData, jwtSignatureIsValid} from "./jwt";
-import {createLoggerSet} from "../logging/logger";
-import {Role} from "../../generated/graphql";
-import AWS  from 'aws-sdk';
+import { AuthState, AuthTokens, IAuthorizer } from './IAuthorizer';
+import { decodeIdToken, JWKData, jwtSignatureIsValid } from './jwt';
+import { createLoggerSet } from '../logging/logger';
+import { Role } from '../../generated/graphql';
+import AWS from 'aws-sdk';
 import fetch from 'node-fetch';
 
 export type CognitoAuthorizerConfig = {
-    iss: string,
-    aud: string,
-    cognito: AWS.CognitoIdentityServiceProvider,
-    userPoolId: string,
-    jwkUrl: string,
-}
+    iss: string;
+    aud: string;
+    cognito: AWS.CognitoIdentityServiceProvider;
+    userPoolId: string;
+    jwkUrl: string;
+};
 
 export type CognitoIdToken = {
-    sub: string,
-    aud: string,
-    email_verified: boolean,
-    event_id: string,
-    token_use: 'id',
-    auth_time: number,
-    iss: string,
-    'cognito:username': string,
-    exp: number,
-    'custom:role': Role,
-    'custom:internalId': string,
-    iat: number,
-    email: string,
-}
-
+    sub: string;
+    aud: string;
+    email_verified: boolean;
+    event_id: string;
+    token_use: 'id';
+    auth_time: number;
+    iss: string;
+    'cognito:username': string;
+    exp: number;
+    'custom:role': Role;
+    'custom:internalId': string;
+    iat: number;
+    email: string;
+};
 
 export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
-
     private jwk: JWKData<'RSA'> | null = null;
 
     private log = createLoggerSet('CognitoAuthorizer');
@@ -41,8 +39,8 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
         role: '',
         email: '',
         externalUsername: '',
-        sub: ''
-    }
+        sub: '',
+    };
 
     constructor(private readonly config: CognitoAuthorizerConfig) {}
 
@@ -81,44 +79,41 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
 
             const issuerValid = this.isIssuerValid(decodedToken.iss);
 
-            if(!issuerValid) {
+            if (!issuerValid) {
                 this.log.err('Token issuer invalid');
                 return false;
             }
 
             const audValid = this.isAudValid(decodedToken.aud);
 
-            if(!audValid) {
+            if (!audValid) {
                 this.log.err('Token aud invalid');
                 return false;
             }
 
             const expValid = this.isExpiryValid(decodedToken.exp);
 
-            if(!expValid) {
+            if (!expValid) {
                 this.log.err('Token exp invalid');
                 return false;
             }
 
             return true;
-
         } catch (e) {
             this.log.err(`Something went wrong validating token, ${e}`);
             return false;
         }
-
     }
 
     public getAuthState(tokens: AuthTokens): AuthState {
-
         if (!tokens.idToken) {
-            this.log.warn('Rejected incomplete token set')
+            this.log.warn('Rejected incomplete token set');
             return CognitoAuthorizer.nullAuthState;
         }
         const tokenValid = this.validateToken(tokens.idToken);
 
-        if(!tokenValid) {
-            this.log.warn('rejected invalid token')
+        if (!tokenValid) {
+            this.log.warn('rejected invalid token');
             return CognitoAuthorizer.nullAuthState;
         }
 
@@ -139,21 +134,24 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
             externalUsername: decodedIdToken['cognito:username'],
             // for uniquely identifying the user in the external pool
             sub: decodedIdToken.sub,
-        }
+        };
     }
 
-    linkExternalUserToInternalUser(externalId: string, internalId: string, role: Role): Promise<void> {
-
+    linkExternalUserToInternalUser(
+        externalId: string,
+        internalId: string,
+        role: Role,
+    ): Promise<void> {
         return new Promise((res, rej) => {
             const params = {
                 UserAttributes: [
                     {
                         Name: 'custom:internalId',
-                        Value: internalId
+                        Value: internalId,
                     },
                     {
                         Name: 'custom:role',
-                        Value: role
+                        Value: role,
                     },
                 ],
                 UserPoolId: this.config.userPoolId,
@@ -161,27 +159,25 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
             };
             this.config.cognito.adminUpdateUserAttributes(params, (err, data) => {
                 if (err) {
-                    this.log.err('Failed to link external user')
-                    this.log.err(err.toString())
-                    rej(err)
+                    this.log.err('Failed to link external user');
+                    this.log.err(err.toString());
+                    rej(err);
                 } else {
-                    res()
+                    res();
                 }
             });
-
-        })
+        });
     }
 
     async initialize(): Promise<void> {
         try {
             const result = await fetch(this.config.jwkUrl);
-            const jwkJson = await result.json() as JWKData<'RSA'>;
-            this.log.info('Did fetch JWK keys')
+            const jwkJson = (await result.json()) as JWKData<'RSA'>;
+            this.log.info('Did fetch JWK keys');
             this.jwk = jwkJson;
         } catch (e) {
             this.log.err('Initialisation of cognito authorizer failed');
             this.log.err(e.toString());
         }
     }
-
 }

@@ -1,35 +1,37 @@
-import {GqlError, MutationResolvers, Role} from "../../../generated/graphql";
-import {GQLContext} from "../../context/context";
-import {ConsentType} from '@prisma/client';
-import {getPrismaError} from "../../error/error";
+import { GqlError, MutationResolvers, Role } from '../../../generated/graphql';
+import { GQLContext } from '../../context/context';
+import { ConsentType } from '@prisma/client';
+import { getPrismaError } from '../../error/error';
 
-export const addConsentResolver: MutationResolvers<GQLContext>['addConsent'] =
-    async (parent, args, {authState, data}, info) => {
-
+export const addConsentResolver: MutationResolvers<GQLContext>['addConsent'] = async (
+    parent,
+    args,
+    { authState, data },
+    info,
+) => {
     try {
         const updatedUser = await data.db.user.update({
             where: {
-                id: authState.id
+                id: authState.id,
             },
             include: {
-                consents: true
+                consents: true,
             },
             data: {
                 consents: {
                     create: [
                         {
-                            consentedTo: (args.type as ConsentType)
-                        }
-                    ]
-                }
-            }
+                            consentedTo: args.type as ConsentType,
+                        },
+                    ],
+                },
+            },
         });
 
         data.loaders.user.byId.prime(authState.id, updatedUser);
-        data.loaders.consents.forUserId.prime(authState.id, updatedUser.consents)
-
+        data.loaders.consents.forUserId.prime(authState.id, updatedUser.consents);
     } catch (e) {
-        throw getPrismaError(e.code)
+        throw getPrismaError(e.code);
     }
 
     return {
@@ -37,6 +39,6 @@ export const addConsentResolver: MutationResolvers<GQLContext>['addConsent'] =
             id: authState.id,
             role: authState.role as Role,
             email: authState.email,
-        }
-    }
-}
+        },
+    };
+};

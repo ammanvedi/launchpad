@@ -14,8 +14,9 @@ import {ProfileLazy} from "pages/profile/index.lazy";
 import {ReSendVerificationLazy} from "pages/re-send-verification-email/index.lazy";
 import {ForgotPassswordLazy} from "pages/forgot-password/index.lazy";
 import {SetNewPasswordLazy} from "pages/set-new-password/index.lazy";
+import {ProtectedRoute} from "auth/protected-route";
 
-const App: React.FC<any> = () => {
+const App: React.FC<{checkIsLoggedIn: () => boolean}> = ({checkIsLoggedIn}) => {
     return (
         <div>
             <Helmet
@@ -32,7 +33,7 @@ const App: React.FC<any> = () => {
                 <Route exact path={routes.socialSignUp} component={SocialSignUp} />
                 <Route exact path={routes.signUp} component={SignUp} />
                 <Route exact path={routes.signUpVerify} component={SignUpVerify} />
-                <Route exact path={routes.profile} component={ProfileLazy} />
+                <ProtectedRoute exact path={routes.profile} component={ProfileLazy} isLoggedIn={checkIsLoggedIn} />
                 <Route exact path={routes.resendVerification} component={ReSendVerificationLazy} />
                 <Route exact path={routes.forgotPassword} component={ForgotPassswordLazy} />
                 <Route exact path={routes.setNewPassword} component={SetNewPasswordLazy} />

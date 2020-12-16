@@ -5,4 +5,5 @@ export const getVerifyUserAttributeEmail = (code: string) => `
     <strong>${code}</strong>
 `;
 
-export const getVerifyUserAttributeSms = (code: string) => `Your verification code is ${code}`;
+export const getVerifyUserAttributeSms = (code: string) =>
+    `Your verification code is ${code}`;

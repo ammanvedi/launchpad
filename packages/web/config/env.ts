@@ -1,4 +1,6 @@
+// @ts-ignore
 import fs from 'fs';
+// @ts-ignore
 import path from 'path';
 import paths from './paths';
 
@@ -6,7 +8,7 @@ delete require.cache[require.resolve('./paths')];
 
 if (!process.env.NODE_ENV) {
     throw new Error(
-        'The process.env.NODE_ENV environment variable is required but was not specified.'
+        'The process.env.NODE_ENV environment variable is required but was not specified.',
     );
 }
 

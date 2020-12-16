@@ -1,1 +1,1 @@
-export const APP_NAME = 'Launchpad'
+export const APP_NAME = 'Launchpad';

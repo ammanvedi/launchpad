@@ -7,4 +7,4 @@ export const uploadUserProfileImageMutation = gql`
             profileImage
         }
     }
-`
+`;
