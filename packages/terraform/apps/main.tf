@@ -17,10 +17,12 @@ resource "digitalocean_app" "api" {
             environment_slug = "node-js"
             instance_count = 1
             instance_size_slug = var.api_instance_size
+
+            source_dir = var.api_source_dir
             http_port = var.api_port
 
-            build_command = "npm run ci:build-api"
-            run_command = "npm run ci:start-api"
+            build_command = "npm run build"
+            run_command = "npm run start"
 
             github {
                 branch         = var.api_git_branch
@@ -136,10 +138,12 @@ resource "digitalocean_app" "web" {
             environment_slug = "node-js"
             instance_count = 1
             instance_size_slug = var.web_instance_size
+
+            source_dir = var.web_source_dir
             http_port = var.web_port
 
-            build_command = "npm run ci:build-web"
-            run_command = "npm run ci:start-web"
+            build_command = "npm run build"
+            run_command = "npm run start"
 
             github {
                 branch         = var.web_git_branch
