@@ -1,4 +1,4 @@
-you will need to first install and configure the aws amplify cli 
+you will need to first install and configure the aws amplify cli
 
 https://docs.amplify.aws/cli/start/install
 setup .env
@@ -17,5 +17,8 @@ lerna bootstrap --force-local && lerna link --force-local && lerna run prisma:ge
 follow instructions here to enable sign in from various providers
 https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-social-idp.html
 launchpad-development-2.auth.eu-west-1.amazoncognito.com/oauth/idpresponse
+
+link you github account to your digital ocean account before running terraform
+https://cloud.digitalocean.com/apps/new
 
 install terraform

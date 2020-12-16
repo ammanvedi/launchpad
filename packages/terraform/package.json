@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "terraform:init": "terraform init",
     "terraform:plan": "./node_modules/.bin/dotenv -- terraform plan",
     "terraform:apply": "./node_modules/.bin/dotenv -- terraform apply",
     "terraform:refresh": "./node_modules/.bin/dotenv -- terraform refresh",
+    "terraform:output": "terraform output",
     "terraform:graph": "./node_modules/.bin/dotenv -- terraform graph | dot -Tsvg > graph.svg"
   },
   "author": "",

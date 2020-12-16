@@ -1,31 +1,13 @@
 terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "3.18.0"
+    required_providers {
+        aws = {
+            source  = "hashicorp/aws"
+            version = "3.18.0"
+        }
     }
-  }
-}
-
-variable "aws_profile" {
-  type = string
-}
-
-variable "aws_region" {
-  type = string
-}
-
-provider "aws" {
-  profile = var.aws_profile
-  region  = var.aws_region
 }
 
 # User Pool
-
-variable "user_pool_name" {
-  type    = string
-  default = "up_launchpad_dev"
-}
 
 resource "aws_cognito_user_pool" "master_user_pool" {
   name = var.user_pool_name
@@ -117,15 +99,6 @@ resource "aws_lambda_permission" "allow_cognito" {
 }
 
 # Identity Provider :: Facebook
-
-variable "facebook_client_id" {
-  type = string
-}
-
-variable "facebook_client_secret" {
-  type = string
-}
-
 resource "aws_cognito_identity_provider" "facebook" {
   provider_name = "Facebook"
   provider_type = "Facebook"
@@ -150,14 +123,6 @@ resource "aws_cognito_identity_provider" "facebook" {
 }
 
 # Identity Provider :: Google
-
-variable "google_client_id" {
-  type = string
-}
-
-variable "google_client_secret" {
-  type = string
-}
 
 resource "aws_cognito_identity_provider" "google" {
   provider_name = "Google"
@@ -184,21 +149,6 @@ resource "aws_cognito_identity_provider" "google" {
 
 # User Pool Client
 
-variable "client_name" {
-  type    = string
-  default = "up_launchpad_dev_client"
-}
-
-variable "sign_in_callback_url" {
-  type    = string
-  default = "http://localhost:8500/social-sign-up/"
-}
-
-variable "sign_out_callback_url" {
-  type    = string
-  default = "http://localhost:8500/"
-}
-
 resource "aws_cognito_user_pool_client" "client" {
   name = var.client_name
 
@@ -217,22 +167,7 @@ resource "aws_cognito_user_pool_client" "client" {
 
 # User Pool Domain
 
-variable "user_pool_domain" {
-  type = string
-}
-
 resource "aws_cognito_user_pool_domain" "main" {
   domain       = var.user_pool_domain
   user_pool_id = aws_cognito_user_pool.master_user_pool.id
-}
-
-# AWS S3 bucket
-
-variable "temp_media_uploads_bucket_name" {
-  type = string
-}
-
-resource "aws_s3_bucket" "temp_media_uploads" {
-  bucket = var.temp_media_uploads_bucket_name
-  acl = "private"
 }

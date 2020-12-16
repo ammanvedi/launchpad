@@ -23,8 +23,8 @@ dotenv.config();
 
 AWS.config.update({
     region: process.env.TF_VAR_aws_region,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.TF_VAR_aws_access_key,
+    secretAccessKey: process.env.TF_VAR_aws_secret_access_key,
 });
 
 const cognitoidentity = new AWS.CognitoIdentityServiceProvider({
@@ -32,24 +32,24 @@ const cognitoidentity = new AWS.CognitoIdentityServiceProvider({
 });
 
 const authorizer: IAuthorizer<CognitoAuthorizerConfig> = new CognitoAuthorizer({
-    iss: `https://cognito-idp.${process.env.TF_VAR_aws_region}.amazonaws.com/${process.env.AWS_USER_POOL_ID}`,
-    aud: process.env.AWS_USER_POOLS_WEB_CLIENT_ID || '',
+    iss: `https://cognito-idp.${process.env.TF_VAR_aws_region}.amazonaws.com/${process.env.TF_VAR_aws_user_pool_id}`,
+    aud: process.env.TF_VAR_aws_user_pool_client_id || '',
     cognito: cognitoidentity,
-    userPoolId: process.env.AWS_USER_POOL_ID || '',
-    jwkUrl: `https://cognito-idp.${process.env.TF_VAR_aws_region}.amazonaws.com/${process.env.AWS_USER_POOL_ID}/.well-known/jwks.json`,
+    userPoolId: process.env.TF_VAR_aws_user_pool_id || '',
+    jwkUrl: `https://cognito-idp.${process.env.TF_VAR_aws_region}.amazonaws.com/${process.env.TF_VAR_aws_user_pool_id}/.well-known/jwks.json`,
 });
 
 const mediaManager: MediaManager = new CloudinaryMediaManager({
-    cloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
-    apiSecret: process.env.CLOUDINARY_SECRET_KEY || '',
-    apiKey: process.env.CLOUDINARY_KEY || '',
+    cloudName: process.env.TF_VAR_cloudinary_cloud_name || '',
+    apiSecret: process.env.TF_VAR_cloudinary_secret_key || '',
+    apiKey: process.env.TF_VAR_cloudinary_key || '',
 });
 
 const amplifyConfig = {
     aws_project_region: process.env.TF_VAR_aws_region,
     aws_cognito_region: process.env.TF_VAR_aws_region,
-    aws_user_pools_id: process.env.AWS_USER_POOL_ID,
-    aws_user_pools_web_client_id: process.env.AWS_USER_POOLS_WEB_CLIENT_ID,
+    aws_user_pools_id: process.env.TF_VAR_aws_user_pool_id,
+    aws_user_pools_web_client_id: process.env.TF_VAR_aws_user_pool_client_id,
     oauth: {
         domain: `${process.env.TF_VAR_user_pool_domain}.auth.${process.env.TF_VAR_aws_region}.amazoncognito.com`,
         scope: ['phone', 'email', 'openid', 'profile', 'aws.cognito.signin.user.admin'],
@@ -97,7 +97,7 @@ export const server = new ApolloServer({
 
 const setup = Promise.all([
     authorizer.initialize(),
-    mediaManager.createTempDir(process.env.MEDIA_TEMP_FOLDER || ''),
+    mediaManager.createTempDir(process.env.TF_VAR_media_temp_folder || ''),
 ]);
 
 setup

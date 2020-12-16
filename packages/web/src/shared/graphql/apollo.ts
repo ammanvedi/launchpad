@@ -7,7 +7,7 @@ export const createApolloClient = (
     ssrMode: boolean,
     getIdToken: () => Promise<string>,
     initialStoreState: Object | null = null,
-    uri: string = process.env.PUBLIC_GRAPHQL_ENDPOINT || '',
+    uri: string = process.env.TF_VAR_public_graphql_endpoint || '',
 ): ApolloClient<any> => {
     const authLink = setContext(async (_, req) => {
         return {

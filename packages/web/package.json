@@ -8,6 +8,7 @@
     "yarn": "^1.22.0"
   },
   "scripts": {
+    "start": "node ./build/server/server.js",
     "analyze": "npm run build:with-stats && npm run start:analyzer",
     "build": "cross-env NODE_ENV=production TS_NODE_PROJECT=tsconfig.tooling.json ts-node scripts/build",
     "build:with-stats": "cross-env NODE_ENV=production TS_NODE_PROJECT=tsconfig.tooling.json webpack --config config/webpack.config.ts/client.prod.ts --json > build/client/static/bundle-stats.json",
