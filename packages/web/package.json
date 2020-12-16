@@ -4,13 +4,14 @@
   "version": "6.0.0",
   "license": "MIT",
   "engines": {
-    "node": ">=10.18.1",
+    "node": ">=10.15.3",
     "yarn": "^1.22.0"
   },
   "scripts": {
     "start": "node ./build/server/server.js",
     "analyze": "npm run build:with-stats && npm run start:analyzer",
     "build": "cross-env NODE_ENV=production TS_NODE_PROJECT=tsconfig.tooling.json ts-node scripts/build",
+    "build:with-bootstrap": "npm run build",
     "build:with-stats": "cross-env NODE_ENV=production TS_NODE_PROJECT=tsconfig.tooling.json webpack --config config/webpack.config.ts/client.prod.ts --json > build/client/static/bundle-stats.json",
     "dev": "cross-env NODE_ENV=development TS_NODE_PROJECT=tsconfig.tooling.json ts-node scripts/start",
     "start:analyzer": "webpack-bundle-analyzer build/client/static/bundle-stats.json",
@@ -54,7 +55,7 @@
     "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
-    "launchpad-config": "^1.0.0",
+    "launchpad-config": "file:../eslint-config-shared",
     "@apollo/client": "^3.2.7",
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
@@ -138,8 +139,6 @@
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
     "husky": "^4.2.5",
-    "i18next-parser": "^2.0.0",
-    "i18next-scanner": "^2.11.0",
     "install-deps-postmerge": "^1.0.5",
     "jest": "^26.0.1",
     "lint-staged": "^10.2.2",

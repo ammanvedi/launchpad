@@ -117,3 +117,7 @@ variable "api_application_name" {
 variable "web_application_name" {
     type = string
 }
+
+variable "database_url" {
+    type = string
+}

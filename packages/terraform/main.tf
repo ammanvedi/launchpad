@@ -52,9 +52,6 @@ module "apps" {
     sign_in_callback_url = var.sign_in_callback_url
     sign_out_callback_url = var.sign_out_callback_url
     user_pool_domain = var.user_pool_domain
-    # Outputs from creating the authentication
-    aws_user_pool_client_id = module.auth.user_pool_client_id
-    aws_user_pool_id = module.auth.user_pool_id
     api_git_branch = var.api_git_branch
     api_git_repo = var.api_git_repo
     api_source_dir = var.api_source_dir
@@ -67,4 +64,8 @@ module "apps" {
     web_port = var.web_port
     api_application_name = var.api_application_name
     web_application_name = var.web_application_name
+    # Outputs from creating the authentication
+    aws_user_pool_client_id = module.auth.user_pool_client_id
+    aws_user_pool_id = module.auth.user_pool_id
+    database_url = var.database_url
 }

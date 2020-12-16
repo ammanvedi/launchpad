@@ -1,8 +1,4 @@
 {
-  "name": "root",
-  "author": "Amman Vedi <amman.vedi@gmail.com>",
   "private": true,
-  "devDependencies": {
-    "lerna": "^3.22.1"
-  }
+  "workspaces": [ "packages/api", "packages/eslint-config-shared", "packages/lambda", "packages/terraform", "packages/web" ]
 }

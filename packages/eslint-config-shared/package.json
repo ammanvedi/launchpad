@@ -1,5 +1,5 @@
 {
-  "name": "launchpad-config",
+  "name": "eslint-config-shared",
   "version": "1.0.0",
   "description": "",
   "main": ".eslintrc.js",

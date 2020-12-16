@@ -9,7 +9,7 @@ terraform {
 
 resource "digitalocean_app" "api" {
     spec {
-        name = "api-app"
+        name = var.api_application_name
         region = "ams"
 
         service {
@@ -21,7 +21,7 @@ resource "digitalocean_app" "api" {
             source_dir = var.api_source_dir
             http_port = var.api_port
 
-            build_command = "npm run build"
+            build_command = "npm run build:with-bootstrap"
             run_command = "npm run start"
 
             github {
@@ -35,99 +35,94 @@ resource "digitalocean_app" "api" {
             }
 
             env {
+                key = "TF_VAR_database_url"
+                scope = "RUN_AND_BUILD_TIME"
+                value = var.database_url
+                type = "GENERAL"
+            }
+
+            env {
                 key = "TF_VAR_aws_region"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.aws_region
+                type = "GENERAL"
             }
 
             env {
                 key = "TF_VAR_aws_user_pool_id"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.aws_user_pool_id
+                type = "GENERAL"
             }
 
             env {
                 key = "TF_VAR_aws_user_pool_client_id"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.aws_user_pool_client_id
+                type = "GENERAL"
             }
 
             env {
                 key = "TF_VAR_user_pool_domain"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.user_pool_domain
+                type = "GENERAL"
             }
 
             env {
                 key = "TF_VAR_sign_in_callback_url"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.sign_in_callback_url
+                type = "GENERAL"
             }
 
             env {
                 key = "TF_VAR_sign_out_callback_url"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.sign_out_callback_url
-            }
-
-            env {
-                key = "TF_VAR_auth_cookie_path"
-                scope = "RUN_AND_BUILD_TIME"
-                value = var.auth_cookie_path
-            }
-
-            env {
-                key = "TF_VAR_auth_cookie_domain"
-                scope = "RUN_AND_BUILD_TIME"
-                value = var.auth_cookie_domain
-            }
-
-            env {
-                key = "TF_VAR_auth_cookie_expiry_days"
-                scope = "RUN_AND_BUILD_TIME"
-                value = var.auth_cookie_expiry_days
-            }
-
-            env {
-                key = "TF_VAR_auth_cookie_secure"
-                scope = "RUN_AND_BUILD_TIME"
-                value = var.auth_cookie_secure
+                type = "GENERAL"
             }
 
             env {
                 key = "TF_VAR_aws_access_key"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.aws_access_key
+                type = "SECRET"
             }
 
             env {
                 key = "TF_VAR_aws_secret_access_key"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.aws_secret_access_key
+                type = "SECRET"
             }
 
             env {
                 key = "TF_VAR_cloudinary_key"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.cloudinary_key
+                type = "SECRET"
             }
 
             env {
                 key = "TF_VAR_cloudinary_secret_key"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.cloudinary_secret_key
+                type = "SECRET"
             }
 
             env {
                 key = "TF_VAR_cloudinary_cloud_name"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.cloudinary_cloud_name
+                type = "SECRET"
             }
 
             env {
                 key = "TF_VAR_media_temp_folder"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.media_temp_folder
+                type = "GENERAL"
             }
         }
     }
@@ -135,7 +130,7 @@ resource "digitalocean_app" "api" {
 
 resource "digitalocean_app" "web" {
     spec {
-        name = "web-app"
+        name = var.web_application_name
         region = "ams"
 
         service {
@@ -147,7 +142,7 @@ resource "digitalocean_app" "web" {
             source_dir = var.web_source_dir
             http_port = var.web_port
 
-            build_command = "npm run build"
+            build_command = "npm run build:with-bootstrap"
             run_command = "npm run start"
 
             github {
@@ -170,96 +165,70 @@ resource "digitalocean_app" "web" {
                 key = "TF_VAR_aws_region"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.aws_region
+                type = "SECRET"
             }
 
             env {
                 key = "TF_VAR_aws_user_pool_id"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.aws_user_pool_id
+                type = "GENERAL"
             }
 
             env {
                 key = "TF_VAR_aws_user_pool_client_id"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.aws_user_pool_client_id
+                type = "GENERAL"
             }
 
             env {
                 key = "TF_VAR_user_pool_domain"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.user_pool_domain
+                type = "GENERAL"
             }
 
             env {
                 key = "TF_VAR_sign_in_callback_url"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.sign_in_callback_url
+                type = "GENERAL"
             }
 
             env {
                 key = "TF_VAR_sign_out_callback_url"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.sign_out_callback_url
+                type = "GENERAL"
             }
 
             env {
                 key = "TF_VAR_auth_cookie_path"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.auth_cookie_path
+                type = "GENERAL"
             }
 
             env {
                 key = "TF_VAR_auth_cookie_domain"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.auth_cookie_domain
+                type = "GENERAL"
             }
 
             env {
                 key = "TF_VAR_auth_cookie_expiry_days"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.auth_cookie_expiry_days
+                type = "GENERAL"
             }
 
             env {
                 key = "TF_VAR_auth_cookie_secure"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.auth_cookie_secure
-            }
-
-            env {
-                key = "TF_VAR_aws_access_key"
-                scope = "RUN_AND_BUILD_TIME"
-                value = var.aws_access_key
-            }
-
-            env {
-                key = "TF_VAR_aws_secret_access_key"
-                scope = "RUN_AND_BUILD_TIME"
-                value = var.aws_secret_access_key
-            }
-
-            env {
-                key = "TF_VAR_cloudinary_key"
-                scope = "RUN_AND_BUILD_TIME"
-                value = var.cloudinary_key
-            }
-
-            env {
-                key = "TF_VAR_cloudinary_secret_key"
-                scope = "RUN_AND_BUILD_TIME"
-                value = var.cloudinary_secret_key
-            }
-
-            env {
-                key = "TF_VAR_cloudinary_cloud_name"
-                scope = "RUN_AND_BUILD_TIME"
-                value = var.cloudinary_cloud_name
-            }
-
-            env {
-                key = "TF_VAR_media_temp_folder"
-                scope = "RUN_AND_BUILD_TIME"
-                value = var.media_temp_folder
+                type = "GENERAL"
             }
         }
     }
