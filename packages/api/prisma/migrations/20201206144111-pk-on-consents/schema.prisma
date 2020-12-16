@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url = "***"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["transactionApi"]
+}
+
+enum Role {
+    USER
+    DESIGNER
+    MANUFACTURER
+    DESIGNER_MANUFACTURER
+    PARTNER
+}
+
+enum ConsentType {
+    TERMS_OF_USE
+    PRIVACY_POLICY
+    COOKIES
+    TRACKING
+    ANALYTICS
+}
+
+model Consent {
+    id Int @default(autoincrement())
+    timestamp DateTime @default(now())
+    consentedTo ConsentType
+    user User @relation(fields: [userId], references: [id])
+    userId String
+
+    @@id([userId, consentedTo])
+}
+
+model User {
+  id            String      @id @default(uuid())
+  externalId    String      @default("")
+  firstName     String?
+  lastName      String?
+  profileImage  String?
+  bio           String?
+  role          Role        @default(USER)
+  consents      Consent[]
+}

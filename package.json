@@ -1,5 +1,6 @@
 {
   "name": "root",
+  "author": "Amman Vedi <amman.vedi@gmail.com>",
   "private": true,
   "devDependencies": {
     "lerna": "^3.22.1"
