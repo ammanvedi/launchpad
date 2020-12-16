@@ -1,4 +1,10 @@
 {
   "private": true,
+  "scripts": {
+    "ci:build-api": "cd packages/api && npm run build",
+    "ci:start-api": "cd packages/api && npm run start",
+    "ci:build-web": "cd packages/web && npm run build",
+    "ci:start-web": "cd packages/web && npm run start"
+  },
   "workspaces": [ "packages/api", "packages/eslint-config-shared", "packages/lambda", "packages/terraform", "packages/web" ]
 }
