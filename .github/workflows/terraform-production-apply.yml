@@ -15,7 +15,7 @@ jobs:
       cwd: ./packages/terraform
     steps:
       - name: "Setup - Checkout"
-        uses: actions/checkout@v2.1.0
+        uses: actions/checkout@v2.3.4
 
       - name: "Setup - Build AWS Credentials"
         run: |
@@ -25,7 +25,7 @@ jobs:
           echo "aws_secret_access_key = ${{ secrets.PROD_TF_VAR_AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
 
       - name: "Setup - Terraform CLI"
-        uses: hashicorp/setup-terraform@v1.0.1
+        uses: hashicorp/setup-terraform@v1.3.2
 
       - name: "Run - Terraform Init"
         working-directory: ${{ env.cwd }}
