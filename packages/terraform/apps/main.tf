@@ -26,7 +26,7 @@ resource "digitalocean_app" "api" {
 
             github {
                 branch         = var.api_git_branch
-                deploy_on_push = true
+                deploy_on_push = false
                 repo           = var.api_git_repo
             }
 
@@ -147,7 +147,7 @@ resource "digitalocean_app" "web" {
 
             github {
                 branch         = var.web_git_branch
-                deploy_on_push = true
+                deploy_on_push = false
                 repo           = var.web_git_repo
             }
 
