@@ -8,7 +8,7 @@
     "yarn": "^1.22.0"
   },
   "scripts": {
-    "start": "node ./build/server/server.js",
+    "start": "npm run build && node ./build/server/server.js",
     "analyze": "npm run build:with-stats && npm run start:analyzer",
     "build": "cross-env NODE_ENV=production TS_NODE_PROJECT=tsconfig.tooling.json ts-node scripts/build",
     "build:with-stats": "cross-env NODE_ENV=production TS_NODE_PROJECT=tsconfig.tooling.json webpack --config config/webpack.config.ts/client.prod.ts --json > build/client/static/bundle-stats.json",
@@ -54,7 +54,6 @@
     "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
-    "launchpad-config": "file:../eslint-config-shared",
     "@apollo/client": "^3.2.7",
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
@@ -113,6 +112,8 @@
     "@types/webpack-hot-middleware": "^2.25.2",
     "@types/webpack-manifest-plugin": "^2.1.0",
     "@types/webpack-node-externals": "^1.7.1",
+    "@typescript-eslint/eslint-plugin": "^4.9.1",
+    "@typescript-eslint/parser": "^4.9.1",
     "@werkzeugkiste/prettier-config": "^2.0.0",
     "autoprefixer": "^9.7.6",
     "babel-eslint": "^10.1.0",
@@ -135,11 +136,17 @@
     "depcheck": "^0.9.2",
     "dependency-cruiser": "^9.1.0",
     "dotenv-webpack": "^5.1.0",
+    "eslint": "^7.15.0",
+    "eslint-config-prettier": "^7.0.0",
+    "eslint-config-shared": "file:../eslint-config-shared",
+    "eslint-plugin-prettier": "^3.2.0",
+    "eslint-plugin-react": "^7.21.5",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
     "husky": "^4.2.5",
     "install-deps-postmerge": "^1.0.5",
     "jest": "^26.0.1",
+    "launchpad-config": "file:../eslint-config-shared",
     "lint-staged": "^10.2.2",
     "mini-css-extract-plugin": "^0.9.0",
     "nodemon": "^2.0.3",
@@ -152,6 +159,7 @@
     "postcss-loader": "^3.0.0",
     "postcss-nested": "^4.2.1",
     "postcss-normalize": "^9.0.0",
+    "prettier": "^2.2.1",
     "promise": "^8.1.0",
     "puppeteer": "^4.0.1",
     "react-dev-utils": "^10.2.1",
@@ -177,14 +185,7 @@
     "webpack-manifest-plugin": "^2.2.0",
     "webpack-node-externals": "^1.7.2",
     "write-file-webpack-plugin": "^4.5.1",
-    "yarn-or-npm": "^3.0.1",
-    "@typescript-eslint/eslint-plugin": "^4.9.1",
-    "@typescript-eslint/parser": "^4.9.1",
-    "eslint": "^7.15.0",
-    "eslint-config-prettier": "^7.0.0",
-    "eslint-plugin-prettier": "^3.2.0",
-    "eslint-plugin-react": "^7.21.5",
-    "prettier": "^2.2.1"
+    "yarn-or-npm": "^3.0.1"
   },
   "resolutions": {
     "caniuse-lite": "^1.0.30001055"

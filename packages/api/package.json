@@ -40,7 +40,6 @@
     "uuid": "^8.3.1"
   },
   "devDependencies": {
-    "launchpad-config": "file:../eslint-config-shared",
     "@graphql-codegen/cli": "^1.19.2",
     "@graphql-codegen/typescript-resolvers": "^1.17.11",
     "@types/dotenv": "^8.2.0",
@@ -50,13 +49,15 @@
     "@types/node": "^14.14.6",
     "@types/node-fetch": "^2.5.7",
     "@types/uuid": "^8.3.0",
-    "nodemon": "^2.0.6",
     "@typescript-eslint/eslint-plugin": "^4.9.1",
     "@typescript-eslint/parser": "^4.9.1",
     "eslint": "^7.15.0",
-    "eslint-plugin-react": "^7.21.5",
     "eslint-config-prettier": "^7.0.0",
+    "eslint-config-shared": "file:../eslint-config-shared",
     "eslint-plugin-prettier": "^3.3.0",
+    "eslint-plugin-react": "^7.21.5",
+    "launchpad-config": "file:../eslint-config-shared",
+    "nodemon": "^2.0.6",
     "prettier": "^2.2.1"
   }
 }
