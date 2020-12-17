@@ -56,7 +56,6 @@
     "eslint-config-shared": "file:../eslint-config-shared",
     "eslint-plugin-prettier": "^3.3.0",
     "eslint-plugin-react": "^7.21.5",
-    "launchpad-config": "file:../eslint-config-shared",
     "nodemon": "^2.0.6",
     "prettier": "^2.2.1"
   }
