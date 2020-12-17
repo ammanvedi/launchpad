@@ -3,7 +3,9 @@ name: "Terraform Apply (Production)"
 on:
   push:
     paths:
-      - "packages/terraform/**/*"
+      - "packages/terraform/apps/**/*"
+      - "packages/terraform/auth/**/*"
+      - "packages/terraform/main/prod/**/*"
     branches:
       - master
 
@@ -12,7 +14,7 @@ jobs:
     name: "Terraform Apply (Production)"
     runs-on: ubuntu-latest
     env:
-      cwd: ./packages/terraform
+      cwd: ./packages/terraform/main/prod
       lambda_cwd: ./packages/lambda
     steps:
       - name: "Setup - Checkout"
@@ -86,3 +88,5 @@ jobs:
           TF_VAR_auth_cookie_domain: ${{ secrets.PROD_TF_VAR_AUTH_COOKIE_DOMAIN }}
           TF_VAR_auth_cookie_expiry_days: ${{ secrets.PROD_TF_VAR_AUTH_COOKIE_EXPIRY_DAYS }}
           TF_VAR_auth_cookie_secure: ${{ secrets.PROD_TF_VAR_AUTH_COOKIE_SECURE }}
+          TF_VAR_tf_backend_bucket: ${ secrets.PROD_TF_VAR_TF_BACKEND_BUCKET }
+          TF_VAR_tf_backend_bucket_key: ${ secrets.PROD_TF_VAR_TF_BACKEND_BUCKET_KEY }

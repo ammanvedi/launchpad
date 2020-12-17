@@ -46,6 +46,6 @@ lerna-debug.log
 .idea
 
 # Terraform
-packages/terraform/.terraform
+.terraform
 *.tfstate.*
 *.tfstate
