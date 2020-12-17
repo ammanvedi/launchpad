@@ -1,0 +1,28 @@
+name: "Web Deploy (Production)"
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "packages/web"
+
+jobs:
+  web-deploy-production:
+    name: "Web Deploy (Production)"
+    runs-on: ubuntu-latest
+    env:
+      cwd: ./packages/web
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2.1.0
+
+      - name: "Install doctl"
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.PROD_TF_VAR_DO_TOKEN }}
+
+      - name: "Create Deployment"
+        run: doctl apps create-deployment $TF_VAR_web_application_name
+        env:
+          TF_VAR_web_application_name: ${{ secrets.PROD_TF_VAR_WEB_APPLICATION_NAME }}

@@ -64,10 +64,6 @@ variable "do_token" {
     type = string
 }
 
-variable "media_temp_folder" {
-    type = string
-}
-
 variable "cloudinary_key" {
     type = string
 }

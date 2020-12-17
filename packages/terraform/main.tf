@@ -48,7 +48,7 @@ module "apps" {
     cloudinary_key = var.cloudinary_key
     cloudinary_secret_key = var.cloudinary_secret_key
     do_token = var.do_token
-    media_temp_folder = var.media_temp_folder
+    media_temp_folder = "/tmp"
     sign_in_callback_url = var.sign_in_callback_url
     sign_out_callback_url = var.sign_out_callback_url
     user_pool_domain = var.user_pool_domain
