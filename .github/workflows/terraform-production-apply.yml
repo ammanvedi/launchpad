@@ -3,7 +3,7 @@ name: "Terraform Apply (Production)"
 on:
   push:
     paths:
-      - "packages/terraform"
+      - "packages/terraform/**/*"
     branches:
       - master
 
