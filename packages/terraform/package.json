@@ -4,12 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "terraform:go:dev": "cd ./main/dev",
     "terraform:dev:init": "npm run terraform:go:dev && terraform init",
     "terraform:dev:plan": "cd ./main/dev && ../../node_modules/.bin/dotenv -e ../../.env -- terraform plan",
-    "terraform:dev:apply": "npm run terraform:go:dev && ../../node_modules/.bin/dotenv -- terraform apply",
-    "terraform:dev:refresh": "npm run terraform:go:dev && ../../node_modules/.bin/dotenv -- terraform refresh",
-    "terraform:dev:output": "npm run terraform:go:dev && terraform output"
+    "terraform:dev:apply": "cd ./main/dev && ../../node_modules/.bin/dotenv -e ../../.env terraform apply",
+    "terraform:dev:refresh": "cd ./main/dev && ../../node_modules/.bin/dotenv -e ../../.env terraform refresh",
+    "terraform:dev:output": "cd ./main/dev && ../../node_modules/.bin/dotenv -e ../../.env terraform output"
   },
   "author": "",
   "license": "ISC",

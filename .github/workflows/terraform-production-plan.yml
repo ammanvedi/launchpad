@@ -14,7 +14,7 @@ jobs:
     name: "Terraform Plan (Production)"
     runs-on: ubuntu-latest
     env:
-      cwd: ./packages/terraform
+      cwd: ./packages/terraform/main/prod
       lambda_cwd: ./packages/lambda
     steps:
       - name: "Setup - Checkout"
