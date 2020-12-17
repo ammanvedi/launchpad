@@ -19,7 +19,7 @@ jobs:
 
       - name: "Setup - Security Scan"
         with:
-          tfsec_actions_working_dir: ${{ cwd }}
+          tfsec_actions_working_dir: ${{ env.cwd }}
         uses: triat/terraform-security-scan@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -35,11 +35,11 @@ jobs:
         uses: hashicorp/setup-terraform@v1.0.1
 
       - name: "Run - Terraform Init"
-        working-directory: ${{ cwd }}
+        working-directory: ${{ env.cwd }}
         run: terraform init -input=false
 
       - name: "Run - Terraform Plan"
-        working-directory: ${{ cwd }}
+        working-directory: ${{ env.cwd }}
         id: plan
         run: terraform plan -input=false -no-color
         env:

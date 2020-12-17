@@ -28,11 +28,11 @@ jobs:
         uses: hashicorp/setup-terraform@v1.0.1
 
       - name: "Run - Terraform Init"
-        working-directory: ${{ cwd }}
+        working-directory: ${{ env.cwd }}
         run: terraform init -input=false
 
       - name: "Run - Terraform Plan"
-        working-directory: ${{ cwd }}
+        working-directory: ${{ env.cwd }}
         id: plan
         run: terraform apply -input=false -auto-approve
         env:
