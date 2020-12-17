@@ -1,4 +1,10 @@
 {
   "private": true,
-  "workspaces": [ "packages/api", "packages/eslint-config-shared", "packages/lambda", "packages/terraform", "packages/web" ]
+  "workspaces": [
+    "packages/api",
+    "packages/eslint-config-shared",
+    "packages/lambda",
+    "packages/terraform",
+    "packages/web"
+  ]
 }
