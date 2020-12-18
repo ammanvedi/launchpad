@@ -10,7 +10,6 @@ terraform {
         }
     }
     backend "s3" {
-
         bucket = "launchpad-tf-backend"
         key    = "tf/prod"
         region = "eu-west-1"
@@ -41,8 +40,8 @@ module "auth" {
     sign_in_callback_url = var.sign_in_callback_url
     sign_out_callback_url = var.sign_out_callback_url
     user_pool_name = var.user_pool_name
-    lambda_custom_message_name = "custom_message_lambda_prod"
-    lambda_role_name = "iam_for_lambda_prod"
+    lambda_custom_message_name = "custom_message_lambda_production"
+    lambda_role_name = "iam_for_lambda_production"
 }
 
 module "apps" {
