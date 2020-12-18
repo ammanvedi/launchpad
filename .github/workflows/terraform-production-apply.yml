@@ -33,14 +33,14 @@ jobs:
         with:
           node-version: '12'
 
+      - name: "Setup - Terraform CLI"
+        uses: hashicorp/setup-terraform@v1.3.2
+
       - name: "Run - Build Lambda Functions"
         working-directory: ${{ env.lambda_cwd }}
         run: |
           npm install
           npm run build
-
-      - name: "Setup - Terraform CLI"
-        uses: hashicorp/setup-terraform@v1.3.2
 
       - name: "Run - Terraform Init"
         working-directory: ${{ env.cwd }}
