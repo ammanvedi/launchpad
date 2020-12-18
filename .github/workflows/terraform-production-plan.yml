@@ -106,7 +106,7 @@ jobs:
         env:
           # For some reason printing the actual stdout here seems to
           # show secrets so lets just tell the user that there is an output and o our best to link to it
-          STDOUT: "[Terraform Plan has been executed, please see the output from \"Terraform Init\" stage in the action run](https://github.com/${{ github.repository }}/runs/${{ github.run_id }}?check_suite_focus=true)"
+          STDOUT: "[Terraform Plan has been executed, please see the output from \"Terraform Init\" stage in the action run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
