@@ -56,9 +56,7 @@ jobs:
       - name: "Run - Terraform Plan"
         working-directory: ${{ env.cwd }}
         id: plan
-        run: |
-          echo "::add-mask::$TF_VAR_database_url"
-          terraform plan -input=false -no-color
+        run: terraform plan -input=false -no-color
         env:
           TF_VAR_database_url: ${{ secrets.PROD_TF_VAR_DATABASE_URL }}
           TF_VAR_aws_access_key: ${{ secrets.PROD_TF_VAR_AWS_ACCESS_KEY }}
