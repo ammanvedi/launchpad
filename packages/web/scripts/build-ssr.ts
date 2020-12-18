@@ -7,8 +7,6 @@ import { logMessage, compilerPromise, sleep } from './utils';
 
 const webpackConfig = getConfig(process.env.NODE_ENV || 'development');
 
-
-
 const build = async () => {
     rimraf.sync(paths.clientBuild);
     rimraf.sync(paths.serverBuild);
@@ -16,8 +14,12 @@ const build = async () => {
     const [clientConfig, serverConfig] = webpackConfig;
     const multiCompiler = webpack([clientConfig, serverConfig]);
 
-    const clientCompiler = multiCompiler.compilers.find((compiler) => compiler.name === 'client');
-    const serverCompiler = multiCompiler.compilers.find((compiler) => compiler.name === 'server');
+    const clientCompiler = multiCompiler.compilers.find(
+        (compiler) => compiler.name === 'client',
+    );
+    const serverCompiler = multiCompiler.compilers.find(
+        (compiler) => compiler.name === 'server',
+    );
 
     const clientPromise = compilerPromise('client', clientCompiler);
     const serverPromise = compilerPromise('server', serverCompiler);
@@ -41,11 +43,17 @@ const build = async () => {
     // wait until client and server is compiled
     try {
         await clientPromise;
-        await serverPromise
+        await serverPromise;
         logMessage('Done!', 'info');
     } catch (error) {
         logMessage(error, 'error');
     }
 };
 
-build();
+build()
+    .then(() => {
+        process.exit(0);
+    })
+    .catch(() => {
+        process.exit(1);
+    });
