@@ -47,7 +47,7 @@ resource "aws_cognito_user_pool" "master_user_pool" {
 # Custom Message Lambda Function
 
 resource "aws_lambda_function" "custom_message_lambda" {
-  function_name = "custom_message_lambda"
+  function_name = var.lambda_custom_message_name
   handler = "custom-message.verificationEmail"
   role = aws_iam_role.iam_for_lambda.arn
   runtime = "nodejs12.x"
@@ -73,7 +73,7 @@ resource "aws_iam_role_policy" "logs" {
 }
 
 resource "aws_iam_role" "iam_for_lambda" {
-  name = "iam_for_lambda"
+  name = var.lambda_role_name
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",

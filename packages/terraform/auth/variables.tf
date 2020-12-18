@@ -34,3 +34,10 @@ variable "user_pool_domain" {
     type = string
 }
 
+variable "lambda_custom_message_name" {
+    type = string
+}
+
+variable "lambda_role_name" {
+    type = string
+}

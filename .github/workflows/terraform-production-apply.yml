@@ -46,7 +46,7 @@ jobs:
         working-directory: ${{ env.cwd }}
         run: terraform init -input=false
 
-      - name: "Run - Terraform Plan"
+      - name: "Run - Terraform Apply"
         working-directory: ${{ env.cwd }}
         id: plan
         run: terraform apply -input=false -auto-approve
