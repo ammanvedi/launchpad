@@ -20,7 +20,13 @@ const isProfilerEnabled = () => process.argv.includes('--profile');
 
 const isDev = () => process.env.NODE_ENV === 'development';
 
-const loadableManifest = path.join(process.cwd(), 'build', 'client', 'static', 'loadable-stats.json');
+const loadableManifest = path.join(
+    process.cwd(),
+    'build',
+    'client',
+    'static',
+    'loadable-stats.json',
+);
 
 export const shared = [
     new MiniCssExtractPlugin({
@@ -28,7 +34,7 @@ export const shared = [
         chunkFilename: isDev() ? '[id].css' : '[id].[contenthash].css',
     }),
     new CaseSensitivePathsPlugin(),
-    new Dotenv()
+    new Dotenv(),
 ];
 
 export const client = [
@@ -57,7 +63,7 @@ export const client = [
                 sockIntegration: 'whm',
             },
         }),
-    new LoadablePlugin()
+    new LoadablePlugin(),
 ].filter(Boolean);
 
 export const server = [

@@ -144,7 +144,7 @@ resource "digitalocean_app" "web" {
             source_dir = var.web_source_dir
             http_port = var.web_port
 
-            build_command = "npm run build"
+            build_command = "npm run build:with-serialised-env"
             run_command = "npm run start"
 
             github {
