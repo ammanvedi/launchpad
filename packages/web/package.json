@@ -11,6 +11,7 @@
     "start": "node ./build/server/server.js",
     "analyze": "npm run build:with-stats && npm run start:analyzer",
     "build": "cross-env OMIT_SOURCEMAP=true NODE_ENV=production TS_NODE_PROJECT=tsconfig.tooling.json ts-node scripts/build",
+    "build:with-serialised-env": "TS_NODE_PROJECT=tsconfig.tooling.json ts-node scripts/generate-env.ts && npm run build",
     "build:with-stats": "cross-env NODE_ENV=production TS_NODE_PROJECT=tsconfig.tooling.json webpack --config config/webpack.config.ts/client.prod.ts --json > build/client/static/bundle-stats.json",
     "dev": "cross-env NODE_ENV=development TS_NODE_PROJECT=tsconfig.tooling.json ts-node scripts/start",
     "start:analyzer": "webpack-bundle-analyzer build/client/static/bundle-stats.json",
