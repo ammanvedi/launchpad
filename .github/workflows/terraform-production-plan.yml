@@ -6,6 +6,7 @@ on:
       - "packages/terraform/apps/**/*"
       - "packages/terraform/auth/**/*"
       - "packages/terraform/main/prod/**/*"
+      - "packages/lambda/**/*"
     branches:
       - master
 
@@ -34,12 +35,12 @@ jobs:
           echo "aws_access_key_id = ${{ secrets.PROD_TF_VAR_AWS_ACCESS_KEY }}" >> ~/.aws/credentials
           echo "aws_secret_access_key = ${{ secrets.PROD_TF_VAR_AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
 
-      - name: "setup NodeJS:"
+      - name: "Setup - Node"
         uses: actions/setup-node@v2
         with:
           node-version: '12'
 
-      - name: "Build Lambda Functions"
+      - name: "Run - Build Lambda Functions"
         working-directory: ${{ env.lambda_cwd }}
         run: |
           npm install
@@ -51,7 +52,6 @@ jobs:
       - name: "Run - Terraform Init"
         working-directory: ${{ env.cwd }}
         run: terraform init -input=false
-
 
       - name: "Run - Terraform Plan"
         working-directory: ${{ env.cwd }}
@@ -100,3 +100,19 @@ jobs:
           TF_VAR_auth_cookie_secure: ${{ secrets.PROD_TF_VAR_AUTH_COOKIE_SECURE }}
           TF_VAR_tf_backend_bucket: ${ secrets.PROD_TF_VAR_TF_BACKEND_BUCKET }
           TF_VAR_tf_backend_bucket_key: ${ secrets.PROD_TF_VAR_TF_BACKEND_BUCKET_KEY }
+
+      - name: "Run - Terraform Comment"
+        uses: actions/github-script@0.9.0
+        env:
+          # For some reason printing the actual stdout here seems to
+          # show secrets so lets just tell the user that there is an output and o our best to link to it
+          STDOUT: "[Terraform Plan has been executed, please see the output from \"Terraform Init\" stage in the action run](https://github.com/${{ env.GITHUB_REPOSITORY }}/actions/runs/${{ env.GITHUB_RUN_ID }})"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: process.env.STDOUT
+            })
