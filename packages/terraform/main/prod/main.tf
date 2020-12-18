@@ -9,6 +9,14 @@ terraform {
             version = "3.18.0"
         }
     }
+    backend "s3" {
+
+        bucket = "launchpad-tf-backend"
+        key    = "tf/prod"
+        region = "eu-west-1"
+        profile = "launchpad"
+        shared_credentials_file = "~/.aws/credentials"
+    }
 }
 # DIGITAL OCEAN
 
@@ -23,7 +31,7 @@ provider "aws" {
 }
 
 module "auth" {
-    source = "./auth"
+    source = "../../auth"
     facebook_client_id = var.facebook_client_id
     facebook_client_secret = var.facebook_client_secret
     google_client_id = var.google_client_id
@@ -36,7 +44,7 @@ module "auth" {
 }
 
 module "apps" {
-    source = "./apps"
+    source = "../../apps"
     auth_cookie_domain = var.auth_cookie_domain
     auth_cookie_expiry_days = var.auth_cookie_expiry_days
     auth_cookie_path = var.auth_cookie_path

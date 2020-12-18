@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - "packages/web"
+      - "packages/web/**/*"
 
 jobs:
   web-deploy-production:

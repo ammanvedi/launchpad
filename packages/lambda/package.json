@@ -4,8 +4,7 @@
   "description": "",
   "main": "custom-message.js",
   "scripts": {
-    "build": "./node_modules/.bin/webpack",
-    "prettier": "./node_modules/.bin/prettier -w src"
+    "build": "./node_modules/.bin/webpack"
   },
   "author": "Amman Vedi <amman.vedi@gmail.com>",
   "license": "ISC",
