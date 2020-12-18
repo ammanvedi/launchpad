@@ -1,3 +1,5 @@
+# Global Providers
+
 terraform {
     required_providers {
         digitalocean = {
