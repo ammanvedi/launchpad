@@ -76,6 +76,7 @@ import { DigitalOceanService, EncryptedTokenStore } from './digital-ocean';
  * GITHUB_TOKEN
  * TF_VAR_api_git_repo
  * SECRETS_PREFIX
+ * SECRETS_POSTFIX
  */
 
 console.log('env');
@@ -105,7 +106,7 @@ const reflectTokens = async (
     for (const tokenName in alreadyEncryptedTokens) {
         if (alreadyEncryptedTokens.hasOwnProperty(tokenName)) {
             const tokenVal = alreadyEncryptedTokens[tokenName];
-            const ghTokenName = `${process.env.SECRETS_PREFIX}${tokenName}`;
+            const ghTokenName = `${process.env.SECRETS_PREFIX}${tokenName}${process.env.SECRETS_POSTFIX}`;
             console.log(
                 `Token from DO named ${tokenName} will be reflected into github token ${ghTokenName}`,
             );

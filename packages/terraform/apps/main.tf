@@ -51,6 +51,13 @@ resource "digitalocean_app" "api" {
             }
 
             env {
+                key = "TF_VAR_database_url"
+                scope = "RUN_AND_BUILD_TIME"
+                value = var.database_url
+                type = "SECRET"
+            }
+
+            env {
                 key = "TF_VAR_cloudinary_key"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.cloudinary_key
@@ -68,13 +75,6 @@ resource "digitalocean_app" "api" {
                 key = "TF_VAR_cloudinary_cloud_name"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.cloudinary_cloud_name
-                type = "GENERAL"
-            }
-
-            env {
-                key = "TF_VAR_database_url"
-                scope = "RUN_AND_BUILD_TIME"
-                value = var.database_url
                 type = "GENERAL"
             }
 

@@ -103,4 +103,5 @@ jobs:
           TF_VAR_api_git_repo: ${{ secrets.PROD_TF_VAR_API_GIT_REPO }}
           TF_VAR_do_token: ${{ secrets.PROD_TF_VAR_DO_TOKEN }}
           SECRETS_PREFIX: "PROD_"
+          SECRETS_POSTFIX: "_do_encrypted"
           # GITHUB_TOKEN is provided implicitly by action
