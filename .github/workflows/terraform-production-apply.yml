@@ -17,6 +17,7 @@ jobs:
     env:
       cwd: ./packages/terraform/main/prod
       lambda_cwd: ./packages/lambda
+      post_apply_scripts_cwd: ./packages/terraform
     steps:
       - name: "Setup - Checkout"
         uses: actions/checkout@v2.3.4
@@ -35,6 +36,10 @@ jobs:
 
       - name: "Setup - Terraform CLI"
         uses: hashicorp/setup-terraform@v1.3.2
+
+      - name: "Run - Setup for Post Apply Scripts"
+        working-directory: ${{ env.post_apply_scripts_cwd }}
+        run: npm install
 
       - name: "Run - Build Lambda Functions"
         working-directory: ${{ env.lambda_cwd }}
@@ -89,3 +94,13 @@ jobs:
           TF_VAR_auth_cookie_domain: ${{ secrets.PROD_TF_VAR_AUTH_COOKIE_DOMAIN }}
           TF_VAR_auth_cookie_expiry_days: ${{ secrets.PROD_TF_VAR_AUTH_COOKIE_EXPIRY_DAYS }}
           TF_VAR_auth_cookie_secure: ${{ secrets.PROD_TF_VAR_AUTH_COOKIE_SECURE }}
+
+      - name: "RUN - Reflect Digital Ocean Encrypted Secrets Back to Github"
+        working-directory: ${{ env.post_apply_scripts_cwd }}
+        run: ts-node scripts/token-reflector.ts
+        env:
+          TF_VAR_api_application_name: ${{ secrets.PROD_TF_VAR_API_APPLICATION_NAME }}
+          TF_VAR_api_git_repo: ${{ secrets.PROD_TF_VAR_API_GIT_REPO }}
+          TF_VAR_do_token: ${{ secrets.PROD_TF_VAR_DO_TOKEN }}
+          SECRETS_PREFIX: "PROD_"
+          # GITHUB_TOKEN is provided implicitly by action

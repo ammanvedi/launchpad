@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "terraform:dev:init": "npm run terraform:go:dev && terraform init",
-    "terraform:dev:plan": "cd ./main/dev && ../../node_modules/.bin/dotenv -e ../../.env -- terraform plan",
+    "terraform:dev:plan": "cd ./main/prod && ../../node_modules/.bin/dotenv -e ../../.env -- terraform plan",
     "terraform:dev:apply": "cd ./main/dev && ../../node_modules/.bin/dotenv -e ../../.env terraform apply",
     "terraform:dev:refresh": "cd ./main/dev && ../../node_modules/.bin/dotenv -e ../../.env terraform refresh",
     "terraform:dev:output": "cd ./main/dev && ../../node_modules/.bin/dotenv -e ../../.env terraform output"
@@ -13,6 +13,20 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv-cli": "^4.0.0"
+    "@octokit/rest": "^18.0.12",
+    "@types/node-fetch": "^2.5.7",
+    "@typescript-eslint/eslint-plugin": "^4.9.1",
+    "@typescript-eslint/parser": "^4.9.1",
+    "dotenv-cli": "^4.0.0",
+    "eslint": "^7.15.0",
+    "eslint-config-prettier": "^7.0.0",
+    "eslint-config-shared": "file:../eslint-config-shared",
+    "eslint-plugin-prettier": "^3.3.0",
+    "eslint-plugin-react": "^7.21.5",
+    "node-fetch": "^2.6.1",
+    "prettier": "^2.2.1",
+    "ts-node": "^8.10.1",
+    "tweetsodium": "0.0.5",
+    "typescript": "^3.8.3"
   }
 }

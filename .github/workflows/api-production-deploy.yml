@@ -1,15 +1,15 @@
-name: "Web Deploy (Production)"
+name: "API Deploy (Production)"
 
 on:
   push:
     branches:
       - master
     paths:
-      - "packages/web/**/*"
+      - "packages/api/**/*"
 
 jobs:
   web-deploy-production:
-    name: "Web Deploy (Production)"
+    name: "API Deploy (Production)"
     runs-on: ubuntu-latest
     env:
       terraform: ./packages/terraform
@@ -26,10 +26,10 @@ jobs:
         working-directory: ${{ env.terraform }}
         run: npm install
 
-      - name: "Run - Trigger Web Application Deployment"
+      - name: "Run - Trigger API Application Deployment"
         working-directory: ${{ env.terraform }}
         run: ts-node scripts/trigger-deploy.ts
         env:
-          APPLICATION_NAME: ${{ secrets.TF_VAR_WEB_APPLICATION_NAME }}
+          APPLICATION_NAME: ${{ secrets.TF_VAR_API_APPLICATION_NAME }}
           TF_VAR_do_token: ${{ secrets.PROD_TF_VAR_DO_TOKEN }}
 

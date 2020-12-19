@@ -52,10 +52,8 @@ module "apps" {
     auth_cookie_secure = var.auth_cookie_secure
     aws_access_key = var.aws_access_key
     aws_region = var.aws_region
-    aws_secret_access_key = var.aws_secret_access_key
     cloudinary_cloud_name = var.cloudinary_cloud_name
     cloudinary_key = var.cloudinary_key
-    cloudinary_secret_key = var.cloudinary_secret_key
     do_token = var.do_token
     media_temp_folder = "/tmp"
     sign_in_callback_url = var.sign_in_callback_url
@@ -77,4 +75,9 @@ module "apps" {
     aws_user_pool_client_id = module.auth.user_pool_client_id
     aws_user_pool_id = module.auth.user_pool_id
     database_url = var.database_url
+    # secrets
+    cloudinary_secret_key = var.cloudinary_secret_key
+    aws_secret_access_key = var.aws_secret_access_key
+    aws_secret_access_key_do_encrypted = var.aws_secret_access_key_do_encrypted
+    cloudinary_secret_key_do_encrypted = var.cloudinary_secret_key_do_encrypted
 }

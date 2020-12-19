@@ -29,3 +29,12 @@ https://www.terraform.io/docs/state/locking.html
 
 you should also update the backend configs in each environment as terraform does nto allow you to
 set these up with envars so youll have to do it manually
+
+the purpose of a secret is to be secret, however this causes a problem for terraform
+https://github.com/digitalocean/terraform-provider-digitalocean/issues/514
+https://github.com/hashicorp/terraform/issues/26359
+
+1. ignore changes there
+2. store the value unencrypted
+3. deal with the recreation
+4. self encrypt the value
