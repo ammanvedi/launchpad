@@ -27,7 +27,7 @@ jobs:
         working-directory: ${{ env.api_dir }}
         run: npm install
 
-      - name: "Run - Trigger API Application Deployment"
+      - name: "Run - Apply Migrations to Production Database"
         working-directory: ${{ env.api_dir }}
         run: npm run prisma:apply-migration
         env:

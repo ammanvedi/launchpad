@@ -29,7 +29,7 @@ jobs:
 
       - name: "Run - Trigger Web Application Deployment"
         working-directory: ${{ env.terraform }}
-        run: ts-node scripts/trigger-deploy.ts
+        run: ./node_modules/.bin/ts-node scripts/trigger-deploy.ts
         env:
           APPLICATION_NAME: ${{ secrets.TF_VAR_WEB_APPLICATION_NAME }}
           TF_VAR_do_token: ${{ secrets.PROD_TF_VAR_DO_TOKEN }}
