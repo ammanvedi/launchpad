@@ -38,3 +38,5 @@ https://github.com/hashicorp/terraform/issues/26359
 2. store the value unencrypted
 3. deal with the recreation
 4. self encrypt the value
+
+make sure you set up the s3 bucket to store terraform congiof
