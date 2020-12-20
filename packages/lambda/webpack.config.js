@@ -9,6 +9,9 @@ const entry = {
 const zipPlugins = Object.keys(entry).map((entryName) => {
     return new ZipPlugin({
         filename: entryName,
+        fileOptions: {
+            mtime: new Date('2020-12-20T13:47:27+0000')
+        }
     })
 })
 
