@@ -58,8 +58,8 @@ module "database" {
     db_cluster_size = var.db_cluster_size
     db_node_count = 1
     region = "ams"
-    secret_name_encrypted = "PROD_TF_VAR_DATABASE_URL"
-    secret_name_unencrypted = "PROD_TF_VAR_DATABASE_URL_DO_ENCRYPTED"
+    secret_name_encrypted = "PROD_TF_VAR_DATABASE_URL" #tfsec:ignore:GEN003
+    secret_name_unencrypted = "PROD_TF_VAR_DATABASE_URL_DO_ENCRYPTED" #tfsec:ignore:GEN003
     secrets_repository = element(split("/", var.api_git_repo), 1)
 }
 

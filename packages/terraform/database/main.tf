@@ -27,11 +27,11 @@ data "github_actions_public_key" "repo_public_key" {
 resource "github_actions_secret" "db_url_raw_secret" {
     plaintext_value = digitalocean_database_cluster.main_db.uri
     repository = var.secrets_repository
-    secret_name = var.secret_name_unencrypted
+    secret_name = var.secret_name_unencrypted #tfsec:ignore:GEN003
 }
 
 resource "github_actions_secret" "db_url_do_encrypted_secret" {
     plaintext_value = digitalocean_database_cluster.main_db.uri
     repository = var.secrets_repository
-    secret_name = var.secret_name_encrypted
+    secret_name = var.secret_name_encrypted #tfsec:ignore:GEN003
 }
