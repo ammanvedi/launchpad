@@ -64,6 +64,8 @@
  * ...
  *
  * The purpose of this code is to perform that reflection
+ *
+ * https://www.digitalocean.com/community/questions/how-to-use-environment-values-of-type-secret-on-following-submissions
  */
 
 import { GithubService, SecretUpdater } from './github';
@@ -100,21 +102,28 @@ const reflectTokens = async (
     secretUpdater: SecretUpdater,
 ) => {
     const alreadyEncryptedTokens = await tokenStore.getEncryptedTokensForService(
-        'api-app-prod',
+        process.env.TF_VAR_api_application_name,
     );
 
     for (const tokenName in alreadyEncryptedTokens) {
         if (alreadyEncryptedTokens.hasOwnProperty(tokenName)) {
             const tokenVal = alreadyEncryptedTokens[tokenName];
-            const ghTokenName = `${process.env.SECRETS_PREFIX}${tokenName}${process.env.SECRETS_POSTFIX}`;
+            const ghTokenName = `${process.env.SECRETS_PREFIX}${tokenName}${process.env.SECRETS_POSTFIX}`.toUpperCase();
             console.log(
                 `Token from DO named ${tokenName} will be reflected into github token ${ghTokenName}`,
             );
-            await secretUpdater.updateSecret(
-                process.env.TF_VAR_api_git_repo,
-                ghTokenName,
-                tokenVal,
-            );
+            try {
+                console.log('attempting to update secret');
+                await secretUpdater.updateSecret(
+                    process.env.TF_VAR_api_git_repo,
+                    ghTokenName,
+                    tokenVal,
+                );
+                console.log('did update secret', tokenName, '-->', ghTokenName);
+            } catch (e) {
+                console.log('failed to update secret', tokenName, '-->', ghTokenName);
+                console.log(e);
+            }
         }
     }
 };

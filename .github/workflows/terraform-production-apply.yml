@@ -1,6 +1,7 @@
 name: "Terraform Apply (Production)"
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - "packages/terraform/apps/**/*"
@@ -94,6 +95,10 @@ jobs:
           TF_VAR_auth_cookie_domain: ${{ secrets.PROD_TF_VAR_AUTH_COOKIE_DOMAIN }}
           TF_VAR_auth_cookie_expiry_days: ${{ secrets.PROD_TF_VAR_AUTH_COOKIE_EXPIRY_DAYS }}
           TF_VAR_auth_cookie_secure: ${{ secrets.PROD_TF_VAR_AUTH_COOKIE_SECURE }}
+          # Vars for storing value that get encrypted by digitalocean
+          TF_VAR_cloudinary_secret_key_do_encrypted: ${{ secrets.PROD_TF_VAR_CLOUDINARY_SECRET_KEY_DO_ENCRYPTED }}
+          TF_VAR_database_url_do_encrypted: ${{ secrets.PROD_TF_VAR_DATABASE_URL_DO_ENCRYPTED }}
+          TF_VAR_aws_secret_access_key_do_encrypted: ${{ secrets.PROD_TF_VAR_AWS_SECRET_ACCESS_KEY_DO_ENCRYPTED }}
 
       - name: "RUN - Reflect Digital Ocean Encrypted Secrets Back to Github"
         working-directory: ${{ env.post_apply_scripts_cwd }}
@@ -103,5 +108,5 @@ jobs:
           TF_VAR_api_git_repo: ${{ secrets.PROD_TF_VAR_API_GIT_REPO }}
           TF_VAR_do_token: ${{ secrets.PROD_TF_VAR_DO_TOKEN }}
           SECRETS_PREFIX: "PROD_"
-          SECRETS_POSTFIX: "_do_encrypted"
+          SECRETS_POSTFIX: "_DO_ENCRYPTED"
           # GITHUB_TOKEN is provided implicitly by action

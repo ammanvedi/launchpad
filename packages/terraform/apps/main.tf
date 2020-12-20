@@ -39,21 +39,21 @@ resource "digitalocean_app" "api" {
             env {
                 key = "TF_VAR_aws_secret_access_key"
                 scope = "RUN_AND_BUILD_TIME"
-                value = var.aws_secret_access_key
+                value = var.aws_secret_access_key_do_encrypted
                 type = "SECRET"
             }
 
             env {
                 key = "TF_VAR_cloudinary_secret_key"
                 scope = "RUN_AND_BUILD_TIME"
-                value = var.cloudinary_secret_key
+                value = var.cloudinary_secret_key_do_encrypted
                 type = "SECRET"
             }
 
             env {
                 key = "TF_VAR_database_url"
                 scope = "RUN_AND_BUILD_TIME"
-                value = var.database_url
+                value = var.database_url_do_encrypted
                 type = "SECRET"
             }
 
