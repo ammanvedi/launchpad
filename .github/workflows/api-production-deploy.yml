@@ -6,10 +6,13 @@ on:
     branches:
       - master
     paths:
-      - "packages/api/**/*"
+      - "packages/api/src/**/*"
+      - "packages/api/package.json"
+      - "packages/api/package-lock.json"
+      - "packages/api/tsconfig.json"
 
 jobs:
-  web-deploy-production:
+  api-deploy-production:
     name: "API Deploy (Production)"
     runs-on: ubuntu-latest
     env:

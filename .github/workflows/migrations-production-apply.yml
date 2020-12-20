@@ -1,0 +1,35 @@
+name: "Apply Migrations (Production)"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - "packages/api/prisma/**/*"
+
+jobs:
+  apply-migration-production:
+    name: "Apply Migrations (Production)"
+    runs-on: ubuntu-latest
+    env:
+      api_dir: ./packages/api
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2.1.0
+
+      - name: "Setup - Node"
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+
+      - name: "Run - Install Packages"
+        working-directory: ${{ env.api_dir }}
+        run: npm install
+
+      - name: "Run - Trigger API Application Deployment"
+        working-directory: ${{ env.api_dir }}
+        run: npm run prisma:apply-migration
+        env:
+          TF_VAR_database_url: ${{ secrets.PROD_TF_VAR_DATABASE_URL }}
+
