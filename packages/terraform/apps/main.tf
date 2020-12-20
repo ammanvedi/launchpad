@@ -37,9 +37,44 @@ resource "digitalocean_app" "api" {
             }
 
             env {
+                key = "TF_VAR_aws_secret_access_key"
+                scope = "RUN_AND_BUILD_TIME"
+                value = var.aws_secret_access_key_do_encrypted
+                type = "SECRET"
+            }
+
+            env {
+                key = "TF_VAR_cloudinary_secret_key"
+                scope = "RUN_AND_BUILD_TIME"
+                value = var.cloudinary_secret_key_do_encrypted
+                type = "SECRET"
+            }
+
+            env {
                 key = "TF_VAR_database_url"
                 scope = "RUN_AND_BUILD_TIME"
-                value = var.database_url
+                value = var.database_url_do_encrypted
+                type = "SECRET"
+            }
+
+            env {
+                key = "TF_VAR_cloudinary_key"
+                scope = "RUN_AND_BUILD_TIME"
+                value = var.cloudinary_key
+                type = "GENERAL"
+            }
+
+            env {
+                key = "TF_VAR_aws_access_key"
+                scope = "RUN_AND_BUILD_TIME"
+                value = var.aws_access_key
+                type = "GENERAL"
+            }
+
+            env {
+                key = "TF_VAR_cloudinary_cloud_name"
+                scope = "RUN_AND_BUILD_TIME"
+                value = var.cloudinary_cloud_name
                 type = "GENERAL"
             }
 
@@ -86,41 +121,6 @@ resource "digitalocean_app" "api" {
             }
 
             env {
-                key = "TF_VAR_aws_access_key"
-                scope = "RUN_AND_BUILD_TIME"
-                value = var.aws_access_key
-                type = "SECRET"
-            }
-
-            env {
-                key = "TF_VAR_aws_secret_access_key"
-                scope = "RUN_AND_BUILD_TIME"
-                value = var.aws_secret_access_key
-                type = "SECRET"
-            }
-
-            env {
-                key = "TF_VAR_cloudinary_key"
-                scope = "RUN_AND_BUILD_TIME"
-                value = var.cloudinary_key
-                type = "SECRET"
-            }
-
-            env {
-                key = "TF_VAR_cloudinary_secret_key"
-                scope = "RUN_AND_BUILD_TIME"
-                value = var.cloudinary_secret_key
-                type = "SECRET"
-            }
-
-            env {
-                key = "TF_VAR_cloudinary_cloud_name"
-                scope = "RUN_AND_BUILD_TIME"
-                value = var.cloudinary_cloud_name
-                type = "SECRET"
-            }
-
-            env {
                 key = "TF_VAR_media_temp_folder"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.media_temp_folder
@@ -158,16 +158,16 @@ resource "digitalocean_app" "web" {
             }
 
             env {
-                key = "TF_VAR_public_graphql_endpoint"
-                scope = "RUN_AND_BUILD_TIME"
-                value = digitalocean_app.api.default_ingress
-            }
-
-            env {
                 key = "TF_VAR_aws_region"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.aws_region
-                type = "SECRET"
+                type = "GENERAL"
+            }
+
+            env {
+                key = "TF_VAR_public_graphql_endpoint"
+                scope = "RUN_AND_BUILD_TIME"
+                value = digitalocean_app.api.default_ingress
             }
 
             env {

@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "esModuleInterop": true,
+    "lib": ["ES2015"]
+  },
+  "include": ["config", "scripts"],
+  "exclude": ["src"]
+}

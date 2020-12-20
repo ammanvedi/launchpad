@@ -44,15 +44,7 @@ variable "aws_access_key" {
     type = string
 }
 
-variable "aws_secret_access_key" {
-    type = string
-}
-
 variable "cloudinary_key" {
-    type = string
-}
-
-variable "cloudinary_secret_key" {
     type = string
 }
 
@@ -118,6 +110,14 @@ variable "web_application_name" {
     type = string
 }
 
-variable "database_url" {
+variable "database_url_do_encrypted" {
+    type = string
+}
+
+variable "aws_secret_access_key_do_encrypted" {
+    type = string
+}
+
+variable "cloudinary_secret_key_do_encrypted" {
     type = string
 }

@@ -14,6 +14,7 @@ terraform variables where most of these things end up
 adding an envar
 add to your .env
 add it to .env.example
-if it is a secret make sure it is added to ::add_mask:: in any workflows in .github/workflows
 update vars lists in .github/workflows/*.yml
+if it is a secret then you will need to keep it in the envar and also in another envar
+%ENV%_%ENVARNAME%_DO_ENCRYPTED because digitalocean will
 

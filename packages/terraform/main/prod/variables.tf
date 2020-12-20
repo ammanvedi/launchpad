@@ -141,3 +141,18 @@ variable "api_application_name" {
 variable "web_application_name" {
     type = string
 }
+
+variable "aws_secret_access_key_do_encrypted" {
+    type = string
+    default = null
+}
+
+variable "cloudinary_secret_key_do_encrypted" {
+    type = string
+    default = null
+}
+
+variable "database_url_do_encrypted" {
+    type = string
+    default = null
+}
