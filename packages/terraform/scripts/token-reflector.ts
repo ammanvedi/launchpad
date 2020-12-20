@@ -76,7 +76,7 @@ import { log } from './log';
  *
  * TF_VAR_do_token
  * TF_VAR_api_application_name
- * GITHUB_TOKEN
+ * TF_VAR_github_personal_access_token
  * TF_VAR_api_git_repo
  * SECRETS_PREFIX
  * SECRETS_POSTFIX
@@ -88,9 +88,10 @@ log.info(
         {
             haveDoToken: !!process.env.TF_VAR_do_token,
             applicationName: process.env.TF_VAR_api_application_name,
-            haveGHToken: !!process.env.GITHUB_TOKEN,
+            haveGHToken: !!process.env.TF_VAR_github_personal_access_token,
             gitRepo: process.env.TF_VAR_api_git_repo,
             secretsPrefix: process.env.SECRETS_PREFIX,
+            secretsPostfix: process.env.SECRETS_POSTFIX,
         },
         null,
         2,
@@ -133,5 +134,5 @@ const reflectTokens = async (
 reflectTokens(
     process.env.TF_VAR_api_application_name,
     new DigitalOceanService(process.env.TF_VAR_do_token),
-    new GithubService(process.env.GITHUB_TOKEN),
+    new GithubService(process.env.TF_VAR_github_personal_access_token),
 );

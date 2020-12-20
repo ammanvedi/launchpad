@@ -104,9 +104,9 @@ jobs:
         working-directory: ${{ env.post_apply_scripts_cwd }}
         run: ./node_modules/.bin/ts-node scripts/token-reflector.ts
         env:
+          TF_VAR_github_personal_access_token: ${{ secrets.PROD_TF_VAR_GITHUB_PERSONAL_ACCESS_TOKEN }}
           TF_VAR_api_application_name: ${{ secrets.PROD_TF_VAR_API_APPLICATION_NAME }}
           TF_VAR_api_git_repo: ${{ secrets.PROD_TF_VAR_API_GIT_REPO }}
           TF_VAR_do_token: ${{ secrets.PROD_TF_VAR_DO_TOKEN }}
           SECRETS_PREFIX: "PROD_"
           SECRETS_POSTFIX: "_DO_ENCRYPTED"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
