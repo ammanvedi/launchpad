@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+import { log } from './log';
 
 export interface EncryptedTokenStore {
     getEncryptedTokensForService(serviceId: string): Promise<EncryptedTokensMap | null>;
@@ -90,7 +91,7 @@ export class DigitalOceanService implements EncryptedTokenStore, DeploymentTrigg
     async triggerDeployment(serviceId: string): Promise<boolean> {
         const app = await this.getAppWithName(serviceId);
         if (!app) {
-            return false;
+            throw new Error('Could not get an app with the given name');
         }
 
         const res: DigitalOceanDeploymentResponse = await fetch(
@@ -101,8 +102,8 @@ export class DigitalOceanService implements EncryptedTokenStore, DeploymentTrigg
             },
         ).then((r) => r.json());
 
-        console.log(`Created Deployment ${res.deployment.id} for ${serviceId}`);
+        log.success(`Created Deployment ${res.deployment.id} for ${serviceId}`);
 
-        return Promise.resolve(false);
+        return Promise.resolve(true);
     }
 }

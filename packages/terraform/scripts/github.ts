@@ -1,5 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import { seal } from 'tweetsodium';
+import { log } from './log';
 
 export interface SecretUpdater {
     updateSecret(
@@ -31,8 +32,10 @@ export class GithubService implements SecretUpdater {
                 key: pkResponse.data.key,
                 keyId: pkResponse.data.key_id,
             };
-        } catch {
-            return null;
+        } catch (e) {
+            log.error('failed to fetch public key');
+            log.error(e.toString());
+            log.error(e.stack);
         }
     }
 
@@ -43,7 +46,7 @@ export class GithubService implements SecretUpdater {
     ): Promise<{ encrypted_value: string; key_id: string } | null> {
         const pk = await this.getPublicKey(owner, repo);
         if (!pk) {
-            return null;
+            throw new Error('FAIL: could not get public key');
         }
 
         const messageBytes = Buffer.from(newValue);
@@ -70,7 +73,7 @@ export class GithubService implements SecretUpdater {
         const encryptedValue = await this.encryptSecret(owner, repo, newSecret);
 
         if (!encryptedValue) {
-            return false;
+            throw new Error('FAIL: no encrypted value was generated');
         }
 
         const updateResult = await this.api.actions.createOrUpdateRepoSecret({

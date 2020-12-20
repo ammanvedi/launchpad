@@ -70,6 +70,7 @@
 
 import { GithubService, SecretUpdater } from './github';
 import { DigitalOceanService, EncryptedTokenStore } from './digital-ocean';
+import { log } from './log';
 /**
  * envars required
  *
@@ -81,8 +82,8 @@ import { DigitalOceanService, EncryptedTokenStore } from './digital-ocean';
  * SECRETS_POSTFIX
  */
 
-console.log('env');
-console.log(
+log.info('Show environment');
+log.info(
     JSON.stringify(
         {
             haveDoToken: !!process.env.TF_VAR_do_token,
@@ -109,20 +110,21 @@ const reflectTokens = async (
         if (alreadyEncryptedTokens.hasOwnProperty(tokenName)) {
             const tokenVal = alreadyEncryptedTokens[tokenName];
             const ghTokenName = `${process.env.SECRETS_PREFIX}${tokenName}${process.env.SECRETS_POSTFIX}`.toUpperCase();
-            console.log(
+            log.info(
                 `Token from DO named ${tokenName} will be reflected into github token ${ghTokenName}`,
             );
             try {
-                console.log('attempting to update secret');
+                log.info('attempting to update secret');
                 await secretUpdater.updateSecret(
                     process.env.TF_VAR_api_git_repo,
                     ghTokenName,
                     tokenVal,
                 );
-                console.log('did update secret', tokenName, '-->', ghTokenName);
+                log.success(`Did update secret`);
             } catch (e) {
-                console.log('failed to update secret', tokenName, '-->', ghTokenName);
-                console.log(e);
+                log.error('failed to update secret');
+                log.error(e.toString());
+                log.error(e.stack);
             }
         }
     }

@@ -14,9 +14,10 @@
  */
 
 import { DigitalOceanService } from './digital-ocean';
+import { log } from './log';
 
-console.log('env');
-console.log(
+log.info('Showing environment');
+log.info(
     JSON.stringify(
         {
             hasDoToken: !!process.env.TF_VAR_do_token,
@@ -32,9 +33,10 @@ const digitalOcean = new DigitalOceanService(process.env.TF_VAR_do_token);
 digitalOcean
     .triggerDeployment(process.env.APPLICATION_NAME)
     .then(() => {
-        console.log('Success, Deployed');
+        log.success('Application was deployed');
     })
-    .catch((e) => {
-        console.log('Failed to create deployment');
-        console.log(e);
+    .catch((e: Error) => {
+        log.error('Application failed to deploy');
+        log.error(e.toString());
+        log.error(e.stack);
     });
