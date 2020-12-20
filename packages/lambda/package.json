@@ -9,7 +9,7 @@
   "author": "Amman Vedi <amman.vedi@gmail.com>",
   "license": "ISC",
   "devDependencies": {
-    "launchpad-config": "file:../eslint-config-shared",
+    "eslint-config-shared": "file:../eslint-config-shared",
     "@types/aws-lambda": "^8.10.64",
     "@typescript-eslint/eslint-plugin": "^4.9.1",
     "@typescript-eslint/parser": "^4.9.1",

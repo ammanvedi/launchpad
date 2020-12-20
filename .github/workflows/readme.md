@@ -7,6 +7,9 @@ for example
 
 TF_VAR_database_url --> PROD_TF_VAR_DATABASE_URL
 
+NOTE BAD EXAMPLE AS YOU SHOULD NTO CREATE DTABASE URL IN PRODUCTION IT WILL BE CREATED BY TERRAFORM ON
+THE FIRST RUN
+
 pleasse note that github will convert the envars to upper case so they need to be referecned
 like that in the workflow, we use the lowercase alternative to be abel to adhere to the style of
 terraform variables where most of these things end up

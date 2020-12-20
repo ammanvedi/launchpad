@@ -121,3 +121,11 @@ variable "aws_secret_access_key_do_encrypted" {
 variable "cloudinary_secret_key_do_encrypted" {
     type = string
 }
+
+variable "web_domain_name" {
+    type = string
+}
+
+variable "api_domain_name" {
+    type = string
+}
