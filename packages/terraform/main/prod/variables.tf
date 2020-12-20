@@ -156,3 +156,23 @@ variable "database_url_do_encrypted" {
     type = string
     default = null
 }
+
+variable "web_domain_name" {
+    type = string
+}
+
+variable "api_domain_name" {
+    type = string
+}
+
+variable "db_cluster_name" {
+    type = string
+}
+
+variable "db_cluster_size" {
+    type = string
+}
+
+variable "github_personal_access_token" {
+    type = string
+}

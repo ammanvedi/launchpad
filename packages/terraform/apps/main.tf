@@ -13,6 +13,7 @@ resource "digitalocean_app" "api" {
     spec {
         name = var.api_application_name
         region = "ams"
+        domains = [var.api_domain_name]
 
         service {
             name = var.api_application_name
@@ -134,6 +135,7 @@ resource "digitalocean_app" "web" {
     spec {
         name = var.web_application_name
         region = "ams"
+        domains = [var.web_domain_name]
 
         service {
             name = var.web_application_name
