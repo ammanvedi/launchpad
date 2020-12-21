@@ -71,6 +71,7 @@
 import { GithubService, SecretUpdater } from './github';
 import { DigitalOceanService, EncryptedTokenStore } from './digital-ocean';
 import { log } from './log';
+import { ConfigReader, TFVarsReader } from './tfvars-reader';
 /**
  * envars required
  *
@@ -82,29 +83,14 @@ import { log } from './log';
  * SECRETS_POSTFIX
  */
 
-log.info('Show environment');
-log.info(
-    JSON.stringify(
-        {
-            haveDoToken: !!process.env.TF_VAR_do_token,
-            applicationName: process.env.TF_VAR_api_application_name,
-            haveGHToken: !!process.env.TF_VAR_github_personal_access_token,
-            gitRepo: process.env.TF_VAR_api_git_repo,
-            secretsPrefix: process.env.SECRETS_PREFIX,
-            secretsPostfix: process.env.SECRETS_POSTFIX,
-        },
-        null,
-        2,
-    ),
-);
-
 const reflectTokens = async (
     serviceName: string,
+    repoName: string,
     tokenStore: EncryptedTokenStore,
     secretUpdater: SecretUpdater,
 ) => {
     const alreadyEncryptedTokens = await tokenStore.getEncryptedTokensForService(
-        process.env.TF_VAR_api_application_name,
+        serviceName,
     );
 
     for (const tokenName in alreadyEncryptedTokens) {
@@ -116,11 +102,7 @@ const reflectTokens = async (
             );
             try {
                 log.info('attempting to update secret');
-                await secretUpdater.updateSecret(
-                    process.env.TF_VAR_api_git_repo,
-                    ghTokenName,
-                    tokenVal,
-                );
+                await secretUpdater.updateSecret(repoName, ghTokenName, tokenVal);
                 log.success(`Did update secret`);
             } catch (e) {
                 log.error('failed to update secret');
@@ -131,8 +113,31 @@ const reflectTokens = async (
     }
 };
 
+const varReader: ConfigReader = new TFVarsReader();
+
+varReader.loadVars(process.env.TFVARS_PATH);
+const appName = varReader.getVar(process.env.APPLICATION_NAME_TFVAR);
+const repoName = varReader.getVar(process.env.APPLICATION_REPO_NAME_TFVAR);
+
+log.info('Show environment');
+log.info(
+    JSON.stringify(
+        {
+            haveDoToken: !!process.env.TF_VAR_do_token,
+            appName,
+            haveGHToken: !!process.env.TF_VAR_github_personal_access_token,
+            repoName,
+            secretsPrefix: process.env.SECRETS_PREFIX,
+            secretsPostfix: process.env.SECRETS_POSTFIX,
+        },
+        null,
+        2,
+    ),
+);
+
 reflectTokens(
-    process.env.TF_VAR_api_application_name,
+    appName,
+    repoName,
     new DigitalOceanService(process.env.TF_VAR_do_token),
     new GithubService(process.env.TF_VAR_github_personal_access_token),
 );

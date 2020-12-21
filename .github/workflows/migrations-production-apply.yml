@@ -1,4 +1,4 @@
-name: "Apply Migrations (Production)"
+name: "Database :: Prod :: Apply Migrations"
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   apply-migration-production:
-    name: "Apply Migrations (Production)"
+    name: "Apply Migrations"
     runs-on: ubuntu-latest
     env:
       api_dir: ./packages/api

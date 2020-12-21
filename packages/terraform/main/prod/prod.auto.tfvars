@@ -6,6 +6,7 @@ web_port = "8500"
 web_application_name = "web-app-prod"
 web_domain_name = "stage.habuhome.com"
 web_region = "ams"
+web_node_count = 1
 
 api_git_repo = "ammanvedi/launchpad"
 api_git_branch = "master"
@@ -16,12 +17,14 @@ api_application_name = "api-app-prod"
 api_domain_name = "graphql.habuhome.com"
 api_media_temp_folder = "/tmp"
 api_region = "ams"
+api_node_count = 1
 
 db_cluster_name = "production-launchpad-cluster"
 db_cluster_size = "db-s-1vcpu-1gb"
 db_region = "lon1"
 db_uri_github_secret_name_encrypted = "PROD_TF_VAR_DATABASE_URL"
 db_uri_github_secret_name_unencrypted = "PROD_TF_VAR_DATABASE_URL_DO_ENCRYPTED"
+db_node_count = 1
 
 auth_cookie_path = "/"
 auth_cookie_domain = "habuhome.com"

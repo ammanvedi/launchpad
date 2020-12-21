@@ -1,4 +1,4 @@
-name: "Terraform Apply (Production)"
+name: "Prod :: Terraform :: Apply"
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ on:
 
 jobs:
   terraform-apply:
-    name: "Terraform Apply (Production)"
+    name: "Apply"
     runs-on: ubuntu-latest
     env:
       cwd: ./packages/terraform/main/prod
@@ -86,6 +86,10 @@ jobs:
           TF_VAR_github_personal_access_token: ${{ secrets.PROD_TF_VAR_GITHUB_PERSONAL_ACCESS_TOKEN }}
           TF_VAR_api_application_name: ${{ secrets.PROD_TF_VAR_API_APPLICATION_NAME }}
           TF_VAR_api_git_repo: ${{ secrets.PROD_TF_VAR_API_GIT_REPO }}
-          TF_VAR_do_token: ${{ secrets.PROD_TF_VAR_DO_TOKEN }}
+
           SECRETS_PREFIX: "PROD_"
           SECRETS_POSTFIX: "_DO_ENCRYPTED"
+          TF_VAR_do_token: ${{ secrets.PROD_TF_VAR_DO_TOKEN }}
+          TFVARS_PATH: "main/prod/prod.auto.tfvars"
+          APPLICATION_NAME_TFVAR: "api_application_name"
+          APPLICATION_REPO_NAME_TFVAR: "api_git_repo"

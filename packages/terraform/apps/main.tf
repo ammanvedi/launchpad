@@ -18,7 +18,7 @@ resource "digitalocean_app" "api" {
         service {
             name = var.api_application_name
             environment_slug = "node-js"
-            instance_count = 1
+            instance_count = var.api_node_count
             instance_size_slug = var.api_instance_size
 
             source_dir = var.api_source_dir
@@ -140,7 +140,7 @@ resource "digitalocean_app" "web" {
         service {
             name = var.web_application_name
             environment_slug = "node-js"
-            instance_count = 1
+            instance_count = var.web_node_count
             instance_size_slug = var.web_instance_size
 
             source_dir = var.web_source_dir

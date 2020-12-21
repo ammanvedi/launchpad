@@ -1,10 +1,10 @@
-name: "Terraform Destroy (Production)"
+name: "Prod :: Terraform :: Destroy"
 
 on: workflow_dispatch
 
 jobs:
   terraform-destroy:
-    name: "Terraform Destroy (Production)"
+    name: "Destroy"
     runs-on: ubuntu-latest
     env:
       cwd: ./packages/terraform/main/prod

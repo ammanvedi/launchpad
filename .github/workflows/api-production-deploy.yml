@@ -1,4 +1,4 @@
-name: "API Deploy (Production)"
+name: "Prod :: App :: API Deployment"
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ on:
 
 jobs:
   api-deploy-production:
-    name: "API Deploy (Production)"
+    name: "Trigger Deployment"
     runs-on: ubuntu-latest
     env:
       terraform: ./packages/terraform
