@@ -16,11 +16,11 @@ variable "user_pool_domain" {
     type = string
 }
 
-variable "sign_in_callback_url" {
+variable "user_pool_sign_in_callback_url" {
     type    = string
 }
 
-variable "sign_out_callback_url" {
+variable "user_pool_sign_out_callback_url" {
     type    = string
 }
 
@@ -52,7 +52,7 @@ variable "cloudinary_cloud_name" {
     type = string
 }
 
-variable "media_temp_folder" {
+variable "api_media_temp_folder" {
     type = string
 }
 
@@ -129,3 +129,12 @@ variable "web_domain_name" {
 variable "api_domain_name" {
     type = string
 }
+
+variable "api_region" {
+    type = string
+}
+
+variable "web_region" {
+    type = string
+}
+

@@ -6,7 +6,9 @@ export const registerExternalUserMutation = gql`
 
     mutation registerExternalUser($user: RegisterUserFromExternalProviderInput) {
         registerUserFromExternalProvider(user: $user) {
-            ...GlobalMeFragment
+            me {
+                ...GlobalMeFragment
+            }
         }
     }
 `;

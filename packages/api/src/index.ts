@@ -97,7 +97,7 @@ export const server = new ApolloServer({
 
 const setup = Promise.all([
     authorizer.initialize(),
-    mediaManager.createTempDir(process.env.TF_VAR_media_temp_folder || ''),
+    mediaManager.createTempDir(process.env.TF_VAR_api_media_temp_folder || ''),
 ]);
 
 setup

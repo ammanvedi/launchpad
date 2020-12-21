@@ -16,9 +16,18 @@ lerna bootstrap --force-local && lerna link --force-local && lerna run prisma:ge
 
 follow instructions here to enable sign in from various providers
 https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-social-idp.html
-launchpad-development-2.auth.eu-west-1.amazoncognito.com/oauth/idpresponse
+your user pool domain will be
+App Domain
+https://<user_pool_domain>.auth.<aws_region>.amazoncognito.com
+redirect uri
+https://<user_pool_domain>.auth.<aws_region>.amazoncognito.com/oauth/idpresponse
+
+for development you should make sure this matches the user_pool info in your .env
+and for prod you should make sure it matches the user_pool info in your
 
 link you github account to your digital ocean account before running terraform
 https://cloud.digitalocean.com/apps/new
+
+you dont have to actually create an app just get as far as linking github
 
 install terraform

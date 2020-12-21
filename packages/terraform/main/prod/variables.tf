@@ -43,17 +43,26 @@ variable "google_client_secret" {
     type = string
 }
 
-variable "client_name" {
+variable "user_pool_client_name" {
     type    = string
     default = "up_launchpad_dev_client"
 }
 
-variable "sign_in_callback_url" {
+variable "user_pool_sign_in_callback_url" {
     type    = string
 }
 
-variable "sign_out_callback_url" {
+variable "user_pool_sign_out_callback_url" {
     type    = string
+}
+
+variable "user_pool_lambda_name_custom_message" {
+    type = string
+}
+
+
+variable "user_pool_lambda_role_name" {
+    type = string
 }
 
 variable "user_pool_domain" {
@@ -121,6 +130,10 @@ variable "api_instance_size" {
     type = string
 }
 
+variable "api_media_temp_folder" {
+    type = string
+    default = "/tmp"
+}
 
 variable "web_instance_size" {
     type = string
@@ -173,6 +186,26 @@ variable "db_cluster_size" {
     type = string
 }
 
+variable "db_region" {
+    type = string
+}
+
+variable "db_uri_github_secret_name_unencrypted" {
+    type = string
+}
+
+variable "db_uri_github_secret_name_encrypted" {
+    type = string
+}
+
 variable "github_personal_access_token" {
+    type = string
+}
+
+variable "api_region" {
+    type = string
+}
+
+variable "web_region" {
     type = string
 }

@@ -44,12 +44,12 @@ module "auth" {
     google_client_id = var.google_client_id
     google_client_secret = var.google_client_secret
     user_pool_domain = var.user_pool_domain
-    client_name = var.client_name
-    sign_in_callback_url = var.sign_in_callback_url
-    sign_out_callback_url = var.sign_out_callback_url
+    client_name = var.user_pool_client_name
+    sign_in_callback_url = var.user_pool_sign_in_callback_url
+    sign_out_callback_url = var.user_pool_sign_out_callback_url
     user_pool_name = var.user_pool_name
-    lambda_custom_message_name = "prod_custom_message_lambda"
-    lambda_role_name = "prod_iam_for_lambda_production"
+    lambda_custom_message_name = var.user_pool_lambda_name_custom_message
+    lambda_role_name = var.user_pool_lambda_role_name
 }
 
 module "database" {
@@ -57,9 +57,9 @@ module "database" {
     db_cluster_name = var.db_cluster_name
     db_cluster_size = var.db_cluster_size
     db_node_count = 1
-    region = "lon1"
-    secret_name_encrypted = "PROD_TF_VAR_DATABASE_URL" #tfsec:ignore:GEN003
-    secret_name_unencrypted = "PROD_TF_VAR_DATABASE_URL_DO_ENCRYPTED" #tfsec:ignore:GEN003
+    region = var.db_region
+    secret_name_encrypted = var.db_uri_github_secret_name_encrypted #tfsec:ignore:GEN003
+    secret_name_unencrypted = var.db_uri_github_secret_name_unencrypted #tfsec:ignore:GEN003
     secrets_repository = element(split("/", var.api_git_repo), 1)
 }
 
@@ -74,9 +74,9 @@ module "apps" {
     cloudinary_cloud_name = var.cloudinary_cloud_name
     cloudinary_key = var.cloudinary_key
     do_token = var.do_token
-    media_temp_folder = "/tmp"
-    sign_in_callback_url = var.sign_in_callback_url
-    sign_out_callback_url = var.sign_out_callback_url
+    api_media_temp_folder = var.api_media_temp_folder
+    user_pool_sign_in_callback_url = var.user_pool_sign_in_callback_url
+    user_pool_sign_out_callback_url = var.user_pool_sign_out_callback_url
     user_pool_domain = var.user_pool_domain
     api_git_branch = var.api_git_branch
     api_git_repo = var.api_git_repo
@@ -92,6 +92,8 @@ module "apps" {
     api_domain_name = var.api_domain_name
     api_application_name = var.api_application_name
     web_application_name = var.web_application_name
+    web_region = var.web_region
+    api_region = var.api_region
     # Outputs from creating the authentication
     aws_user_pool_client_id = module.auth.user_pool_client_id
     aws_user_pool_id = module.auth.user_pool_id

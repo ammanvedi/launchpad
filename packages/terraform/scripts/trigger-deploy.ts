@@ -13,25 +13,37 @@
  * the CLI
  */
 
-import { DigitalOceanService } from './digital-ocean';
+import { DeploymentTrigger, DigitalOceanService } from './digital-ocean';
 import { log } from './log';
+import { ConfigReader, TFVarsReader } from './tfvars-reader';
 
 log.info('Showing environment');
 log.info(
     JSON.stringify(
         {
-            hasDoToken: !!process.env.TF_VAR_do_token,
-            applicationName: process.env.APPLICATION_NAME,
+            hasDoToken: !!process.env.DO_TOKEN,
+            applicationNameTfVar: process.env.APPLICATION_NAME_TFVAR,
+            TfVarsPath: process.env.TFVARS_PATH,
         },
         null,
         2,
     ),
 );
 
-const digitalOcean = new DigitalOceanService(process.env.TF_VAR_do_token);
+const trigger: DeploymentTrigger = new DigitalOceanService(process.env.DO_TOKEN);
+const varReader: ConfigReader = new TFVarsReader();
 
-digitalOcean
-    .triggerDeployment(process.env.APPLICATION_NAME)
+varReader.loadVars(process.env.TFVARS_PATH);
+const appName = varReader.getVar(process.env.APPLICATION_NAME_TFVAR);
+
+console.log(appName);
+
+if (!appName) {
+    log.error('Failed to retrieve the app name from tfVars');
+}
+
+trigger
+    .triggerDeployment(appName)
     .then(() => {
         log.success('Application was deployed');
     })
