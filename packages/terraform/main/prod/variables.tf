@@ -2,10 +2,6 @@ variable "database_url" {
     type = string
 }
 
-variable "public_graphql_endpoint" {
-    type = string
-}
-
 variable "aws_access_key" {
     type = string
 }
