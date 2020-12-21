@@ -197,14 +197,14 @@ resource "digitalocean_app" "web" {
             env {
                 key = "TF_VAR_user_pool_sign_in_callback_url"
                 scope = "RUN_AND_BUILD_TIME"
-                value = var.sign_in_callback_url
+                value = var.user_pool_sign_in_callback_url
                 type = "GENERAL"
             }
 
             env {
                 key = "TF_VAR_user_pool_sign_out_callback_url"
                 scope = "RUN_AND_BUILD_TIME"
-                value = var.sign_out_callback_url
+                value = var.user_pool_sign_out_callback_url
                 type = "GENERAL"
             }
 
