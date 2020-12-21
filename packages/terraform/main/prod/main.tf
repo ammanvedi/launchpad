@@ -56,7 +56,7 @@ module "database" {
     source = "../../database"
     db_cluster_name = var.db_cluster_name
     db_cluster_size = var.db_cluster_size
-    db_node_count = 1
+    db_node_count = var.db_node_count
     region = var.db_region
     secret_name_encrypted = var.db_uri_github_secret_name_encrypted #tfsec:ignore:GEN003
     secret_name_unencrypted = var.db_uri_github_secret_name_unencrypted #tfsec:ignore:GEN003
@@ -81,6 +81,7 @@ module "apps" {
     api_git_branch = var.api_git_branch
     api_git_repo = var.api_git_repo
     api_source_dir = var.api_source_dir
+    api_node_count = var.api_node_count
     web_git_branch = var.web_git_branch
     web_git_repo = var.web_git_repo
     web_source_dir = var.web_source_dir
@@ -89,6 +90,7 @@ module "apps" {
     api_port = var.api_port
     web_port = var.web_port
     web_domain_name = var.web_domain_name
+    web_node_count = var.web_node_count
     api_domain_name = var.api_domain_name
     api_application_name = var.api_application_name
     web_application_name = var.web_application_name

@@ -205,3 +205,16 @@ variable "api_region" {
 variable "web_region" {
     type = string
 }
+
+
+variable "web_node_count" {
+    type = number
+}
+
+variable "api_node_count" {
+    type = number
+}
+
+variable "db_node_count" {
+    type = number
+}

@@ -1,4 +1,4 @@
-name: "Web Deploy (Production)"
+name: "Prod :: App :: Web Deployment"
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   web-deploy-production:
-    name: "Web Deploy (Production)"
+    name: "Trigger Deployment"
     runs-on: ubuntu-latest
     env:
       terraform: ./packages/terraform

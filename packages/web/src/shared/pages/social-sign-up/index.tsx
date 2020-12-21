@@ -6,6 +6,7 @@ import {
     useMeQuery,
     useRegisterExternalUserMutation,
 } from '../../graphql/generated/graphql';
+import { Auth } from '@aws-amplify/auth';
 
 const Page = () => {
     const [firstName, setFirstName] = useState<string>('');
@@ -38,6 +39,13 @@ const Page = () => {
                 },
             }).then((data) => {
                 console.log(data);
+                /**
+                 * The user previously had no "internalId" in aws cognito
+                 * our sign up external user mutation has added one
+                 * so we need to make sure that we refresh the users data now
+                 * to get the new internal id so we can use it for api requests
+                 */
+                return Auth.currentAuthenticatedUser({ bypassCache: true });
             });
         } catch (error) {
             console.log('error signing up:', error);
