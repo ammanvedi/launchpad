@@ -79,7 +79,7 @@ jobs:
           TF_VAR_user_pool_name: ${{ secrets.PROD_TF_VAR_USER_POOL_NAME }}
           TF_VAR_client_name: ${{ secrets.PROD_TF_VAR_CLIENT_NAME }}
 
-      - name: "RUN - Reflect Digital Ocean Encrypted Secrets Back to Github"
+      - name: "Run - Reflect Digital Ocean Encrypted Secrets Back to Github"
         working-directory: ${{ env.post_apply_scripts_cwd }}
         run: ./node_modules/.bin/ts-node scripts/token-reflector.ts
         env:

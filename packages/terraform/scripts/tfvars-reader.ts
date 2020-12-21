@@ -20,8 +20,8 @@ export class TFVarsReader implements ConfigReader {
         this.varsMap = lines.reduce<VarMap>((vars, line) => {
             const [varName, varValue] = line.split('=');
             if (varName && varValue) {
-                const key = varName.trim();
-                const value = varValue.trim();
+                const key = varName.trim().replace(/"/g, '');
+                const value = varValue.trim().replace(/"/g, '');
 
                 return {
                     ...vars,
