@@ -169,7 +169,7 @@ resource "digitalocean_app" "web" {
             env {
                 key = "TF_VAR_public_graphql_endpoint"
                 scope = "RUN_AND_BUILD_TIME"
-                value = digitalocean_app.api.default_ingress
+                value = digitalocean_app.api.live_url
                 type = "GENERAL"
             }
 
