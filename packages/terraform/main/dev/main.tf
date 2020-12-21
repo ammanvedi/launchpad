@@ -36,48 +36,13 @@ module "auth" {
     google_client_id = var.google_client_id
     google_client_secret = var.google_client_secret
     user_pool_domain = var.user_pool_domain
-    client_name = var.client_name
-    sign_in_callback_url = var.sign_in_callback_url
-    sign_out_callback_url = var.sign_out_callback_url
+    client_name = var.user_pool_client_name
+    sign_in_callback_url = var.user_pool_sign_in_callback_url
+    sign_out_callback_url = var.user_pool_sign_out_callback_url
     user_pool_name = var.user_pool_name
-    lambda_custom_message_name = "custom_message_lambda"
-    lambda_role_name = "iam_for_lambda"
+    lambda_custom_message_name = var.user_pool_lambda_name_custom_message
+    lambda_role_name = var.user_pool_lambda_role_name
 }
 
 # in development the apps run locally so we dont need to deploy the
 # actual apps anywhere, we just need to set up the authentication flows
-
-//module "apps" {
-//    source = "../../apps"
-//    auth_cookie_domain = var.auth_cookie_domain
-//    auth_cookie_expiry_days = var.auth_cookie_expiry_days
-//    auth_cookie_path = var.auth_cookie_path
-//    auth_cookie_secure = var.auth_cookie_secure
-//    aws_access_key = var.aws_access_key
-//    aws_region = var.aws_region
-//    aws_secret_access_key = var.aws_secret_access_key
-//    cloudinary_cloud_name = var.cloudinary_cloud_name
-//    cloudinary_key = var.cloudinary_key
-//    cloudinary_secret_key = var.cloudinary_secret_key
-//    do_token = var.do_token
-//    media_temp_folder = "/tmp"
-//    sign_in_callback_url = var.sign_in_callback_url
-//    sign_out_callback_url = var.sign_out_callback_url
-//    user_pool_domain = var.user_pool_domain
-//    api_git_branch = var.api_git_branch
-//    api_git_repo = var.api_git_repo
-//    api_source_dir = var.api_source_dir
-//    web_git_branch = var.web_git_branch
-//    web_git_repo = var.web_git_repo
-//    web_source_dir = var.web_source_dir
-//    api_instance_size = var.api_instance_size
-//    web_instance_size = var.web_instance_size
-//    api_port = var.api_port
-//    web_port = var.web_port
-//    api_application_name = var.api_application_name
-//    web_application_name = var.web_application_name
-//    # Outputs from creating the authentication
-//    aws_user_pool_client_id = module.auth.user_pool_client_id
-//    aws_user_pool_id = module.auth.user_pool_id
-//    database_url = var.database_url
-//}

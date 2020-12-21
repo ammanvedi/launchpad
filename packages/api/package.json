@@ -12,6 +12,7 @@
     "prisma:generate": "./node_modules/.bin/prisma generate",
     "prisma:save-migration": "./node_modules/.bin/prisma migrate dev --preview-feature",
     "prisma:apply-migration": "./node_modules/.bin/prisma migrate deploy --preview-feature",
+    "prisma:reset": "./node_modules/.bin/prisma migrate reset --preview-feature",
     "codegen": "./node_modules/.bin/graphql-codegen --config codegen.yml"
   },
   "author": "Amman Vedi <amman.vedi@gmail.com>",

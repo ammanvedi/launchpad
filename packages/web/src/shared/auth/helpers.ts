@@ -39,7 +39,7 @@ export const getTokenTypeFromRequest = (
 export const isLoggedInSync = (
     cookieString: string,
     tokenType: CookieType = 'idToken',
-    clientId: string = process.env.AWS_USER_POOLS_WEB_CLIENT_ID || '',
+    clientId: string = process.env.TF_VAR_aws_user_pool_client_id || '',
 ): boolean => {
     const idTokenRegex = getTokenTypeRegex(tokenType, clientId);
     return idTokenRegex.test(cookieString);

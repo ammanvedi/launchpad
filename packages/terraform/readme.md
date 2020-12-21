@@ -22,6 +22,8 @@ make sure you have the correct permissions
 }
 ```
 
+make sure you edit the backend configuration in main/prod/main.tf and main/dev.m,ain.tf unfortunately you cant set these dynamically
+
 
 this setup does not LOCK STSTAE
 

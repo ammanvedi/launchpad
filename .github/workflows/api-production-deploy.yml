@@ -34,6 +34,7 @@ jobs:
         working-directory: ${{ env.terraform }}
         run: ./node_modules/.bin/ts-node scripts/trigger-deploy.ts
         env:
-          APPLICATION_NAME: ${{ secrets.PROD_TF_VAR_API_APPLICATION_NAME }}
-          TF_VAR_do_token: ${{ secrets.PROD_TF_VAR_DO_TOKEN }}
+          TFVARS_PATH: "main/prod/prod.auto.tfvars"
+          APPLICATION_NAME_TFVAR: "api_application_name"
+          DO_TOKEN: ${{ secrets.PROD_TF_VAR_DO_TOKEN }}
 

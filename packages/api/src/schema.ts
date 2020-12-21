@@ -88,7 +88,7 @@ export const schema = gql`
         register(user: RegisterUserInput): Boolean
         registerUserFromExternalProvider(
             user: RegisterUserFromExternalProviderInput
-        ): User
+        ): MeResponse!
         updateUserProfileImage(file: Upload!): User
     }
 `;

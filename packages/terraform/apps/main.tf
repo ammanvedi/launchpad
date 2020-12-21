@@ -12,7 +12,7 @@ terraform {
 resource "digitalocean_app" "api" {
     spec {
         name = var.api_application_name
-        region = "ams"
+        region = var.api_region
         domains = [var.api_domain_name]
 
         service {
@@ -110,21 +110,21 @@ resource "digitalocean_app" "api" {
             env {
                 key = "TF_VAR_sign_in_callback_url"
                 scope = "RUN_AND_BUILD_TIME"
-                value = var.sign_in_callback_url
+                value = var.user_pool_sign_in_callback_url
                 type = "GENERAL"
             }
 
             env {
                 key = "TF_VAR_sign_out_callback_url"
                 scope = "RUN_AND_BUILD_TIME"
-                value = var.sign_out_callback_url
+                value = var.user_pool_sign_out_callback_url
                 type = "GENERAL"
             }
 
             env {
-                key = "TF_VAR_media_temp_folder"
+                key = "TF_VAR_api_media_temp_folder"
                 scope = "RUN_AND_BUILD_TIME"
-                value = var.media_temp_folder
+                value = var.api_media_temp_folder
                 type = "GENERAL"
             }
         }
@@ -134,7 +134,7 @@ resource "digitalocean_app" "api" {
 resource "digitalocean_app" "web" {
     spec {
         name = var.web_application_name
-        region = "ams"
+        region = var.web_region
         domains = [var.web_domain_name]
 
         service {
@@ -169,7 +169,7 @@ resource "digitalocean_app" "web" {
             env {
                 key = "TF_VAR_public_graphql_endpoint"
                 scope = "RUN_AND_BUILD_TIME"
-                value = digitalocean_app.api.default_ingress
+                value = digitalocean_app.api.live_url
                 type = "GENERAL"
             }
 
@@ -195,16 +195,16 @@ resource "digitalocean_app" "web" {
             }
 
             env {
-                key = "TF_VAR_sign_in_callback_url"
+                key = "TF_VAR_user_pool_sign_in_callback_url"
                 scope = "RUN_AND_BUILD_TIME"
-                value = var.sign_in_callback_url
+                value = var.user_pool_sign_in_callback_url
                 type = "GENERAL"
             }
 
             env {
-                key = "TF_VAR_sign_out_callback_url"
+                key = "TF_VAR_user_pool_sign_out_callback_url"
                 scope = "RUN_AND_BUILD_TIME"
-                value = var.sign_out_callback_url
+                value = var.user_pool_sign_out_callback_url
                 type = "GENERAL"
             }
 

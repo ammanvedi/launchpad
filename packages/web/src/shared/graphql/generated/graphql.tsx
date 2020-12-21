@@ -2,6 +2,8 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -103,7 +105,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addConsent?: Maybe<ConsentResponse>;
   register?: Maybe<Scalars['Boolean']>;
-  registerUserFromExternalProvider?: Maybe<User>;
+  registerUserFromExternalProvider: MeResponse;
   updateUserProfileImage?: Maybe<User>;
 };
 
@@ -168,10 +170,13 @@ export type RegisterExternalUserMutationVariables = Exact<{
 
 export type RegisterExternalUserMutation = (
   { __typename?: 'Mutation' }
-  & { registerUserFromExternalProvider?: Maybe<(
-    { __typename?: 'User' }
-    & GlobalMeFragmentFragment
-  )> }
+  & { registerUserFromExternalProvider: (
+    { __typename?: 'MeResponse' }
+    & { me?: Maybe<(
+      { __typename?: 'User' }
+      & GlobalMeFragmentFragment
+    )> }
+  ) }
 );
 
 export type RegisterMutationVariables = Exact<{
@@ -279,7 +284,9 @@ export type AddConsentMutationOptions = Apollo.BaseMutationOptions<AddConsentMut
 export const RegisterExternalUserDocument = gql`
     mutation registerExternalUser($user: RegisterUserFromExternalProviderInput) {
   registerUserFromExternalProvider(user: $user) {
-    ...GlobalMeFragment
+    me {
+      ...GlobalMeFragment
+    }
   }
 }
     ${GlobalMeFragmentFragmentDoc}`;
