@@ -4,7 +4,7 @@ Launchpad is a (very) opinionated startup in a box. Here are the things that it 
 
 ### Web Application
 
-React, Server Side Rendering, Styled Components, Apollo Client, React Recoil, React Router, Loadable Components (Code Splitting)
+Typescript, React, Server Side Rendering, Styled Components, Apollo Client, Graphql Codegen, React Recoil, React Router, Loadable Components (Code Splitting)
 
 ### Infrastructure
 
@@ -16,7 +16,7 @@ AWS Cognito (username and password as well as Facebook and Google login), cookie
 
 ### API
 
-GraphQl, Prisma 2, Dataloader
+Typescript, GraphQl, Prisma 2, Dataloader, Graphql Codegen
 
 ### Database
 
@@ -326,6 +326,9 @@ We had previously updated `prod.auto.ftvars` with values for `web_domain_name` a
 
 If you missed these values in the terraform output you can also go to teh application in Digital Ocean and find it in the application settings.
 
+### Database Migration
+
+Another action needs to be run manually, `Database :: Prod :: Apply Migrations` This will set up the production database with the initial schema that is need to for the app to function properly.
 
 
 ### Future Deployments

@@ -5,15 +5,13 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "mkdir -p ./out && ./node_modules/typescript/bin/tsc",
-    "build:with-bootstrap": "npm run build",
     "start": "node out/index.js",
     "dev": "./node_modules/.bin/nodemon --config nodemon.json",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "codegen": "./node_modules/.bin/graphql-codegen --config codegen.yml",
     "prisma:generate": "./node_modules/.bin/prisma generate",
-    "prisma:save-migration": "./node_modules/.bin/prisma migrate dev --preview-feature",
+    "prisma:save-migration": "./node_modules/.bin/prisma migrate dev --preview-feature && npm run prisma:generate",
     "prisma:apply-migration": "./node_modules/.bin/prisma migrate deploy --preview-feature",
-    "prisma:reset": "./node_modules/.bin/prisma migrate reset --preview-feature",
-    "codegen": "./node_modules/.bin/graphql-codegen --config codegen.yml"
+    "prisma:reset": "./node_modules/.bin/prisma migrate reset --preview-feature"
   },
   "author": "Amman Vedi <amman.vedi@gmail.com>",
   "license": "ISC",
