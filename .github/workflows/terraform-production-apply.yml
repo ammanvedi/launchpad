@@ -6,6 +6,7 @@ on:
     paths:
       - "packages/terraform/apps/**/*"
       - "packages/terraform/auth/**/*"
+      - "packages/terraform/database/**/*"
       - "packages/terraform/main/prod/**/*"
       - "packages/lambda/**/*"
     branches:

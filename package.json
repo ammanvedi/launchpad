@@ -1,5 +1,8 @@
 {
   "private": true,
+  "scripts": {
+    "symlink-env": "ln -f ./.env ./packages/web/.env && ln -f ./.env ./packages/api/.env && ln -f ./.env ./packages/terraform/.env"
+  },
   "workspaces": [
     "packages/api",
     "packages/eslint-config-shared",
