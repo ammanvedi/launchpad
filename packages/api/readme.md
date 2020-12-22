@@ -84,21 +84,21 @@ Dataloader allows for short term (one-tick) caching of api calls. The reason for
 given the schema;
 
 ```graphql
-    type User {
-        id: ID!
-        name: String!
-        age: Int!
-        consents: [Consent!]!
-    }
+type User {
+    id: ID!
+    name: String!
+    age: Int!
+    consents: [Consent!]!
+}
 
-    type Consent {
-        id: ID!
-        type: String!
-    }
+type Consent {
+    id: ID!
+    type: String!
+}
 
-    type Query {
-        userById(id: ID!): User
-    }
+type Query {
+    userById(id: ID!): User
+}
 ```
 
 lets say that we structure our resolver like so

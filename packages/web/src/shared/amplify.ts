@@ -46,6 +46,13 @@ export const amplifyAuthConfig = {
         expires: parseInt(process.env.TF_VAR_auth_cookie_expiry_days || '365'),
         secure: JSON.parse(process.env.TF_VAR_auth_cookie_secure || 'true'),
     },
+    oauth: {
+        domain: `${process.env.TF_VAR_user_pool_domain}.auth.${process.env.TF_VAR_aws_region}.amazoncognito.com`,
+        scope: ['phone', 'email', 'openid', 'profile', 'aws.cognito.signin.user.admin'],
+        redirectSignIn: process.env.TF_VAR_user_pool_sign_in_callback_url,
+        redirectSignOut: process.env.TF_VAR_user_pool_sign_out_callback_url,
+        responseType: 'code',
+    },
 };
 
 export const COGNITO_URL = `https://cognito-idp.${process.env.TF_VAR_aws_region}.amazonaws.com/`;

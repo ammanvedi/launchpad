@@ -8,13 +8,25 @@ import bodyParser from 'body-parser';
 import paths from '../../config/paths';
 import errorHandler from './middleware/error-handler';
 import serverRenderer from './middleware/server-renderer';
-import { keepTokensFresh } from 'auth/helpers';
+import { keepTokensFresh } from './middleware/keep-tokens-fresh';
+import staticGzip from 'express-static-gzip';
 
 require('dotenv').config();
 
 const app = express();
 
-app.use(paths.publicPath, express.static(path.join(paths.clientBuild, paths.publicPath)));
+const staticPath = path.join(paths.clientBuild, paths.publicPath);
+
+app.use(
+    paths.publicPath,
+    staticGzip(staticPath, {
+        enableBrotli: false,
+        index: false,
+        serveStatic: {
+            maxAge: 31536000,
+        },
+    }),
+);
 
 app.use(cors());
 

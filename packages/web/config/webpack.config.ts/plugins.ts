@@ -8,6 +8,8 @@ import CopyPlugin from 'copy-webpack-plugin';
 import { TypedCssModulesPlugin } from 'typed-css-modules-webpack-plugin';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 const Dotenv = require('dotenv-webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const CompressionPlugin = require('compression-webpack-plugin');
 import paths from '../paths';
 import { clientOnly } from '../../scripts/utils';
 import envBuilder from '../env';
@@ -19,6 +21,8 @@ const env = envBuilder();
 const isProfilerEnabled = () => process.argv.includes('--profile');
 
 const isDev = () => process.env.NODE_ENV === 'development';
+const isProd = () => process.env.NODE_ENV === 'production';
+const shouldAnalyze = () => process.env.ANALYZE === 'true';
 
 const loadableManifest = path.join(
     process.cwd(),
@@ -64,6 +68,8 @@ export const client = [
             },
         }),
     new LoadablePlugin(),
+    shouldAnalyze() && new BundleAnalyzerPlugin(),
+    isProd() && new CompressionPlugin(),
 ].filter(Boolean);
 
 export const server = [
