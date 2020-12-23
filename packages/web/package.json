@@ -13,7 +13,6 @@
     "build:analyze": "cross-env ANALYZE=true OMIT_SOURCEMAP=true NODE_ENV=production TS_NODE_PROJECT=tsconfig.tooling.json ts-node scripts/build",
     "build:with-serialised-env": "TS_NODE_PROJECT=tsconfig.tooling.json ts-node scripts/generate-env.ts && npm run build",
     "dev": "cross-env NODE_ENV=development TS_NODE_PROJECT=tsconfig.tooling.json ts-node scripts/start",
-    "start:analyzer": "webpack-bundle-analyzer build/client/static/bundle-stats.json",
     "test": "cross-env TS_NODE_PROJECT=tsconfig.tooling.json ts-node scripts/test --env=jsdom",
     "codegen": "./node_modules/.bin/graphql-codegen --config codegen.yml"
   },

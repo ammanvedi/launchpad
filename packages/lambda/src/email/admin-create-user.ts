@@ -1,4 +1,7 @@
-export const getAdminCreateUserEmail = (username: string, tempPassword: string) => `
+export const getAdminCreateUserEmail = (
+    username: string,
+    tempPassword: string,
+): string => `
     You have been signed up here are your credentials
     <br />
     <br />

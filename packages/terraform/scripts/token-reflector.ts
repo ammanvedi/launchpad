@@ -1,14 +1,19 @@
+import { GithubService, SecretUpdater } from './github';
+import { DigitalOceanService, EncryptedTokenStore } from './digital-ocean';
+import { log } from './log';
+import { ConfigReader, TFVarsReader } from './tfvars-reader';
+
 /**
  * Terraform works on a basis of comparing the action that you would like to take to the
- * state of teh real world. Because of this difficulties will arise from time to time
+ * state of the real world. Because of this difficulties will arise from time to time
  * when external services perform any transformations on the inputs we give them. As this
  * would immediately lead to the state of the real world differing from the desired state
  * immediately after it was applied.
  *
- * Logically this will lead to the state being refreshed every time we make a change
- * regardless if we changed that specific piece of the infrastructure, the knock on effect
- * of this can be the infrastructure re deploying when it does not need to which is a waste
- * of resources
+ * Logically this will lead to the state being refreshed every time we make a change,
+ * regardless of if we changed that specific piece of the infrastructure. The knock on effect
+ * of this can be the infrastructure re-deploying when it does not need to, which is a waste
+ * of resources.
  *
  * Well we have a situation like this when it comes to secret storage in digital ocean.
  * When we send a plaintext value of a secret environment variable to digital ocean it will
@@ -20,12 +25,12 @@
  * see a diff in terraform that is not the result of us making an actual change but
  * is rather a reflection of this problem.
  *
- * So we need to combat this somehow and we do have a few options
+ * So we need to combat this somehow and we do have a few options that we need to evaluate
  *
  * 1. ignore the changes
  * This is potentially a good solution, we use terraform to set the envar once
- * and then we manage it in the digitalocean console ourselves after that
- * although a downside is that its just one more place we can forget to update it
+ * and then we manage it in the digitalocean console ourselves after that.
+ * Although a downside is that its just one more place we can forget to update it
  * should it change. However unfortunately there is an issue open for this at time of
  * writing that prevents us setting these envars to be ignored
  *
@@ -41,8 +46,8 @@
  * will have a new image spun up. But this also feels like bad practice since we are
  * wasting resources for no reason so we want to avoid this also
  *
- * 4. encrypt the value ourself
- * This initially sounded like a good idea to me, we dont use the Do encryption but instead we
+ * 4. encrypt the value ourselves
+ * This initially sounded like a good idea to me, we dont use the DO encryption but instead we
  * encrypt the value ourselves and we decrypt it in the app, but in order to tell the app
  * how to decrypt that information we would have to pass it a key, or an api key if we were
  * to use something like Hashicorp Vault, so really we dont avoid using secrets, which means
@@ -57,30 +62,13 @@
  *
  * The downside here is that we will need a separate environment variable to pass secrets to
  * digital ocean in order to not affect other services that dont need this behaviour. For
- * me this is acceptable. And i plant to make it manageable via documentation
- *
- * which i will write
- *
- * ...
+ * me this is acceptable. And I plant to make it manageable via documentation. And if you are
+ * reading this right now it means I stayed true to my word on that one.
  *
  * The purpose of this code is to perform that reflection
  *
+ * See some discussion about this here
  * https://www.digitalocean.com/community/questions/how-to-use-environment-values-of-type-secret-on-following-submissions
- */
-
-import { GithubService, SecretUpdater } from './github';
-import { DigitalOceanService, EncryptedTokenStore } from './digital-ocean';
-import { log } from './log';
-import { ConfigReader, TFVarsReader } from './tfvars-reader';
-/**
- * envars required
- *
- * TF_VAR_do_token
- * TF_VAR_api_application_name
- * TF_VAR_github_personal_access_token
- * TF_VAR_api_git_repo
- * SECRETS_PREFIX
- * SECRETS_POSTFIX
  */
 
 const reflectTokens = async (
@@ -96,6 +84,7 @@ const reflectTokens = async (
     for (const tokenName in alreadyEncryptedTokens) {
         if (alreadyEncryptedTokens.hasOwnProperty(tokenName)) {
             const tokenVal = alreadyEncryptedTokens[tokenName];
+            // Github converts envars to uppercase so lets do that also
             const ghTokenName = `${process.env.SECRETS_PREFIX}${tokenName}${process.env.SECRETS_POSTFIX}`.toUpperCase();
             log.info(
                 `Token from DO named ${tokenName} will be reflected into github token ${ghTokenName}`,

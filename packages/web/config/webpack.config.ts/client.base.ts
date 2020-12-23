@@ -3,7 +3,6 @@ import TerserPlugin from 'terser-webpack-plugin';
 import paths from '../paths';
 import resolvers from './resolvers';
 import plugins from './plugins';
-// const { client: clientLoaders } = require('./loaders');
 import { client as clientLoaders } from './loaders';
 const generateSourceMap = process.env.OMIT_SOURCEMAP === 'true' ? false : true;
 

@@ -83,7 +83,7 @@ Upload via GraphQL API, storage via Cloudinary
            }
        ```
 
-       Unfortunately this section cannot be configured manually, hence the need to change this by hand directly instead of through configuration files or envars
+       Unfortunately this section cannot be configured manually, hence the need to change this by hand directly instead of through configuration files or envars you can seee further guidance on this here https://www.terraform.io/docs/backends/types/s3.html
 
 10. Duplicate the `.example.env` in the repo root into a `.env` file and in the root run
 
