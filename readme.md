@@ -1,6 +1,6 @@
-# Launchpad
+# Habu Home Monorepo
 
-Launchpad is a (very) opinionated startup in a box. Here are the things that it provides and some key features of each;
+This repo contains;
 
 ### Web Application
 
@@ -26,7 +26,14 @@ Postgres
 
 Upload via GraphQL API, storage via Cloudinary
 
-
+# Upstream
+This was forked from [Launchpad](https://github.com/ammanvedi/launchpad) in order to stay up to date with this upstream
+```bash
+git checkout master
+git remote add upstream git@github.com:ammanvedi/launchpad.git
+git fetch upstream
+git merge upstream/master
+```
 
 # Setup
 

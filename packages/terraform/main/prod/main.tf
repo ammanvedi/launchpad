@@ -14,10 +14,10 @@ terraform {
         }
     }
     backend "s3" {
-        bucket = "launchpad-tf-backend"
+        bucket = "habu-home-infra"
         key    = "tf/prod"
         region = "eu-west-1"
-        profile = "launchpad"
+        profile = "habu-web"
         shared_credentials_file = "~/.aws/credentials"
     }
 }
