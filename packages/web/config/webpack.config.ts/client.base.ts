@@ -10,12 +10,7 @@ export default {
     name: 'client',
     target: 'web',
     entry: {
-        bundle: [
-            // Experimentally switched to @babel-env's useBuiltIns: 'entry'
-            // require.resolve('core-js/stable'),
-            // require.resolve('regenerator-runtime/runtime'),
-            paths.srcClient,
-        ],
+        bundle: [paths.srcClient],
     },
     output: {
         path: path.join(paths.clientBuild, paths.publicPath),
@@ -79,8 +74,6 @@ export default {
                         ecma: 8,
                     },
                     compress: {
-                        // TODO: according to TypeScript, compress does not have an 'ecma' option. Investigate
-                        // ecma: 5,
                         warnings: false,
                         // Disabled because of an issue with Uglify breaking seemingly valid code:
                         // https://github.com/facebook/create-react-app/issues/2376
