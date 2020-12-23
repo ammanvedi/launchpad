@@ -35,6 +35,7 @@ provider "aws" {
 
 provider "github" {
     token = var.github_personal_access_token
+    organization = "habuhome"
 }
 
 module "auth" {
