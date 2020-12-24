@@ -93,7 +93,7 @@ Upload via GraphQL API, storage via Cloudinary
 
     1. Dont worry about `TF_VAR_aws_user_pool_id` and `TF_VAR_aws_user_pool_client_id` we can get those from the output of the terraform run a bit later when we create our development infrastructure
 
-10. Run an `npm install` in each subdirectory of `packages/`
+10. Run an `npm ci` in each subdirectory of `packages/`, I am recommending npm ci because then you will get exactly the dependencies installed in versions that I have tested
 
 11. [Postgresql](https://www.postgresql.org/) server running locally
 
@@ -170,20 +170,23 @@ and you can see some coniguration values that are passed in in the file
 `packages/terraform/main/dev/dev.auto.tfvars`
 
 Configuration is also passed in via the `.env` file, which is why you will see alot of envars prefixed with `TF_VAR_` as this allows terraform to pull them [out of the environment automatically](https://www.terraform.io/docs/commands/environment-variables.html)
+0. `cd packages/lambda`
+1. `npm run build`
+2. `cd packages/terraform`
 
-1. `cd packages/terraform`
+3. `npm run terraform:dev:init`
 
-2. `npm run terraform:dev:plan`
+4. `npm run terraform:dev:plan`
 
    The output of this will show you what terraform plans to create and where, have a read through the output and make sure that everything looks OK, if you are happy then move onto the next command
 
-3. `npm run terraform:dev:apply`
+5. `npm run terraform:dev:apply`
 
    This step will actually create the infrastructure, or update it if it already exists. While it is doing this it will also create and update the backend state file that is stored in the S3 bucket that we set up earlier. If you are curious you can go and inspect it after this step is complete.
 
    Also once this step is complete you can log into the AWS console and inspect the actual infrastruture that was created, But remember than t if you want to make any changes that those changes should only ever be made through Terraform, otherwise the state that terraform has stored and the state of the real world can start to drift apart, which kind of defeats the point.
 
-4. Should everything go well at this stage terraform will helpfully output the values that we are missing from our environment variables
+6. Should everything go well at this stage terraform will helpfully output the values that we are missing from our environment variables
 
    `user_pool_id`
 
