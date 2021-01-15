@@ -28,8 +28,12 @@ const getIdToken = async () => {
      * On the client side we use the amplify sdk to get the users logged in state
      * The SDK will handle refreshing the token if it is expired
      */
-    const session = await Auth.currentSession();
-    return session.getIdToken().getJwtToken();
+    try {
+        const session = await Auth.currentSession();
+        return session.getIdToken().getJwtToken();
+    } catch {
+        return '';
+    }
 };
 
 const checkIsLoggedIn = () => {

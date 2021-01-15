@@ -3,26 +3,26 @@ import { Route, RouteProps, Redirect } from 'react-router-dom';
 import routes from 'routes';
 
 type ProtectedRouteProps = {
-    sendUnauthorisedTo?: string;
-    isLoggedIn: () => boolean;
+    onConditionFailureSendUserTo?: string;
+    grantAccess: () => boolean;
 } & Omit<RouteProps, 'render'>;
 
 export const ProtectedRoute = ({
-    sendUnauthorisedTo = routes.signIn,
+    onConditionFailureSendUserTo = routes.signIn,
     component: Component,
-    isLoggedIn,
+    grantAccess,
     ...routeProps
 }: ProtectedRouteProps) => {
     return (
         <Route
             {...routeProps}
             render={() => {
-                if (isLoggedIn()) {
+                if (grantAccess()) {
                     // @ts-ignore
                     return <Component />;
                 }
 
-                return <Redirect to={sendUnauthorisedTo} />;
+                return <Redirect to={onConditionFailureSendUserTo} />;
             }}
         />
     );

@@ -44,7 +44,7 @@ export const keepTokensFresh = async (
     const idToken = getTokenTypeFromRequest(
         cookies,
         'idToken',
-        process.env.AWS_USER_POOLS_WEB_CLIENT_ID || '',
+        process.env.TF_VAR_aws_user_pool_client_id || '',
     );
 
     if (idToken) {
@@ -81,7 +81,7 @@ export const keepTokensFresh = async (
             const refreshToken = getTokenTypeFromRequest(
                 cookies,
                 'refreshToken',
-                process.env.AWS_USER_POOLS_WEB_CLIENT_ID || '',
+                process.env.TF_VAR_aws_user_pool_client_id || '',
             );
 
             if (!refreshToken) {
@@ -94,7 +94,7 @@ export const keepTokensFresh = async (
             log.err('Token was expired, refresh them and send to the server');
             const newTokens = await manuallyRefreshTokens(
                 refreshToken,
-                process.env.AWS_USER_POOLS_WEB_CLIENT_ID || '',
+                process.env.TF_VAR_aws_user_pool_client_id || '',
             );
 
             if (!newTokens) {
@@ -104,7 +104,7 @@ export const keepTokensFresh = async (
 
             const responseCookies = generateCookies(
                 newTokens,
-                process.env.AWS_USER_POOLS_WEB_CLIENT_ID || '',
+                process.env.TF_VAR_aws_user_pool_client_id || '',
                 decodedIdToken.sub,
             );
 
