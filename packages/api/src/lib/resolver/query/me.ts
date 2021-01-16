@@ -6,7 +6,6 @@ export const meResolver: QueryResolvers<GQLContext>['me'] = async (
     parent,
     args,
     context,
-    info,
 ) => {
     /**
      * If the user does a me request and they do not have an internal id
@@ -22,6 +21,7 @@ export const meResolver: QueryResolvers<GQLContext>['me'] = async (
             id: context.authState.id,
             role: context.authState.role || Role.User,
             email: context.authState.email,
+            tokensExpireAtUtcSecs: context.authState.tokenExpiresAtUtcSecs,
         },
     };
 };

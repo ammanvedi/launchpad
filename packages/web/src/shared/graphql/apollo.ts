@@ -20,7 +20,7 @@ export const createApolloClient = (
 
     const terminatingLinkConfig = {
         uri, // Server URL (must be absolute)
-        credentials: 'same-origin',
+        credentials: 'include',
     };
 
     const terminatingLink = ssrMode
@@ -32,6 +32,7 @@ export const createApolloClient = (
         : createUploadLink(terminatingLinkConfig);
 
     return new ApolloClient({
+        credentials: 'same-origin',
         ssrMode,
         // @ts-ignore
         link: authLink.concat(terminatingLink),

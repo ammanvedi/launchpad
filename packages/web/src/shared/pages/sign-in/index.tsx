@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Auth } from '@aws-amplify/auth';
-import { useMeQuery } from '../../graphql/generated/graphql';
+import { useMeQuery, useSignInMutation } from '../../graphql/generated/graphql';
 import { amplifyConfig } from '../../amplify';
 
 const getSocialLink = (provider: 'Facebook' | 'Google'): string => {
@@ -17,10 +17,16 @@ const Page = () => {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const { data } = useMeQuery();
+    const [signIn] = useSignInMutation();
 
     const handleButtonClick = async () => {
         try {
-            const user = await Auth.signIn(username, password);
+            const user = await signIn({
+                variables: {
+                    username,
+                    password,
+                },
+            });
             console.log(user);
         } catch (error) {
             console.log('error signing in', error);

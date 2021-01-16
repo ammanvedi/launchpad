@@ -52,6 +52,7 @@ export const updateUserProfileImageResolver: MutationResolvers<GQLContext>['upda
         id: authState.id,
         email: authState.email,
         role: authState.role as Role,
+        tokensExpireAtUtcSecs: authState.tokenExpiresAtUtcSecs,
         profileImage: finalPath,
     };
 };

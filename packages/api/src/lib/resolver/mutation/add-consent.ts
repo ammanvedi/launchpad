@@ -39,6 +39,7 @@ export const addConsentResolver: MutationResolvers<GQLContext>['addConsent'] = a
             id: authState.id,
             role: authState.role as Role,
             email: authState.email,
+            tokensExpireAtUtcSecs: authState.tokenExpiresAtUtcSecs,
         },
     };
 };

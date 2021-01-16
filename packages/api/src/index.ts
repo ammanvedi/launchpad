@@ -5,19 +5,25 @@ import { GQLContext } from './lib/context/context';
 import {
     CognitoAuthorizer,
     CognitoAuthorizerConfig,
+    CognitoIdToken,
 } from './lib/authorization/cognito-authorizer';
-import { IAuthorizer } from './lib/authorization/IAuthorizer';
-import { getAuthTokens } from './lib/authorization/header';
+import { AuthTokens, IAuthorizer } from './lib/authorization/IAuthorizer';
 import { applyMiddleware } from 'graphql-middleware';
 import { makeExecutableSchema } from 'graphql-tools';
 import Amplify from '@aws-amplify/core';
 import Auth from '@aws-amplify/auth';
 import { permissions } from './lib/authorization/rbac';
-import { ApolloServer } from 'apollo-server';
+import { ApolloServer } from 'apollo-server-express';
+import express from 'express';
 import AWS from 'aws-sdk';
 import { loaders, prismaDb as db } from './lib/data/data';
 import { MediaManager } from './lib/media/media-manager';
 import { CloudinaryMediaManager } from './lib/media/cloudinary-media-manager';
+import {
+    getAuthTokensFromRequest,
+    setAuthCookiesOnResponse,
+} from './lib/authorization/cookie';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -31,12 +37,18 @@ const cognitoidentity = new AWS.CognitoIdentityServiceProvider({
     apiVersion: '2016-04-18',
 });
 
-const authorizer: IAuthorizer<CognitoAuthorizerConfig> = new CognitoAuthorizer({
+const authorizer: IAuthorizer<
+    CognitoAuthorizerConfig,
+    CognitoIdToken
+> = new CognitoAuthorizer({
     iss: `https://cognito-idp.${process.env.TF_VAR_aws_region}.amazonaws.com/${process.env.TF_VAR_aws_user_pool_id}`,
     aud: process.env.TF_VAR_aws_user_pool_client_id || '',
     cognito: cognitoidentity,
     userPoolId: process.env.TF_VAR_aws_user_pool_id || '',
     jwkUrl: `https://cognito-idp.${process.env.TF_VAR_aws_region}.amazonaws.com/${process.env.TF_VAR_aws_user_pool_id}/.well-known/jwks.json`,
+    clientId: process.env.TF_VAR_aws_user_pool_client_id || '',
+    oauthDomain: `${process.env.TF_VAR_user_pool_domain}.auth.${process.env.TF_VAR_aws_region}.amazoncognito.com`,
+    signInCallbackUrl: process.env.TF_VAR_user_pool_sign_in_callback_url || '',
 });
 
 const mediaManager: MediaManager = new CloudinaryMediaManager({
@@ -73,26 +85,127 @@ const executableSchema = makeExecutableSchema({
 export const schemaWithPermissions = applyMiddleware(executableSchema, permissions);
 
 // @ts-ignore
-export const context = ({ req }): GQLContext => {
-    const authTokens = getAuthTokens(req);
+export const context = ({ req, res }): GQLContext => {
+    const authTokens = getAuthTokensFromRequest(req);
 
-    const authState = authorizer.getAuthState(authTokens);
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-origin', process.env.TF_VAR_public_web_endpoint);
 
-    return {
+    const context: GQLContext = {
         authorizer,
-        authState,
         data: {
             db,
             loaders: loaders(),
         },
         amplifyAuth: Auth,
         mediaManager,
+        authState: authorizer.getAuthState(authTokens),
+        req,
+        res,
+        setAuthState(tokens) {
+            this.authState = this.authorizer.getAuthState(tokens);
+        },
     };
+
+    return context as GQLContext;
 };
 
-export const server = new ApolloServer({
+const httpServer = express();
+
+httpServer.use(cookieParser());
+
+export const graphqlServer = new ApolloServer({
     schema: schemaWithPermissions,
     context,
+});
+
+httpServer.options('/*', function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', process.env.TF_VAR_public_web_endpoint);
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header(
+        'Access-Control-Allow-Headers',
+        'Content-Type, Authorization, Content-Length, X-Requested-With, x-id-token',
+    );
+    res.send(200);
+});
+
+httpServer.get('/auth/callback/sign-in', async (req, res) => {
+    const { code } = req.query;
+
+    if (!code) {
+        res.status(400);
+        return;
+    }
+
+    try {
+        const tokens = await authorizer.exchangeCodeForTokens(code as string);
+
+        if (!tokens) {
+            res.status(500);
+            return;
+        }
+
+        console.log(tokens);
+
+        setAuthCookiesOnResponse(
+            tokens.idToken,
+            tokens.accessToken,
+            tokens.refreshToken,
+            res,
+            process.env.TF_VAR_auth_cookie_domain || '',
+            parseInt(process.env.TF_VAR_auth_cookie_expiry_days || ''),
+            process.env.TF_VAR_auth_cookie_secure === 'true',
+        );
+
+        res.redirect(302, process.env.TF_VAR_public_web_endpoint || '');
+    } catch (e) {
+        res.status(500);
+    } finally {
+        res.end();
+    }
+});
+
+httpServer.post('/auth/token/refresh', async (req, res) => {
+    const tokens = getAuthTokensFromRequest(req);
+
+    if (!tokens) {
+        res.status(400);
+        res.end();
+        return;
+    }
+
+    const newTokens = await authorizer.refreshTokens(tokens);
+
+    if (!newTokens) {
+        res.status(400);
+        res.end();
+        return;
+    }
+
+    setAuthCookiesOnResponse(
+        newTokens.idToken,
+        newTokens.accessToken,
+        newTokens.refreshToken,
+        res,
+        process.env.TF_VAR_auth_cookie_domain || '',
+        parseInt(process.env.TF_VAR_auth_cookie_expiry_days || ''),
+        process.env.TF_VAR_auth_cookie_secure === 'true',
+    );
+
+    res.status(200);
+    res.end();
+});
+
+httpServer.get('/auth/callback/sign-out', (req, res) => {
+    console.log('req');
+    console.log(JSON.stringify(req, null, 2));
+    console.log(process.env.TF_VAR_public_web_endpoint);
+});
+
+graphqlServer.applyMiddleware({
+    app: httpServer,
+    path: '/',
 });
 
 const setup = Promise.all([
@@ -100,8 +213,10 @@ const setup = Promise.all([
     mediaManager.createTempDir(process.env.TF_VAR_api_media_temp_folder || ''),
 ]);
 
-setup
-    .then(() => server.listen())
-    .then(({ url }) => {
-        console.log(`Server running @ ${url}`);
+setup.then(() => {
+    httpServer.listen({ port: 4000 }, () => {
+        console.log(
+            `🚀 Server ready at http://localhost:4000${graphqlServer.graphqlPath}`,
+        );
     });
+});

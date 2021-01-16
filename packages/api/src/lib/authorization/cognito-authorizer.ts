@@ -4,6 +4,8 @@ import { createLoggerSet } from '../logging/logger';
 import { Role } from '../../generated/graphql';
 import AWS from 'aws-sdk';
 import fetch from 'node-fetch';
+import { urlEncodeObject } from './helper';
+import { sign } from 'jsonwebtoken';
 
 export type CognitoAuthorizerConfig = {
     iss: string;
@@ -11,6 +13,9 @@ export type CognitoAuthorizerConfig = {
     cognito: AWS.CognitoIdentityServiceProvider;
     userPoolId: string;
     jwkUrl: string;
+    clientId: string;
+    signInCallbackUrl: string;
+    oauthDomain: string;
 };
 
 export type CognitoIdToken = {
@@ -29,7 +34,14 @@ export type CognitoIdToken = {
     email: string;
 };
 
-export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
+type AWSTokensResponse = {
+    id_token: string;
+    access_token: string;
+    refresh_token: string;
+};
+
+export class CognitoAuthorizer
+    implements IAuthorizer<CognitoAuthorizerConfig, CognitoIdToken> {
     private jwk: JWKData<'RSA'> | null = null;
 
     private log = createLoggerSet('CognitoAuthorizer');
@@ -40,9 +52,132 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
         email: '',
         externalUsername: '',
         sub: '',
+        tokenExpiresAtUtcSecs: 0,
     };
 
     constructor(private readonly config: CognitoAuthorizerConfig) {}
+
+    async refreshTokens({ refreshToken }: AuthTokens): Promise<AuthTokens | null> {
+        const tokenUrl = `https://${this.config.oauthDomain}/oauth2/token`;
+        const refreshRedacted = `${refreshToken.substr(0, 5)}-xxx-xxx`;
+
+        this.log.info(`Exchanging refresh token ${refreshRedacted} for tokens`);
+
+        const body = urlEncodeObject({
+            client_id: this.config.clientId,
+            grant_type: 'refresh_token',
+            refresh_token: refreshToken,
+        });
+
+        try {
+            const result: AWSTokensResponse = await fetch(tokenUrl, {
+                method: 'POST',
+                body,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            }).then((res) => res.json());
+
+            return {
+                idToken: result.id_token,
+                accessToken: result.access_token,
+                refreshToken: result.refresh_token,
+            };
+        } catch (e) {
+            this.log.err(
+                `Failed to exchange refresh token for tokens ${refreshRedacted} for token`,
+            );
+            this.log.err(e);
+            return null;
+        }
+    }
+
+    async signIn(username: string, password: string): Promise<AuthTokens | null> {
+        try {
+            const signInResult = await this.config.cognito
+                .adminInitiateAuth({
+                    AuthFlow: 'ADMIN_NO_SRP_AUTH',
+                    AuthParameters: {
+                        USERNAME: username,
+                        PASSWORD: password,
+                    },
+                    ClientId: this.config.clientId,
+                    UserPoolId: this.config.userPoolId,
+                })
+                .promise();
+
+            const accessToken = signInResult.AuthenticationResult?.AccessToken;
+            const idToken = signInResult.AuthenticationResult?.IdToken;
+            const refreshToken = signInResult.AuthenticationResult?.RefreshToken;
+            if (accessToken && idToken && refreshToken) {
+                return {
+                    idToken,
+                    accessToken,
+                    refreshToken,
+                };
+            }
+
+            this.log.err('Response for sign in contained incomplete token set');
+
+            return null;
+        } catch (e) {
+            this.log.err('Failed to sign user in');
+            this.log.err(e);
+            return null;
+        }
+    }
+
+    async exchangeCodeForTokens(code: string): Promise<AuthTokens | null> {
+        const tokenUrl = `https://${this.config.oauthDomain}/oauth2/token`;
+        const codeRedacted = `${code.substr(0, 5)}-xxx-xxx`;
+
+        this.log.info(`Exchanging code ${codeRedacted} for tokens`);
+
+        const body = urlEncodeObject({
+            client_id: this.config.clientId,
+            grant_type: 'authorization_code',
+            code: code,
+            redirect_uri: this.config.signInCallbackUrl,
+        });
+
+        console.log(body);
+
+        try {
+            const result: AWSTokensResponse = await fetch(tokenUrl, {
+                method: 'POST',
+                body,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            }).then((res) => res.json());
+
+            console.log(result);
+
+            // @ts-ignore
+            if (result.error) {
+                this.log.err(
+                    `Failed to exchange code ${codeRedacted} for token, request succeeded but returned error`,
+                );
+                // @ts-ignore
+                this.log.err(result.error);
+                return null;
+            }
+
+            return {
+                idToken: result.id_token,
+                accessToken: result.access_token,
+                refreshToken: result.refresh_token,
+            };
+        } catch (e) {
+            this.log.err(`Failed to exchange code ${codeRedacted} for token`);
+            this.log.err(e);
+            return null;
+        }
+    }
+
+    determineAccessTokenExpiryUTC(token: string): string {
+        throw new Error('Method not implemented.');
+    }
 
     private isIssuerValid(iss: string): boolean {
         return iss === this.config.iss;
@@ -57,7 +192,7 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
         return exp > now;
     }
 
-    public validateToken(accessToken: string): boolean {
+    public validateToken(accessToken: string): CognitoIdToken | false {
         if (!this.jwk) {
             this.log.warn('Attempted token validation when no JWK data was available');
             return false;
@@ -98,21 +233,26 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
                 return false;
             }
 
-            return true;
+            return decodedToken;
         } catch (e) {
             this.log.err(`Something went wrong validating token, ${e}`);
             return false;
         }
     }
 
-    public getAuthState(tokens: AuthTokens): AuthState {
+    public getAuthState(tokens: AuthTokens | null): AuthState {
+        if (!tokens) {
+            this.log.warn('Token set was null');
+            return CognitoAuthorizer.nullAuthState;
+        }
+
         if (!tokens.idToken) {
             this.log.warn('Rejected incomplete token set');
             return CognitoAuthorizer.nullAuthState;
         }
-        const tokenValid = this.validateToken(tokens.idToken);
+        const tokenValidated = this.validateToken(tokens.idToken);
 
-        if (!tokenValid) {
+        if (!tokenValidated) {
             this.log.warn('rejected invalid token');
             return CognitoAuthorizer.nullAuthState;
         }
@@ -134,6 +274,7 @@ export class CognitoAuthorizer implements IAuthorizer<CognitoAuthorizerConfig> {
             externalUsername: decodedIdToken['cognito:username'],
             // for uniquely identifying the user in the external pool
             sub: decodedIdToken.sub,
+            tokenExpiresAtUtcSecs: tokenValidated.exp,
         };
     }
 

@@ -4,7 +4,7 @@ import { GQLContext } from '../../context/context';
 const baseFieldResolver = (
     baseField: Exclude<
         keyof Required<Resolvers<GQLContext>>['User'],
-        'email' | 'consents' | '__isTypeOf'
+        'email' | 'consents' | '__isTypeOf' | 'tokensExpireAtUtcSecs'
     >,
 ) => async (parent: any, args: any, context: GQLContext) => {
     if (parent[baseField]) {

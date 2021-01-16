@@ -59,6 +59,13 @@ resource "digitalocean_app" "api" {
             }
 
             env {
+                key = "TF_VAR_public_web_endpoint"
+                scope = "RUN_AND_BUILD_TIME"
+                value = var.web_domain_name
+                type = "GENERAL"
+            }
+
+            env {
                 key = "TF_VAR_cloudinary_key"
                 scope = "RUN_AND_BUILD_TIME"
                 value = var.cloudinary_key

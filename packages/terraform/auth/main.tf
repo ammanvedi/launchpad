@@ -162,6 +162,8 @@ resource "aws_cognito_user_pool_client" "client" {
   logout_urls                  = [var.sign_out_callback_url]
   supported_identity_providers = ["COGNITO", "Facebook", "Google"]
 
+    explicit_auth_flows = ["ALLOW_ADMIN_USER_PASSWORD_AUTH", "ALLOW_CUSTOM_AUTH", "ALLOW_USER_PASSWORD_AUTH", "ALLOW_USER_SRP_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
+
   depends_on = [aws_cognito_identity_provider.facebook, aws_cognito_identity_provider.google]
 }
 

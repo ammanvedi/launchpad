@@ -34,7 +34,8 @@ export enum GqlError {
   UserDoesNotExist = 'USER_DOES_NOT_EXIST',
   UploadFailed = 'UPLOAD_FAILED',
   EntryExists = 'ENTRY_EXISTS',
-  Unknown = 'UNKNOWN'
+  Unknown = 'UNKNOWN',
+  UsernameOrPasswordIncorrect = 'USERNAME_OR_PASSWORD_INCORRECT'
 }
 
 export enum Role {
@@ -56,6 +57,7 @@ export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
   email: Scalars['String'];
+  tokensExpireAtUtcSecs: Scalars['Int'];
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   profileImage?: Maybe<Scalars['String']>;
@@ -105,6 +107,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addConsent?: Maybe<ConsentResponse>;
   register?: Maybe<Scalars['Boolean']>;
+  signIn: User;
   registerUserFromExternalProvider: MeResponse;
   updateUserProfileImage?: Maybe<User>;
 };
@@ -117,6 +120,12 @@ export type MutationAddConsentArgs = {
 
 export type MutationRegisterArgs = {
   user?: Maybe<RegisterUserInput>;
+};
+
+
+export type MutationSignInArgs = {
+  username: Scalars['String'];
+  password: Scalars['String'];
 };
 
 
@@ -215,6 +224,7 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']>;
   String: ResolverTypeWrapper<Scalars['String']>;
   User: ResolverTypeWrapper<User>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
   MeResponse: ResolverTypeWrapper<MeResponse>;
   ConsentResponse: ResolverTypeWrapper<ConsentResponse>;
   HellowWorldData: ResolverTypeWrapper<HellowWorldData>;
@@ -232,6 +242,7 @@ export type ResolversParentTypes = {
   ID: Scalars['ID'];
   String: Scalars['String'];
   User: User;
+  Int: Scalars['Int'];
   MeResponse: MeResponse;
   ConsentResponse: ConsentResponse;
   HellowWorldData: HellowWorldData;
@@ -256,6 +267,7 @@ export type ConsentResolvers<ContextType = any, ParentType extends ResolversPare
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  tokensExpireAtUtcSecs?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   profileImage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -288,6 +300,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addConsent?: Resolver<Maybe<ResolversTypes['ConsentResponse']>, ParentType, ContextType, RequireFields<MutationAddConsentArgs, 'type'>>;
   register?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationRegisterArgs, never>>;
+  signIn?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationSignInArgs, 'username' | 'password'>>;
   registerUserFromExternalProvider?: Resolver<ResolversTypes['MeResponse'], ParentType, ContextType, RequireFields<MutationRegisterUserFromExternalProviderArgs, never>>;
   updateUserProfileImage?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateUserProfileImageArgs, 'file'>>;
 };

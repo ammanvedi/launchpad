@@ -6,6 +6,7 @@ import { registerResolver } from './mutation/register';
 import { registerUserFromExternalProviderResolver } from './mutation/register-user-from-external-provider';
 import { updateUserProfileImageResolver } from './mutation/update-user-profile-image';
 import { addConsentResolver } from './mutation/add-consent';
+import { signInResolver } from './mutation/sign-in';
 
 export const resolvers: Resolvers<GQLContext> = {
     Query: {
@@ -21,6 +22,7 @@ export const resolvers: Resolvers<GQLContext> = {
         register: registerResolver,
         registerUserFromExternalProvider: registerUserFromExternalProviderResolver,
         updateUserProfileImage: updateUserProfileImageResolver,
+        signIn: signInResolver,
     },
     User: userFieldsResolver,
 };

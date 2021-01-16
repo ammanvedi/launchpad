@@ -34,7 +34,8 @@ export enum GqlError {
   UserDoesNotExist = 'USER_DOES_NOT_EXIST',
   UploadFailed = 'UPLOAD_FAILED',
   EntryExists = 'ENTRY_EXISTS',
-  Unknown = 'UNKNOWN'
+  Unknown = 'UNKNOWN',
+  UsernameOrPasswordIncorrect = 'USERNAME_OR_PASSWORD_INCORRECT'
 }
 
 export enum Role {
@@ -56,6 +57,7 @@ export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
   email: Scalars['String'];
+  tokensExpireAtUtcSecs: Scalars['Int'];
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   profileImage?: Maybe<Scalars['String']>;
@@ -105,6 +107,14 @@ export type Mutation = {
   __typename?: 'Mutation';
   addConsent?: Maybe<ConsentResponse>;
   register?: Maybe<Scalars['Boolean']>;
+  signIn: User;
+  verifyEmailBegin?: Maybe<Scalars['Boolean']>;
+  verifyEmailComplete?: Maybe<Scalars['Boolean']>;
+  forgotPasswordBegin?: Maybe<Scalars['Boolean']>;
+  forgotPasswordComplete?: Maybe<Scalars['Boolean']>;
+  setPasswordComple?: Maybe<Scalars['Boolean']>;
+  changeEmailBegin?: Maybe<Scalars['Boolean']>;
+  changeEmailComplete?: Maybe<Scalars['Boolean']>;
   registerUserFromExternalProvider: MeResponse;
   updateUserProfileImage?: Maybe<User>;
 };
@@ -117,6 +127,49 @@ export type MutationAddConsentArgs = {
 
 export type MutationRegisterArgs = {
   user?: Maybe<RegisterUserInput>;
+};
+
+
+export type MutationSignInArgs = {
+  username: Scalars['String'];
+  password: Scalars['String'];
+};
+
+
+export type MutationVerifyEmailBeginArgs = {
+  username: Scalars['String'];
+};
+
+
+export type MutationVerifyEmailCompleteArgs = {
+  code: Scalars['String'];
+};
+
+
+export type MutationForgotPasswordBeginArgs = {
+  username: Scalars['String'];
+};
+
+
+export type MutationForgotPasswordCompleteArgs = {
+  code: Scalars['String'];
+  newPassword: Scalars['String'];
+  username: Scalars['String'];
+};
+
+
+export type MutationSetPasswordCompleArgs = {
+  password: Scalars['String'];
+};
+
+
+export type MutationChangeEmailBeginArgs = {
+  newEmail: Scalars['String'];
+};
+
+
+export type MutationChangeEmailCompleteArgs = {
+  code: Scalars['String'];
 };
 
 
@@ -187,6 +240,20 @@ export type RegisterMutationVariables = Exact<{
 export type RegisterMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'register'>
+);
+
+export type SignInMutationVariables = Exact<{
+  username: Scalars['String'];
+  password: Scalars['String'];
+}>;
+
+
+export type SignInMutation = (
+  { __typename?: 'Mutation' }
+  & { signIn: (
+    { __typename?: 'User' }
+    & GlobalMeFragmentFragment
+  ) }
 );
 
 export type UploadUserProfileImageMutationVariables = Exact<{
@@ -345,6 +412,39 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const SignInDocument = gql`
+    mutation signIn($username: String!, $password: String!) {
+  signIn(password: $password, username: $username) {
+    ...GlobalMeFragment
+  }
+}
+    ${GlobalMeFragmentFragmentDoc}`;
+export type SignInMutationFn = Apollo.MutationFunction<SignInMutation, SignInMutationVariables>;
+
+/**
+ * __useSignInMutation__
+ *
+ * To run a mutation, you first call `useSignInMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignInMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signInMutation, { data, loading, error }] = useSignInMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useSignInMutation(baseOptions?: Apollo.MutationHookOptions<SignInMutation, SignInMutationVariables>) {
+        return Apollo.useMutation<SignInMutation, SignInMutationVariables>(SignInDocument, baseOptions);
+      }
+export type SignInMutationHookResult = ReturnType<typeof useSignInMutation>;
+export type SignInMutationResult = Apollo.MutationResult<SignInMutation>;
+export type SignInMutationOptions = Apollo.BaseMutationOptions<SignInMutation, SignInMutationVariables>;
 export const UploadUserProfileImageDocument = gql`
     mutation uploadUserProfileImage($file: Upload!) {
   updateUserProfileImage(file: $file) {

@@ -23,6 +23,7 @@ export const schema = gql`
         UPLOAD_FAILED
         ENTRY_EXISTS
         UNKNOWN
+        USERNAME_OR_PASSWORD_INCORRECT
     }
 
     enum Role {
@@ -42,6 +43,7 @@ export const schema = gql`
     type User {
         id: ID!
         email: String!
+        tokensExpireAtUtcSecs: Int!
         firstName: String
         lastName: String
         profileImage: String
@@ -86,6 +88,23 @@ export const schema = gql`
     type Mutation {
         addConsent(type: ConsentType!): ConsentResponse
         register(user: RegisterUserInput): Boolean
+        signIn(username: String!, password: String!): User!
+
+        verifyEmailBegin(username: String!): Boolean
+        verifyEmailComplete(code: String!): Boolean
+
+        forgotPasswordBegin(username: String!): Boolean
+        forgotPasswordComplete(
+            code: String!
+            newPassword: String!
+            username: String!
+        ): Boolean
+
+        setPasswordComple(password: String!): Boolean
+
+        changeEmailBegin(newEmail: String!): Boolean
+        changeEmailComplete(code: String!): Boolean
+
         registerUserFromExternalProvider(
             user: RegisterUserFromExternalProviderInput
         ): MeResponse!
