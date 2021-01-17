@@ -7,6 +7,7 @@ import { AuthTokens, IdentityHeaders } from 'auth/types';
 export const createApolloClient = (
     ssrMode: boolean,
     getTokens: (() => AuthTokens) | null,
+    fetch: any = null,
     initialStoreState: Record<string, string> | null = null,
     uri: string = process.env.TF_VAR_public_graphql_endpoint || '',
 ): ApolloClient<any> => {
@@ -45,6 +46,7 @@ export const createApolloClient = (
               ...terminatingLinkConfig,
               batchMax: 100,
               batchInterval: 50,
+              fetch,
           })
         : createUploadLink(terminatingLinkConfig);
 

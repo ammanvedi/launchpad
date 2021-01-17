@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Auth } from '@aws-amplify/auth';
-import { useMeQuery, useSignInMutation } from '../../graphql/generated/graphql';
+import { useMeQuery, useSignInMutation } from '../../gql/generated/graphql';
 import { amplifyConfig } from '../../amplify';
 
 const getSocialLink = (provider: 'Facebook' | 'Google'): string => {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Role, useRegisterMutation } from '../../graphql/generated/graphql';
+import { Role, useRegisterMutation } from '../../gql/generated/graphql';
 
 export default function SignUp() {
     const [username, setUsername] = useState<string>('');

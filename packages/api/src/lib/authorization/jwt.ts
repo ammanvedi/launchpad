@@ -44,12 +44,6 @@ export const jwtSignatureIsValid = (
 ): boolean | never => {
     const header = getHeader(jwt);
 
-    /**
-     * TODO - Check issuer
-     * TODO - Check Aud
-     * TODO - check exp
-     */
-
     if (!header || !header.kid) {
         throw new Error('Could not decode header of jwt');
     }
@@ -66,6 +60,7 @@ export const jwtSignatureIsValid = (
         verify(jwt, pem, { algorithms: ['RS256'] });
         return true;
     } catch (e) {
+        console.log(e);
         return false;
     }
 };

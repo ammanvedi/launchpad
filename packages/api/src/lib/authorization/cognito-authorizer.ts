@@ -62,6 +62,107 @@ export class CognitoAuthorizer
 
     constructor(private readonly config: CognitoAuthorizerConfig) {}
 
+    async signOutGlobal(username: string): Promise<void> {
+        await this.config.cognito
+            .adminUserGlobalSignOut({
+                Username: username,
+                UserPoolId: this.config.userPoolId,
+            })
+            .promise();
+    }
+
+    verifyEmailBegin(username: string): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+    verifyEmailComplete(code: string): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+    async forgotPasswordBegin(username: string): Promise<void> {
+        await this.config.cognito
+            .forgotPassword({
+                ClientId: this.config.clientId,
+                Username: username,
+            })
+            .promise();
+    }
+    async forgotPasswordComplete(
+        code: string,
+        newPassword: string,
+        username: string,
+    ): Promise<void> {
+        await this.config.cognito
+            .confirmForgotPassword({
+                ClientId: this.config.clientId,
+                ConfirmationCode: code,
+                Password: newPassword,
+                Username: username,
+            })
+            .promise();
+    }
+
+    async setPasswordComplete(
+        currentPassword: string,
+        password: string,
+        accessToken: string,
+    ): Promise<void> {
+        await this.config.cognito
+            .changePassword({
+                AccessToken: accessToken,
+                PreviousPassword: currentPassword,
+                ProposedPassword: password,
+            })
+            .promise();
+    }
+
+    async changeEmailBegin(newEmail: string, accessToken: string): Promise<void> {
+        await this.config.cognito
+            .updateUserAttributes({
+                AccessToken: accessToken,
+                UserAttributes: [
+                    {
+                        Name: 'email',
+                        Value: newEmail,
+                    },
+                ],
+            })
+            .promise();
+    }
+
+    changeEmailComplete(code: string, accessToken: string): Promise<void> {
+        return this.verifyAttribute('email', code, accessToken);
+    }
+
+    async signUpConfirmEmail(username: string, code: string): Promise<void> {
+        await this.config.cognito
+            .confirmSignUp({
+                ClientId: this.config.clientId,
+                ConfirmationCode: code,
+                Username: username,
+            })
+            .promise();
+    }
+
+    async signUpResendEmail(username: string): Promise<void> {
+        await this.config.cognito.resendConfirmationCode({
+            ClientId: this.config.clientId,
+            Username: username,
+        });
+    }
+
+    async verifyAttribute(
+        attribute: string,
+        code: string,
+        accessToken: string,
+    ): Promise<void> {
+        await this.config.cognito
+            .verifyUserAttribute({
+                AccessToken: accessToken,
+                AttributeName: attribute,
+                Code: code,
+            })
+            .promise();
+    }
+
     async refreshTokens({ refreshToken }: AuthTokens): Promise<AuthTokens | null> {
         const tokenUrl = `https://${this.config.oauthDomain}/oauth2/token`;
         const refreshRedacted = `${refreshToken.substr(0, 5)}-xxx-xxx`;

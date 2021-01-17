@@ -25,6 +25,7 @@ export const schema = gql`
         UNKNOWN
         USERNAME_OR_PASSWORD_INCORRECT
         TOKENS_MISSING
+        VERIFICATION_CODE_ERROR
     }
 
     enum Role {
@@ -90,10 +91,10 @@ export const schema = gql`
         addConsent(type: ConsentType!): ConsentResponse
         register(user: RegisterUserInput): Boolean
         signIn(username: String!, password: String!): User!
-        signOut: Boolean
+        signOut(global: Boolean): Boolean
 
-        verifyEmailBegin(username: String!): Boolean
-        verifyEmailComplete(code: String!): Boolean
+        registerResendVerificationEmail(username: String!): Boolean
+        registerVerifyEmail(username: String!, code: String!): Boolean
 
         forgotPasswordBegin(username: String!): Boolean
         forgotPasswordComplete(
@@ -102,7 +103,7 @@ export const schema = gql`
             username: String!
         ): Boolean
 
-        setPasswordComple(password: String!): Boolean
+        setPasswordComplete(currentPassword: String!, password: String!): Boolean
 
         changeEmailBegin(newEmail: String!): Boolean
         changeEmailComplete(code: String!): Boolean

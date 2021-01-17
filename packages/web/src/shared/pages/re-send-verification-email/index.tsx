@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
-import { Auth } from '@aws-amplify/auth';
+import { useRegisterResendVerificationEmailMutation } from 'gql/generated/graphql';
 
 const Page = () => {
     const [uName, setUName] = useState<string>('');
+    const [resend] = useRegisterResendVerificationEmailMutation();
 
     const onResendRequest = () => {
-        Auth.resendSignUp(uName)
+        resend({
+            variables: {
+                username: uName,
+            },
+        })
             .then(() => {
                 console.log('sent');
             })

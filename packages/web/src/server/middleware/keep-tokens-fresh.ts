@@ -94,16 +94,6 @@ export const keepTokensFresh = async (
         const isExpired = await tokenIsExpired(decodedIdToken.exp);
 
         if (isExpired) {
-            /**
-             * Amplify SDK at the moment does nto provide a nice way to refresh the
-             * users token server side, this means that if the user makes a request with an
-             * expired token then we will not be able to server side render any content
-             * that requires authentication
-             *
-             * This is not 100% ideal but the main point of server side rendering is to
-             * appease SEO and to show the user data as quick as possible. Since we can
-             * accomplish both of these we wont worry about this too much
-             */
             const refreshToken = authTokens?.refreshToken;
 
             if (!refreshToken) {

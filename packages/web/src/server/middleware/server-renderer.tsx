@@ -5,18 +5,15 @@ import { StaticRouter as Router } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import App from '../../shared/App';
 import Html from '../components/HTML';
-import Amplify from '@aws-amplify/core';
-import { createApolloClient } from '../../shared/graphql/apollo';
+import { createApolloClient } from '../../shared/gql/apollo';
 import { ApolloProvider } from '@apollo/client';
 import { getDataFromTree } from '@apollo/client/react/ssr';
-import { amplifyConfig } from '../../shared/amplify';
 import { RecoilRoot, Snapshot } from 'recoil';
 import { ChunkExtractor } from '@loadable/server';
 import { resolve } from 'path';
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 import { RecoilStateGrabber, serializeRecoilState } from 'components/recoil-ssr';
-
-Amplify.configure({ ...amplifyConfig, ssr: true });
+import fetch from 'node-fetch';
 
 const statsFile = resolve('./build/client/static/loadable-stats.json');
 const extractor = new ChunkExtractor({ statsFile, entrypoints: ['bundle'] });
@@ -25,7 +22,7 @@ const serverRenderer: any = () => async (req: express.Request, res: express.Resp
     const helmetContext = {};
     // TODO here pull out cookie from request and pass it to the api
     const getIdToken = () => res.locals.authTokens;
-    const apolloClient = createApolloClient(true, getIdToken);
+    const apolloClient = createApolloClient(true, getIdToken, fetch);
 
     let recoilState: Snapshot | null = null;
     const sheet = new ServerStyleSheet();

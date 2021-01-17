@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
-import { Auth } from '@aws-amplify/auth';
+import { useForgotPasswordCompleteMutation } from 'gql/generated/graphql';
 
 const Page = () => {
     const [uName, setUName] = useState<string>('');
     const [code, setCode] = useState<string>('');
     const [newPwd, setNewPwd] = useState<string>('');
+    const [setPassword] = useForgotPasswordCompleteMutation();
 
     const onForgotPassword = () => {
-        Auth.forgotPasswordSubmit(uName, code, newPwd)
+        setPassword({
+            variables: {
+                username: uName,
+                code,
+                newPassword: newPwd,
+            },
+        })
             .then(() => {
                 console.log('sent');
             })

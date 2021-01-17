@@ -8,6 +8,14 @@ import { updateUserProfileImageResolver } from './mutation/update-user-profile-i
 import { addConsentResolver } from './mutation/add-consent';
 import { signInResolver } from './mutation/sign-in';
 import { refreshTokensResolver } from './mutation/refresh-tokens';
+import { signOutResolver } from './mutation/sign-out';
+import { registerResendVerificationEmailResolver } from './mutation/register-resend-verification-email';
+import { registerVerifyEmailResolver } from './mutation/register-verify-email';
+import { forgotPasswordCompleteResolver } from './mutation/forgot-password-complete';
+import { forgotPasswordBeginResolver } from './mutation/forgot-password-begin';
+import { setPasswordResolver } from './mutation/set-password';
+import { changeEmailBeginResolver } from './mutation/change-email-begin';
+import { changeEmailCompleteResolver } from './mutation/change-email-complete';
 
 export const resolvers: Resolvers<GQLContext> = {
     Query: {
@@ -25,6 +33,14 @@ export const resolvers: Resolvers<GQLContext> = {
         updateUserProfileImage: updateUserProfileImageResolver,
         signIn: signInResolver,
         refreshTokens: refreshTokensResolver,
+        signOut: signOutResolver,
+        registerResendVerificationEmail: registerResendVerificationEmailResolver,
+        registerVerifyEmail: registerVerifyEmailResolver,
+        forgotPasswordBegin: forgotPasswordBeginResolver,
+        forgotPasswordComplete: forgotPasswordCompleteResolver,
+        setPasswordComplete: setPasswordResolver,
+        changeEmailBegin: changeEmailBeginResolver,
+        changeEmailComplete: changeEmailCompleteResolver,
     },
     User: userFieldsResolver,
 };

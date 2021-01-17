@@ -91,48 +91,10 @@ const executableSchema = makeExecutableSchema({
 
 export const schemaWithPermissions = applyMiddleware(executableSchema, permissions);
 
-const contextLog = createLoggerSet('GQLContext');
-
 // @ts-ignore
 export const context = async ({ req, res }): GQLContext => {
     const authTokens = getAuthTokensFromRequest(req);
-    let authState = authorizer.getAuthState(authTokens);
-    contextLog.info('Creating request context');
-
-    /**
-     * We must check if it is possible to refresh the users token,
-     * just in case they have a very long running session and their token
-     * expires while they still have a valid refresh token.
-     */
-    if (authState.tokenValidationError === TokenValidationError.Expiry) {
-        contextLog.info('Request tokens were expired, will refresh');
-        try {
-            // @ts-ignore
-            const refreshResult = await refreshTokensResolver(
-                {},
-                {},
-                {
-                    authorizer,
-                    authState: {
-                        tokens: authTokens,
-                    },
-                    res,
-                    setAuthState: (tokens: AuthTokens) => {
-                        authState = authorizer.getAuthState(tokens);
-                    },
-                },
-            );
-
-            if (refreshResult) {
-                contextLog.info('Did refresh tokens');
-            } else {
-                contextLog.warn('Could not refresh tokens');
-            }
-        } catch (e) {
-            contextLog.err('Something went wrong refreshing tokens');
-            contextLog.err(e);
-        }
-    }
+    const authState = authorizer.getAuthState(authTokens);
 
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-origin', process.env.TF_VAR_public_web_endpoint);
@@ -202,7 +164,10 @@ httpServer.get('/auth/callback/sign-in', async (req, res) => {
             process.env.TF_VAR_auth_cookie_secure === 'true',
         );
 
-        res.redirect(302, process.env.TF_VAR_public_web_endpoint || '');
+        res.redirect(
+            302,
+            `${process.env.TF_VAR_public_web_endpoint}/social-sign-up` || '',
+        );
     } catch (e) {
         res.status(500);
     } finally {

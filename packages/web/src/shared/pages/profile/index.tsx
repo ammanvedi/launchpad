@@ -4,9 +4,9 @@ import {
     useAddConsentMutation,
     useHelloQuery,
     useMeQuery,
+    useSignOutMutation,
     useUploadUserProfileImageMutation,
-} from '../../graphql/generated/graphql';
-import { Auth } from '@aws-amplify/auth';
+} from '../../gql/generated/graphql';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { exampleAtom } from 'state/atom/example';
 import styled from 'styled-components';
@@ -24,6 +24,7 @@ const Page = () => {
     const { data } = useMeQuery();
     const { data: helloData } = useHelloQuery();
     const [upload] = useUploadUserProfileImageMutation();
+    const [signOutMutation] = useSignOutMutation();
     const [consentToCookie] = useAddConsentMutation({
         variables: {
             type: ConsentType.Cookies,
@@ -51,7 +52,7 @@ const Page = () => {
     };
 
     const signOut = () => {
-        Auth.signOut()
+        signOutMutation()
             .then(() => {
                 console.log('signed out');
             })
