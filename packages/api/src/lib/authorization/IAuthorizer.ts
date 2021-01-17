@@ -8,6 +8,7 @@ export type AuthState = {
     sub: string | '';
     tokenExpiresAtUtcSecs: number;
     tokens: AuthTokens | null;
+    tokenValidationError: TokenValidationError;
 };
 
 export type AuthTokens = {
@@ -16,12 +17,23 @@ export type AuthTokens = {
     refreshToken: string;
 };
 
+export enum TokenValidationError {
+    Signature,
+    Decode,
+    JWK,
+    Expiry,
+    Unknown,
+    Issuer,
+    Aud,
+    None,
+}
+
 export interface IAuthorizer<
     Config extends Record<any, any>,
     IdTokenType extends Record<any, any>
 > {
     initialize(): Promise<void>;
-    validateToken(token: string): IdTokenType | false;
+    validateToken(token: string): IdTokenType | { err: TokenValidationError };
     getAuthState(tokens: AuthTokens | null): AuthState;
     refreshTokens(tokens: AuthTokens): Promise<AuthTokens | null>;
     signIn(username: string, password: string): Promise<AuthTokens | null>;

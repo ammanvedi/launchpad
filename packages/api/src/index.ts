@@ -7,7 +7,11 @@ import {
     CognitoAuthorizerConfig,
     CognitoIdToken,
 } from './lib/authorization/cognito-authorizer';
-import { AuthTokens, IAuthorizer } from './lib/authorization/IAuthorizer';
+import {
+    AuthTokens,
+    IAuthorizer,
+    TokenValidationError,
+} from './lib/authorization/IAuthorizer';
 import { applyMiddleware } from 'graphql-middleware';
 import { makeExecutableSchema } from 'graphql-tools';
 import Amplify from '@aws-amplify/core';
@@ -25,6 +29,8 @@ import {
     setAuthCookiesOnResponse,
 } from './lib/authorization/token';
 import cookieParser from 'cookie-parser';
+import { refreshTokensResolver } from './lib/resolver/mutation/refresh-tokens';
+import { createLogger, createLoggerSet } from './lib/logging/logger';
 
 dotenv.config();
 
@@ -85,9 +91,48 @@ const executableSchema = makeExecutableSchema({
 
 export const schemaWithPermissions = applyMiddleware(executableSchema, permissions);
 
+const contextLog = createLoggerSet('GQLContext');
+
 // @ts-ignore
-export const context = ({ req, res }): GQLContext => {
+export const context = async ({ req, res }): GQLContext => {
     const authTokens = getAuthTokensFromRequest(req);
+    let authState = authorizer.getAuthState(authTokens);
+    contextLog.info('Creating request context');
+
+    /**
+     * We must check if it is possible to refresh the users token,
+     * just in case they have a very long running session and their token
+     * expires while they still have a valid refresh token.
+     */
+    if (authState.tokenValidationError === TokenValidationError.Expiry) {
+        contextLog.info('Request tokens were expired, will refresh');
+        try {
+            // @ts-ignore
+            const refreshResult = await refreshTokensResolver(
+                {},
+                {},
+                {
+                    authorizer,
+                    authState: {
+                        tokens: authTokens,
+                    },
+                    res,
+                    setAuthState: (tokens: AuthTokens) => {
+                        authState = authorizer.getAuthState(tokens);
+                    },
+                },
+            );
+
+            if (refreshResult) {
+                contextLog.info('Did refresh tokens');
+            } else {
+                contextLog.warn('Could not refresh tokens');
+            }
+        } catch (e) {
+            contextLog.err('Something went wrong refreshing tokens');
+            contextLog.err(e);
+        }
+    }
 
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-origin', process.env.TF_VAR_public_web_endpoint);
@@ -100,7 +145,7 @@ export const context = ({ req, res }): GQLContext => {
         },
         amplifyAuth: Auth,
         mediaManager,
-        authState: authorizer.getAuthState(authTokens),
+        authState,
         req,
         res,
         setAuthState(tokens) {

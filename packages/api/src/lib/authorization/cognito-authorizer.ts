@@ -1,11 +1,10 @@
-import { AuthState, AuthTokens, IAuthorizer } from './IAuthorizer';
+import { AuthState, AuthTokens, IAuthorizer, TokenValidationError } from './IAuthorizer';
 import { decodeIdToken, JWKData, jwtSignatureIsValid } from './jwt';
 import { createLoggerSet } from '../logging/logger';
 import { Role } from '../../generated/graphql';
 import AWS from 'aws-sdk';
 import fetch from 'node-fetch';
 import { urlEncodeObject } from './helper';
-import { sign } from 'jsonwebtoken';
 
 export type CognitoAuthorizerConfig = {
     iss: string;
@@ -58,6 +57,7 @@ export class CognitoAuthorizer
         sub: '',
         tokenExpiresAtUtcSecs: 0,
         tokens: null,
+        tokenValidationError: TokenValidationError.None,
     };
 
     constructor(private readonly config: CognitoAuthorizerConfig) {}
@@ -199,51 +199,53 @@ export class CognitoAuthorizer
         return exp > now;
     }
 
-    public validateToken(accessToken: string): CognitoIdToken | false {
+    public validateToken(
+        accessToken: string,
+    ): CognitoIdToken | { err: TokenValidationError } {
         if (!this.jwk) {
             this.log.warn('Attempted token validation when no JWK data was available');
-            return false;
+            return { err: TokenValidationError.JWK };
         }
         try {
             const signatureValid = jwtSignatureIsValid(accessToken, this.jwk);
 
             if (!signatureValid) {
                 this.log.err('The jwt signature could not be verified');
-                return false;
+                return { err: TokenValidationError.Signature };
             }
 
             const decodedToken = decodeIdToken<CognitoIdToken>(accessToken);
 
             if (!decodedToken) {
                 this.log.err('Could not decode id token when trying to validate');
-                return false;
+                return { err: TokenValidationError.Decode };
             }
 
             const issuerValid = this.isIssuerValid(decodedToken.iss);
 
             if (!issuerValid) {
                 this.log.err('Token issuer invalid');
-                return false;
+                return { err: TokenValidationError.Issuer };
             }
 
             const audValid = this.isAudValid(decodedToken.aud);
 
             if (!audValid) {
                 this.log.err('Token aud invalid');
-                return false;
+                return { err: TokenValidationError.Aud };
             }
 
             const expValid = this.isExpiryValid(decodedToken.exp);
 
             if (!expValid) {
                 this.log.err('Token exp invalid');
-                return false;
+                return { err: TokenValidationError.Expiry };
             }
 
             return decodedToken;
         } catch (e) {
             this.log.err(`Something went wrong validating token, ${e}`);
-            return false;
+            return { err: TokenValidationError.Unknown };
         }
     }
 
@@ -269,32 +271,36 @@ export class CognitoAuthorizer
          *  - set the new tokens on the response
          *  - update auth state for current set of requests
          */
-        const tokenValidated = this.validateToken(tokens.idToken);
+        const tokenValidationResult = this.validateToken(tokens.idToken);
 
-        if (!tokenValidated) {
+        if ('err' in tokenValidationResult) {
             this.log.warn('rejected invalid token');
-            return CognitoAuthorizer.nullAuthState;
+            return {
+                ...CognitoAuthorizer.nullAuthState,
+                tokenValidationError: tokenValidationResult.err,
+            };
         }
 
         this.log.info('Token validated');
 
-        const decodedIdToken = decodeIdToken<CognitoIdToken>(tokens.idToken);
+        const decodedIdTokenResult = decodeIdToken<CognitoIdToken>(tokens.idToken);
 
-        if (!decodedIdToken) {
+        if (!decodedIdTokenResult) {
             return CognitoAuthorizer.nullAuthState;
         }
 
         return {
             // the internal id of the user
-            id: decodedIdToken['custom:internalId'],
-            role: decodedIdToken['custom:role'],
-            email: decodedIdToken['email'],
+            id: decodedIdTokenResult['custom:internalId'],
+            role: decodedIdTokenResult['custom:role'],
+            email: decodedIdTokenResult['email'],
             // for lookin up the user in the identity pool
-            externalUsername: decodedIdToken['cognito:username'],
+            externalUsername: decodedIdTokenResult['cognito:username'],
             // for uniquely identifying the user in the external pool
-            sub: decodedIdToken.sub,
-            tokenExpiresAtUtcSecs: tokenValidated.exp,
+            sub: decodedIdTokenResult.sub,
+            tokenExpiresAtUtcSecs: tokenValidationResult.exp,
             tokens,
+            tokenValidationError: TokenValidationError.None,
         };
     }
 
