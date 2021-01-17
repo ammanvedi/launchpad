@@ -257,6 +257,18 @@ export class CognitoAuthorizer
             this.log.warn('Rejected incomplete token set');
             return CognitoAuthorizer.nullAuthState;
         }
+
+        /**
+         * TODO: determine reason for invalid token and if it is
+         * the token being expired then
+         * 1. make a call to refresh the token
+         * 2. if this does not succeed
+         *  - clear logged in state of user
+         *  - redirect user back to sign in page
+         * 3. if it does succeed
+         *  - set the new tokens on the response
+         *  - update auth state for current set of requests
+         */
         const tokenValidated = this.validateToken(tokens.idToken);
 
         if (!tokenValidated) {

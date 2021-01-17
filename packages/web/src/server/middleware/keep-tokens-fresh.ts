@@ -93,7 +93,7 @@ export const keepTokensFresh = async (
          */
         const isExpired = await tokenIsExpired(decodedIdToken.exp);
 
-        if (isExpired || true) {
+        if (isExpired) {
             /**
              * Amplify SDK at the moment does nto provide a nice way to refresh the
              * users token server side, this means that if the user makes a request with an
