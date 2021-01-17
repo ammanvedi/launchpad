@@ -102,7 +102,7 @@ export const schema = gql`
             username: String!
         ): Boolean
 
-        setPasswordComple(password: String!): Boolean
+        setPasswordComplete(password: String!): Boolean
 
         changeEmailBegin(newEmail: String!): Boolean
         changeEmailComplete(code: String!): Boolean
