@@ -20,6 +20,7 @@ import { loaders, prismaDb as db } from './lib/data/data';
 import { MediaManager } from './lib/media/media-manager';
 import { CloudinaryMediaManager } from './lib/media/cloudinary-media-manager';
 import {
+    clearAuthCookies,
     getAuthTokensFromRequest,
     setAuthCookiesOnResponse,
 } from './lib/authorization/token';
@@ -119,7 +120,7 @@ export const graphqlServer = new ApolloServer({
     context,
 });
 
-httpServer.options('/*', function (req, res, next) {
+httpServer.options('/*', function (req, res) {
     res.header('Access-Control-Allow-Origin', process.env.TF_VAR_public_web_endpoint);
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -195,7 +196,15 @@ httpServer.post('/auth/token/refresh', async (req, res) => {
     res.end();
 });
 
-httpServer.get('/auth/callback/sign-out', (req, res) => {});
+httpServer.get('/auth/callback/sign-out', (req, res) => {
+    clearAuthCookies(
+        res,
+        process.env.TF_VAR_auth_cookie_domain || '',
+        process.env.TF_VAR_auth_cookie_secure === 'true',
+    );
+
+    res.redirect('');
+});
 
 graphqlServer.applyMiddleware({
     app: httpServer,

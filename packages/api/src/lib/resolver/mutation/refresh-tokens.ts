@@ -21,9 +21,6 @@ export const refreshTokensResolver: MutationResolvers<GQLContext>['refreshTokens
     if (!refreshResult) {
         log.warn('Could not refresh tokens, clearing users auth cookies');
         clearAuthCookies(
-            context.authState.tokens.idToken,
-            context.authState.tokens.accessToken,
-            context.authState.tokens.refreshToken,
             context.res,
             process.env.TF_VAR_auth_cookie_domain || '',
             process.env.TF_VAR_auth_cookie_secure === 'true',

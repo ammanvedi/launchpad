@@ -24,9 +24,6 @@ const getCookieExpiryDays = (days: number): Date => {
 };
 
 export const clearAuthCookies = (
-    idToken: string,
-    accessToken: string,
-    refreshToken: string,
     response: Response,
     domain: string,
     secure: boolean,
