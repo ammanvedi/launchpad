@@ -36,7 +36,8 @@ export enum GqlError {
   EntryExists = 'ENTRY_EXISTS',
   Unknown = 'UNKNOWN',
   UsernameOrPasswordIncorrect = 'USERNAME_OR_PASSWORD_INCORRECT',
-  TokensMissing = 'TOKENS_MISSING'
+  TokensMissing = 'TOKENS_MISSING',
+  VerificationCodeError = 'VERIFICATION_CODE_ERROR'
 }
 
 export enum Role {
@@ -109,11 +110,12 @@ export type Mutation = {
   addConsent?: Maybe<ConsentResponse>;
   register?: Maybe<Scalars['Boolean']>;
   signIn: User;
-  verifyEmailBegin?: Maybe<Scalars['Boolean']>;
-  verifyEmailComplete?: Maybe<Scalars['Boolean']>;
+  signOut?: Maybe<Scalars['Boolean']>;
+  registerResendVerificationEmail?: Maybe<Scalars['Boolean']>;
+  registerVerifyEmail?: Maybe<Scalars['Boolean']>;
   forgotPasswordBegin?: Maybe<Scalars['Boolean']>;
   forgotPasswordComplete?: Maybe<Scalars['Boolean']>;
-  setPasswordComple?: Maybe<Scalars['Boolean']>;
+  setPasswordComplete?: Maybe<Scalars['Boolean']>;
   changeEmailBegin?: Maybe<Scalars['Boolean']>;
   changeEmailComplete?: Maybe<Scalars['Boolean']>;
   refreshTokens?: Maybe<Scalars['Boolean']>;
@@ -138,12 +140,18 @@ export type MutationSignInArgs = {
 };
 
 
-export type MutationVerifyEmailBeginArgs = {
+export type MutationSignOutArgs = {
+  global?: Maybe<Scalars['Boolean']>;
+};
+
+
+export type MutationRegisterResendVerificationEmailArgs = {
   username: Scalars['String'];
 };
 
 
-export type MutationVerifyEmailCompleteArgs = {
+export type MutationRegisterVerifyEmailArgs = {
+  username: Scalars['String'];
   code: Scalars['String'];
 };
 
@@ -160,7 +168,8 @@ export type MutationForgotPasswordCompleteArgs = {
 };
 
 
-export type MutationSetPasswordCompleArgs = {
+export type MutationSetPasswordCompleteArgs = {
+  currentPassword: Scalars['String'];
   password: Scalars['String'];
 };
 
@@ -347,11 +356,12 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   addConsent?: Resolver<Maybe<ResolversTypes['ConsentResponse']>, ParentType, ContextType, RequireFields<MutationAddConsentArgs, 'type'>>;
   register?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationRegisterArgs, never>>;
   signIn?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationSignInArgs, 'username' | 'password'>>;
-  verifyEmailBegin?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationVerifyEmailBeginArgs, 'username'>>;
-  verifyEmailComplete?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationVerifyEmailCompleteArgs, 'code'>>;
+  signOut?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSignOutArgs, never>>;
+  registerResendVerificationEmail?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationRegisterResendVerificationEmailArgs, 'username'>>;
+  registerVerifyEmail?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationRegisterVerifyEmailArgs, 'username' | 'code'>>;
   forgotPasswordBegin?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationForgotPasswordBeginArgs, 'username'>>;
   forgotPasswordComplete?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationForgotPasswordCompleteArgs, 'code' | 'newPassword' | 'username'>>;
-  setPasswordComple?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSetPasswordCompleArgs, 'password'>>;
+  setPasswordComplete?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSetPasswordCompleteArgs, 'currentPassword' | 'password'>>;
   changeEmailBegin?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationChangeEmailBeginArgs, 'newEmail'>>;
   changeEmailComplete?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationChangeEmailCompleteArgs, 'code'>>;
   refreshTokens?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;

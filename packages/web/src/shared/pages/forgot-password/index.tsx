@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
-import { Auth } from '@aws-amplify/auth';
+import { useForgotPasswordBeginMutation } from 'gql/generated/graphql';
 
 const Page = () => {
     const [uName, setUName] = useState<string>('');
+    const [forgotBegin] = useForgotPasswordBeginMutation();
 
     const onForgotPassword = () => {
-        Auth.forgotPassword(uName)
+        forgotBegin({
+            variables: {
+                username: uName,
+            },
+        })
             .then(() => {
                 console.log('sent');
             })

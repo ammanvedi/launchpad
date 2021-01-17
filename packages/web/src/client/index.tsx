@@ -5,11 +5,8 @@ import { Router } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import App from '../shared/App';
 import createHistory from 'history/history';
-import Amplify from '@aws-amplify/core';
-import { Auth } from '@aws-amplify/auth';
-import { createApolloClient } from '../shared/graphql/apollo';
+import { createApolloClient } from '../shared/gql/apollo';
 import { ApolloProvider } from '@apollo/client';
-import { amplifyAuthConfig, amplifyConfig } from '../shared/amplify';
 import { RecoilRoot } from 'recoil';
 import atoms from '../shared/state/atom';
 import { loadableReady } from '@loadable/component';
@@ -17,18 +14,12 @@ import { isLoggedInSync } from 'auth/helpers';
 
 const history = createHistory();
 
-Auth.configure({
-    Auth: amplifyAuthConfig,
-});
-
-Amplify.configure({ ...amplifyConfig, ssr: true });
-
 const checkIsLoggedIn = () => {
     return isLoggedInSync(document.cookie || '');
 };
 
 loadableReady(() => {
-    const apolloClient = createApolloClient(false, null, window.__APOLLO_STATE__);
+    const apolloClient = createApolloClient(false, null, null, window.__APOLLO_STATE__);
 
     hydrate(
         <ApolloProvider client={apolloClient}>

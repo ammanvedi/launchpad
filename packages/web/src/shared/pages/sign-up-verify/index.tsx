@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
-import { Auth } from 'aws-amplify';
+import { useRegisterVerifyEmailMutation } from 'gql/generated/graphql';
 
 export default function SignUpVerify() {
     const [code, setCode] = useState<string>('');
     const [username, setUsername] = useState<string>('');
+    const [verify] = useRegisterVerifyEmailMutation();
 
     const handleButtonClick = async () => {
         try {
-            await Auth.confirmSignUp(username, code);
+            await verify({
+                variables: {
+                    code,
+                    username,
+                },
+            });
         } catch (error) {
             console.log('error confirming sign up', error);
         }

@@ -36,7 +36,34 @@ export interface IAuthorizer<
     validateToken(token: string): IdTokenType | { err: TokenValidationError };
     getAuthState(tokens: AuthTokens | null): AuthState;
     refreshTokens(tokens: AuthTokens): Promise<AuthTokens | null>;
+
     signIn(username: string, password: string): Promise<AuthTokens | null>;
+    signOutGlobal(username: string): Promise<void>;
+
+    verifyEmailBegin(username: string): Promise<void>;
+    verifyEmailComplete(code: string): Promise<void>;
+
+    forgotPasswordBegin(username: string): Promise<void>;
+    forgotPasswordComplete(
+        code: string,
+        newPassword: string,
+        username: string,
+    ): Promise<void>;
+
+    setPasswordComplete(
+        currentPassword: string,
+        password: string,
+        accessToken: string,
+    ): Promise<void>;
+
+    changeEmailBegin(newEmail: string, accessToken: string): Promise<void>;
+    changeEmailComplete(code: string, accessToken: string): Promise<void>;
+
+    verifyAttribute(attribute: string, code: string, accessToken: string): Promise<void>;
+
+    signUpResendEmail(username: string): Promise<void>;
+    signUpConfirmEmail(username: string, code: string): Promise<void>;
+
     exchangeCodeForTokens(code: string): Promise<AuthTokens | null>;
     determineAccessTokenExpiryUTC(token: string): string;
     linkExternalUserToInternalUser(
