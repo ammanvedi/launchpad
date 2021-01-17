@@ -40,6 +40,10 @@ type AWSTokensResponse = {
     refresh_token: string;
 };
 
+type AWSError = {
+    error: string;
+};
+
 export class CognitoAuthorizer
     implements IAuthorizer<CognitoAuthorizerConfig, CognitoIdToken> {
     private jwk: JWKData<'RSA'> | null = null;
@@ -53,6 +57,7 @@ export class CognitoAuthorizer
         externalUsername: '',
         sub: '',
         tokenExpiresAtUtcSecs: 0,
+        tokens: null,
     };
 
     constructor(private readonly config: CognitoAuthorizerConfig) {}
@@ -70,13 +75,21 @@ export class CognitoAuthorizer
         });
 
         try {
-            const result: AWSTokensResponse = await fetch(tokenUrl, {
+            const result: AWSTokensResponse | AWSError = await fetch(tokenUrl, {
                 method: 'POST',
                 body,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
             }).then((res) => res.json());
+
+            if ('error' in result) {
+                this.log.err(
+                    `Failed to exchange refresh token ${refreshRedacted} for token, request succeeded but returned error`,
+                );
+                this.log.err(result.error);
+                return null;
+            }
 
             return {
                 idToken: result.id_token,
@@ -140,10 +153,8 @@ export class CognitoAuthorizer
             redirect_uri: this.config.signInCallbackUrl,
         });
 
-        console.log(body);
-
         try {
-            const result: AWSTokensResponse = await fetch(tokenUrl, {
+            const result: AWSTokensResponse | AWSError = await fetch(tokenUrl, {
                 method: 'POST',
                 body,
                 headers: {
@@ -151,14 +162,10 @@ export class CognitoAuthorizer
                 },
             }).then((res) => res.json());
 
-            console.log(result);
-
-            // @ts-ignore
-            if (result.error) {
+            if ('error' in result) {
                 this.log.err(
                     `Failed to exchange code ${codeRedacted} for token, request succeeded but returned error`,
                 );
-                // @ts-ignore
                 this.log.err(result.error);
                 return null;
             }
@@ -275,6 +282,7 @@ export class CognitoAuthorizer
             // for uniquely identifying the user in the external pool
             sub: decodedIdToken.sub,
             tokenExpiresAtUtcSecs: tokenValidated.exp,
+            tokens,
         };
     }
 

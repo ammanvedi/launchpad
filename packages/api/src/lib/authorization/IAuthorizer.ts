@@ -7,6 +7,7 @@ export type AuthState = {
     externalUsername: string | '';
     sub: string | '';
     tokenExpiresAtUtcSecs: number;
+    tokens: AuthTokens | null;
 };
 
 export type AuthTokens = {

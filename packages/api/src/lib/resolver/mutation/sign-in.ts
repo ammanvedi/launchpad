@@ -1,6 +1,6 @@
 import { GqlError, MutationResolvers, Role } from '../../../generated/graphql';
 import { GQLContext } from '../../context/context';
-import { setAuthCookiesOnResponse } from '../../authorization/cookie';
+import { setAuthCookiesOnResponse } from '../../authorization/token';
 
 export const signInResolver: MutationResolvers<GQLContext>['signIn'] = async (
     parent,

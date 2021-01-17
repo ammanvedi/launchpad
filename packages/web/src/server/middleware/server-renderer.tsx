@@ -15,7 +15,6 @@ import { ChunkExtractor } from '@loadable/server';
 import { resolve } from 'path';
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 import { RecoilStateGrabber, serializeRecoilState } from 'components/recoil-ssr';
-import { isLoggedInSync } from 'auth/helpers';
 
 Amplify.configure({ ...amplifyConfig, ssr: true });
 
@@ -24,15 +23,14 @@ const extractor = new ChunkExtractor({ statsFile, entrypoints: ['bundle'] });
 
 const serverRenderer: any = () => async (req: express.Request, res: express.Response) => {
     const helmetContext = {};
-    const getIdToken = () => Promise.resolve(res.locals.idToken);
+    // TODO here pull out cookie from request and pass it to the api
+    const getIdToken = () => res.locals.authTokens;
     const apolloClient = createApolloClient(true, getIdToken);
 
     let recoilState: Snapshot | null = null;
     const sheet = new ServerStyleSheet();
 
-    const checkIsLoggedIn = () => {
-        return isLoggedInSync(req.headers.cookie || '');
-    };
+    const checkIsLoggedIn = () => res.locals.isLoggedIn;
 
     const AppTree = (
         <StyleSheetManager sheet={sheet.instance}>

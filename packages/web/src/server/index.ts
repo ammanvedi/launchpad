@@ -10,6 +10,7 @@ import errorHandler from './middleware/error-handler';
 import serverRenderer from './middleware/server-renderer';
 import { keepTokensFresh } from './middleware/keep-tokens-fresh';
 import staticGzip from 'express-static-gzip';
+import cookieParser from 'cookie-parser';
 
 require('dotenv').config();
 
@@ -32,6 +33,8 @@ app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cookieParser());
 
 app.get('/favicon.ico', (_req, res) => {
     res.status(204);

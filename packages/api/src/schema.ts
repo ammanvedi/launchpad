@@ -24,6 +24,7 @@ export const schema = gql`
         ENTRY_EXISTS
         UNKNOWN
         USERNAME_OR_PASSWORD_INCORRECT
+        TOKENS_MISSING
     }
 
     enum Role {
@@ -89,6 +90,7 @@ export const schema = gql`
         addConsent(type: ConsentType!): ConsentResponse
         register(user: RegisterUserInput): Boolean
         signIn(username: String!, password: String!): User!
+        signOut: Boolean
 
         verifyEmailBegin(username: String!): Boolean
         verifyEmailComplete(code: String!): Boolean
@@ -104,6 +106,8 @@ export const schema = gql`
 
         changeEmailBegin(newEmail: String!): Boolean
         changeEmailComplete(code: String!): Boolean
+
+        refreshTokens: Boolean
 
         registerUserFromExternalProvider(
             user: RegisterUserFromExternalProviderInput

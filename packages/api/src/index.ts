@@ -22,7 +22,7 @@ import { CloudinaryMediaManager } from './lib/media/cloudinary-media-manager';
 import {
     getAuthTokensFromRequest,
     setAuthCookiesOnResponse,
-} from './lib/authorization/cookie';
+} from './lib/authorization/token';
 import cookieParser from 'cookie-parser';
 
 dotenv.config();
@@ -146,8 +146,6 @@ httpServer.get('/auth/callback/sign-in', async (req, res) => {
             return;
         }
 
-        console.log(tokens);
-
         setAuthCookiesOnResponse(
             tokens.idToken,
             tokens.accessToken,
@@ -197,11 +195,7 @@ httpServer.post('/auth/token/refresh', async (req, res) => {
     res.end();
 });
 
-httpServer.get('/auth/callback/sign-out', (req, res) => {
-    console.log('req');
-    console.log(JSON.stringify(req, null, 2));
-    console.log(process.env.TF_VAR_public_web_endpoint);
-});
+httpServer.get('/auth/callback/sign-out', (req, res) => {});
 
 graphqlServer.applyMiddleware({
     app: httpServer,

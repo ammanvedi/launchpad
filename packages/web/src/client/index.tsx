@@ -23,25 +23,12 @@ Auth.configure({
 
 Amplify.configure({ ...amplifyConfig, ssr: true });
 
-const getIdToken = async () => {
-    /**
-     * On the client side we use the amplify sdk to get the users logged in state
-     * The SDK will handle refreshing the token if it is expired
-     */
-    try {
-        const session = await Auth.currentSession();
-        return session.getIdToken().getJwtToken();
-    } catch {
-        return '';
-    }
-};
-
 const checkIsLoggedIn = () => {
     return isLoggedInSync(document.cookie || '');
 };
 
 loadableReady(() => {
-    const apolloClient = createApolloClient(false, getIdToken, window.__APOLLO_STATE__);
+    const apolloClient = createApolloClient(false, null, window.__APOLLO_STATE__);
 
     hydrate(
         <ApolloProvider client={apolloClient}>

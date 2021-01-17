@@ -35,7 +35,8 @@ export enum GqlError {
   UploadFailed = 'UPLOAD_FAILED',
   EntryExists = 'ENTRY_EXISTS',
   Unknown = 'UNKNOWN',
-  UsernameOrPasswordIncorrect = 'USERNAME_OR_PASSWORD_INCORRECT'
+  UsernameOrPasswordIncorrect = 'USERNAME_OR_PASSWORD_INCORRECT',
+  TokensMissing = 'TOKENS_MISSING'
 }
 
 export enum Role {
@@ -108,6 +109,14 @@ export type Mutation = {
   addConsent?: Maybe<ConsentResponse>;
   register?: Maybe<Scalars['Boolean']>;
   signIn: User;
+  verifyEmailBegin?: Maybe<Scalars['Boolean']>;
+  verifyEmailComplete?: Maybe<Scalars['Boolean']>;
+  forgotPasswordBegin?: Maybe<Scalars['Boolean']>;
+  forgotPasswordComplete?: Maybe<Scalars['Boolean']>;
+  setPasswordComple?: Maybe<Scalars['Boolean']>;
+  changeEmailBegin?: Maybe<Scalars['Boolean']>;
+  changeEmailComplete?: Maybe<Scalars['Boolean']>;
+  refreshTokens?: Maybe<Scalars['Boolean']>;
   registerUserFromExternalProvider: MeResponse;
   updateUserProfileImage?: Maybe<User>;
 };
@@ -126,6 +135,43 @@ export type MutationRegisterArgs = {
 export type MutationSignInArgs = {
   username: Scalars['String'];
   password: Scalars['String'];
+};
+
+
+export type MutationVerifyEmailBeginArgs = {
+  username: Scalars['String'];
+};
+
+
+export type MutationVerifyEmailCompleteArgs = {
+  code: Scalars['String'];
+};
+
+
+export type MutationForgotPasswordBeginArgs = {
+  username: Scalars['String'];
+};
+
+
+export type MutationForgotPasswordCompleteArgs = {
+  code: Scalars['String'];
+  newPassword: Scalars['String'];
+  username: Scalars['String'];
+};
+
+
+export type MutationSetPasswordCompleArgs = {
+  password: Scalars['String'];
+};
+
+
+export type MutationChangeEmailBeginArgs = {
+  newEmail: Scalars['String'];
+};
+
+
+export type MutationChangeEmailCompleteArgs = {
+  code: Scalars['String'];
 };
 
 
@@ -301,6 +347,14 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   addConsent?: Resolver<Maybe<ResolversTypes['ConsentResponse']>, ParentType, ContextType, RequireFields<MutationAddConsentArgs, 'type'>>;
   register?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationRegisterArgs, never>>;
   signIn?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationSignInArgs, 'username' | 'password'>>;
+  verifyEmailBegin?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationVerifyEmailBeginArgs, 'username'>>;
+  verifyEmailComplete?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationVerifyEmailCompleteArgs, 'code'>>;
+  forgotPasswordBegin?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationForgotPasswordBeginArgs, 'username'>>;
+  forgotPasswordComplete?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationForgotPasswordCompleteArgs, 'code' | 'newPassword' | 'username'>>;
+  setPasswordComple?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSetPasswordCompleArgs, 'password'>>;
+  changeEmailBegin?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationChangeEmailBeginArgs, 'newEmail'>>;
+  changeEmailComplete?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationChangeEmailCompleteArgs, 'code'>>;
+  refreshTokens?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   registerUserFromExternalProvider?: Resolver<ResolversTypes['MeResponse'], ParentType, ContextType, RequireFields<MutationRegisterUserFromExternalProviderArgs, never>>;
   updateUserProfileImage?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateUserProfileImageArgs, 'file'>>;
 };
